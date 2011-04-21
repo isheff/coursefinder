@@ -70,7 +70,7 @@ def get_current_user(request):
 	return user
 
 # dadar chart for course-map
-"""
+
 def radar_chart(request):
     
     chart = open_flash_chart() 
@@ -117,7 +117,7 @@ def radar_chart(request):
     chart.tooltip = tip
     chart.bg_colour = '#FFF4BC'
     return HttpResponse(chart.render())
-"""
+
     
 
 
