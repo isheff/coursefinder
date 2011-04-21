@@ -9,7 +9,7 @@
 
     {% if current_user %}
       <p><a href="{{ current_user.profile_url }}"><img src="http://graph.facebook.com/{{ current_user.key_name }}/picture?type=square"/></a></p>
-      <p>Hello, {{ current_user.name|escape }}, at {{ current_user.education.school|escape }}</p>
+      <p>Hello, {{ current_user.name|escape }}</p>
     {% endif %}
 
     <div id="fb-root"></div>
