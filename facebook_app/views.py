@@ -10,7 +10,9 @@ from facebook_app.models import Facebook_User, Institution, Course
 from urllib import urlopen
 import BeautifulSoup,re
 import facebook
-
+from pyofc2  import * 
+import random
+import time
 
 FACEBOOK_APP_ID = "174228859292999"
 FACEBOOK_APP_SECRET = "cf8e2ce228f9a2d00f13357a826d0093"
@@ -66,3 +68,56 @@ def get_current_user(request):
 				user.access_token = cookie["access_token"]
 				user.save()
 	return user
+
+# dadar chart for course-map
+"""
+def radar_chart(request):
+    
+    chart = open_flash_chart() 
+    chart.title = title(text='My course-map')
+    chart.title.style =("{font-size:20px; color : #93998A;}")
+    area = area_hollow()
+    area.width = 1
+    area.dot_size = 1
+    area.halo_size = 1
+    area.colour = '#2E2E33'         # area edge color
+    area.fill_colour = '#CC6622'    # area color
+    area.fill_alpha = 0.4
+    area.loop = True
+    
+    # values of courses taken-----------------
+    area.values = [3, 4, 5, 4, 3, 3, 2.5]
+    #-----------------------------------------
+    chart.add_element(area) 
+
+    # Max courses have taken in one dept (choose max=8)----------  
+    r = radar_axis(max=8)
+    #------------------------------------------------------------
+    r.colour ='#E5C994'     # main axis color
+    r.grid_colour = '#E5C994'   # grid color
+    ra = radar_axis_labels(labels=['','','2','','4','','6'])
+    ra.colour = '#E5C994'   # label(on axis) color
+    r.labels = ra
+    
+    # courses names----------------------------------------------
+    sa = radar_spoke_labels(labels=['Computer<br>Science',
+                                    'Electrical<br>Engineering',
+                                    'Materials<br>Science',
+                                    'Applied<br>Physics',
+                                    'Humanity',
+                                    'Math',
+                                    'Physecal<br>Education'])
+    #------------------------------------------------------------
+    sa.style="font-size:20px"
+    sa.colour = '#FFF4BC'   # label color
+    chart.radar_axis = r 
+    r.spoke_labels = sa
+    tip = tooltip()
+    tip.proximity = 1
+    chart.tooltip = tip
+    chart.bg_colour = '#FFF4BC'
+    return HttpResponse(chart.render())
+"""
+    
+
+
