@@ -1,0 +1,5 @@
+*.pyc
+*~
+build/
+dist/
+PyOFC2.egg-info/
