@@ -10,7 +10,7 @@ from facebook_app.models import Facebook_User, Institution, Course
 from urllib import urlopen
 import BeautifulSoup,re
 import facebook
-from pyofc2  import * 
+import pyofc2   
 import random
 import time
 
@@ -70,13 +70,13 @@ def get_current_user(request):
 	return user
 
 # dadar chart for course-map
-"""
+
 def radar_chart(request):
     
-    chart = open_flash_chart() 
-    chart.title = title(text='My course-map')
+    chart = pyofc2.open_flash_chart() 
+    chart.title = pyofc2.title(text='My course-map')
     chart.title.style =("{font-size:20px; color : #93998A;}")
-    area = area_hollow()
+    area = pyofc2.area_hollow()
     area.width = 1
     area.dot_size = 1
     area.halo_size = 1
@@ -91,16 +91,16 @@ def radar_chart(request):
     chart.add_element(area) 
 
     # Max courses have taken in one dept (choose max=8)----------  
-    r = radar_axis(max=8)
+    r = pyofc2.radar_axis(max=8)
     #------------------------------------------------------------
     r.colour ='#E5C994'     # main axis color
     r.grid_colour = '#E5C994'   # grid color
-    ra = radar_axis_labels(labels=['','','2','','4','','6'])
+    ra = pyofc2.radar_axis_labels(labels=['','','2','','4','','6'])
     ra.colour = '#E5C994'   # label(on axis) color
     r.labels = ra
     
     # courses names----------------------------------------------
-    sa = radar_spoke_labels(labels=['Computer<br>Science',
+    sa = pyofc2.radar_spoke_labels(labels=['Computer<br>Science',
                                     'Electrical<br>Engineering',
                                     'Materials<br>Science',
                                     'Applied<br>Physics',
@@ -112,12 +112,12 @@ def radar_chart(request):
     sa.colour = '#FFF4BC'   # label color
     chart.radar_axis = r 
     r.spoke_labels = sa
-    tip = tooltip()
+    tip = pyofc2.tooltip()
     tip.proximity = 1
     chart.tooltip = tip
     chart.bg_colour = '#FFF4BC'
     return HttpResponse(chart.render())
-"""
+
     
 
 
