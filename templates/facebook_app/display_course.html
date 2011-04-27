@@ -1,43 +1,239 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Facebook Example</title>
-  </head>
-  <body>
-    <fb:login-button autologoutlink="true"></fb:login-button>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Course Corner - course</title>
+<style type="text/css">
+<!--
+.Course_detail {	font-size: 11px;
+	color: #333;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-align: justify;
+}
+.Course_instructor {	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #333;
+}
+.Course_title {	font-size: 14px;
+	font-weight: bold;
+	color: #333;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+.Rating_item {
+	color: #333;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+.rating_bar {
+	width: 125px;
+	background-image: url(/media/star_x_gray.png);
+	background-repeat: repeat-x;
+	background-position: 0 0;
+}
 
-    {% if current_user %}
-      <p><a href="{{ current_user.profile_url }}"><img src="http://graph.facebook.com/{{ current_user.key_name }}/picture?type=square"/></a></p>
-      <p>Hello, {{ current_user.name|escape }}</p>
-	  
-	  
-    {% endif %}
-	  <p>
-		{{ course.name }}
-	  </p>
-	  {% for teacher in teachers %}
-		<p>
-		{{ teacher.name }}
-		</p>
-	  {% endfor %}
+.rating_bar div {
+	height: 25px;
+	background-image: url(/media/star_x_gold.png);
+	background-repeat: repeat-x;
+	background-position: 0 0;
+}
+.Title {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 20px;
+	color: #515151;
+}
+-->
+</style>
 
-    <div id="fb-root"></div>
-    <script>
-      window.fbAsyncInit = function() {
-        FB.init({appId: '{{ facebook_app_id }}', status: true, cookie: true,
-                 xfbml: true});
-        FB.Event.subscribe('{% if current_user %}auth.logout{% else %}auth.login{% endif %}', function(response) {
-          window.location.reload();
-        });
-      };
-      (function() {
-        var e = document.createElement('script');
-        e.type = 'text/javascript';
-        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
-        e.async = true;
-        document.getElementById('fb-root').appendChild(e);
-      }());
-    </script>
-  </body>
+
+	<script src="/media/mootools-1.3.js"></script>
+	<script src="/media/moostarrating.js"></script>  
+	<script src="/media/rating_star.js"></script>     
+    
+ 
+</head>
+
+<body>
+	
+<table width="510" border="0" cellpadding="0">
+  <tr>
+    <td height="10">&nbsp;</td>
+  </tr>
+  <tr>
+    <td><table width="510" border="0" cellpadding="0">
+      <tr>
+        <td><img src="/media/Caltech_namecopy.png" alt="Caltech_name" width="350" height="100" /></td>
+        <td><img src="/media/Caltech_logo.png" alt="Caltech_logo" width="100" height="100" /></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td height="40">&nbsp;</td>
+  </tr>
+  <tr>
+    <td><table width="480" height="100" border="0" cellpadding="0" style="border:1px #3B5998  solid">
+      <tr>
+        <td><table width="470" border="0" cellpadding="0">
+            <tr>
+              <td width="87" height="85" rowspan="2" style="border:1px gray  solid"><img src="/media/dept/{{course.department|first}}.png" alt="course_tmp" width="85" height="85" /></td>
+              <td colspan="2" valign="top"><span class="Course_title"> {% for department in course.department %} {{department}} {% endfor %}{{ course.name }} </span></td>
+            </tr>
+            <tr>
+              <td colspan="2" class="Course_detail"> {{ course.description }} </td>
+            </tr>
+            <tr>
+              <td width="87" height="15"><img src="file:///D|/Documents/2011 Spring/CS 145/FB_Template/rating_small copy.png" alt="rating_small" width="85" height="15" /></td>
+              <td width="72" height="15"><span class="Course_instructor">Instructor:</span></td>
+			  {% for teacher in teachers %}
+              <td width="303" height="15" class="Course_instructor"> {{ teacher.name }} </td>
+			  {% endfor %}
+            </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td height="10">&nbsp;</td>
+  </tr>
+  <tr>
+    <td><table width="408" border="0" cellpadding="0">
+      <tr>
+        <td height="25" class="Rating_item">Overall:</td>
+        <td><div class="rating_bar">
+  		<div style="width:51%"></div>
+		</div>		</td>
+        <td width="40">&nbsp;</td>
+        <td height="25" valign="middle"><div>
+			<form name="Overall_Ratingsform">
+			<input type="radio" name="Overall_Rating" value="1" >
+			<input type="radio" name="Overall_Rating" value="2" />
+			<input type="radio" name="Overall_Rating" value="3" >
+			<input type="radio" name="Overall_Rating" value="4" >
+			<input type="radio" name="Overall_Rating" value="5" >
+			</form>
+			</div>		</td>
+      </tr>
+      <tr>
+        <td width="80" height="25" class="Rating_item"><span class="Rating_item">Content:</span></td>
+        <td width="144">
+		<div class="rating_bar">
+  		<div style="width:51%"></div>
+		</div>		</td>
+        <td width="40">&nbsp;</td>
+        <td width="141" height="25">
+		<div>
+			<form name="Content_Ratingsform">
+			<input type="radio" name="Content_Rating" value="1" >
+			<input type="radio" name="Content_Rating" value="2" />
+			<input type="radio" name="Content_Rating" value="3" >
+			<input type="radio" name="Content_Rating" value="4" >
+			<input type="radio" name="Content_Rating" value="5" >
+			</form>
+			</div>		
+		  </td>
+      </tr>
+      <tr>
+        <td width="80" height="25" class="Rating_item">Instructor:</td>
+        <td>
+		<div class="rating_bar">
+  		<div style="width:80%"></div>
+		</div>		</td>
+        <td width="40"></td>
+        <td height="25">
+		<div>
+			<form name="Teaching_Ratingsform">
+			<input type="radio" name="Teaching_Rating" value="1" >
+			<input type="radio" name="Teaching_Rating" value="2" />
+			<input type="radio" name="Teaching_Rating" value="3" >
+			<input type="radio" name="Teaching_Rating" value="4" >
+			<input type="radio" name="Teaching_Rating" value="5" >
+			</form>
+			</div>		
+		</td>
+      </tr>
+      <tr>
+        <td width="80" height="25" class="Rating_item">Grading:</td>
+        <td>		
+		<div class="rating_bar">
+  		<div style="width:10%"></div>
+		</div>		</td>
+        <td width="40">&nbsp;</td>
+        <td height="25">
+		<div>
+			<form name="Grading_Ratingsform">
+			<input type="radio" name="Grading_Rating" value="1" >
+			<input type="radio" name="Grading_Rating" value="2" />
+			<input type="radio" name="Grading_Rating" value="3" >
+			<input type="radio" name="Grading_Rating" value="4" >
+			<input type="radio" name="Grading_Rating" value="5" >
+			</form>
+			</div>		
+		</td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td><table width="400" height="110" border="0" cellpadding="0" bgcolor="EDEFF4">
+      <tr>
+        <td><table width="440" border="0" cellpadding="0">
+          <tr>
+            <td height="75" colspan="2"><textarea rows="3"  title="Write a comment..." name="Course_Comment" cols="50"></textarea></td>
+          </tr>
+          <tr>
+            <td  height="30">
+			<input type="image"   src="/media/submit_button.png" align="right"/></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td height="20">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="10"><span class="Title">Distribution</span></td>
+  </tr>
+  <tr>
+   <td height="1" bgcolor="#808080"></td>
+</tr>
+  <tr>
+    <td height="10"><table width="470" border="0" cellpadding="0">
+      <tr>
+        <td width="235" height="30" class="Rating_item"><div align="center">Grade</div></td>
+        <td width="235" height="30" class="Rating_item"><div align="center">Time-spent</div></td>
+      </tr>
+      <tr>
+        <td><div align="center"></div></td>
+        <td><div align="center"></div></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td height="40">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="10" class="Title">Comments</td>
+  </tr>
+  <tr>
+   <td height="1" bgcolor="#808080"></td>
+</tr>
+  <tr>
+    <td height="30"><table width="470" border="0" cellpadding="0">
+      <tr>
+        <td width="235" height="30">FB friends comments </td>
+        <td width="235" height="30">FB public comments </td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td height="10">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="10">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="10">&nbsp;</td>
+  </tr>
+</table>
+</body>
 </html>
