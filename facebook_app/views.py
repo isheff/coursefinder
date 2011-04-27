@@ -34,14 +34,17 @@ def display_institution(request, institution_id):
 		return HttpResponse("You do not attend this institution.")
 	
 	
-
+@csrf_exempt
 def display_course(request, course_id):
 	# TODO: Add form processing so reviews care added to database
 	# TODO: edit template so people can actually review course
 	p = get_object_or_404(Course, id=int(course_id))
 	user=get_current_user(request)
 	if attends_institution(user, p.institution):
-		return render_to_response('facebook_app/display_course.html', {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'course':p, 'teachers':map(lambda x: Facebook_User.objects.get(id=x), p.teacher_ids)})
+		teachers = map(lambda x: Facebook_User.objects.get(id=x), p.teacher_ids)
+		if "Overall_Rating" in request.REQUEST:
+			p.name+= str(request.REQUEST["Overall_Rating"])
+		return render_to_response('facebook_app/display_course.html', {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'course':p, 'teachers':teachers})
 	else:
 		return HttpResponse("You do not attend this institution.")
 

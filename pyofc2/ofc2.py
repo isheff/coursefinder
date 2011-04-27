@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 #!/usr/bin/env python
 # encoding: utf-8
 """
@@ -189,7 +189,7 @@ class open_flash_chart(OFCBase):
 
     def render(self):
         return anyjson.serialize(self)
-=======
+
 #!/usr/bin/env python
 # encoding: utf-8
 """
@@ -380,4 +380,3 @@ class open_flash_chart(OFCBase):
 
     def render(self):
         return anyjson.serialize(self)
->>>>>>> c7a1b3500caa50b4f05cabaf8b6d715d230f76a8
