@@ -7,9 +7,7 @@ urlpatterns = patterns('facebook_app.views',
     (r'^/$', 'canvas'),
     (r'^institution/(?P<institution_id>\d+)/$', 'display_institution'),
     (r'^course/(?P<course_id>\d+)/$', 'display_course'),
-    (r'^institution_test/$','canvas_institutiontest'),
 )
-
 
 # the chart data views
 urlpatterns += patterns('facebook_app.views',
