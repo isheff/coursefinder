@@ -3,6 +3,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Facebook Example</title>
+	
+	<script type="text/javascript" src="/media/swfobject.js"></script>
+    <script type="text/javascript">
+    	swfobject.embedSWF(
+    	  "/media/open-flash-chart.swf", "course_map",
+    	  "275", "275", "9.0.0", "/media/expressInstall.swf",
+    	  {"data-file":"/data/"} );
+    </script>
   </head>
   <body>
     <fb:login-button autologoutlink="true"></fb:login-button>
@@ -29,5 +37,7 @@
         document.getElementById('fb-root').appendChild(e);
       }());
     </script>
+	
+	<div class="chart" id="course_map"></div>
   </body>
 </html>
