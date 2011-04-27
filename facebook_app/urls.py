@@ -7,8 +7,7 @@ urlpatterns = patterns('facebook_app.views',
     (r'^/$', 'canvas'),
     (r'^institution/(?P<institution_id>\d+)/$', 'display_institution'),
     (r'^course/(?P<course_id>\d+)/$', 'display_course'),
-    #(r'^data/$','radar_chart')
-	(r'^institution_test/$','canvas_institutiontest'),
+    (r'^institution_test/$','canvas_institutiontest'),
 )
 
 
