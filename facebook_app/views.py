@@ -75,14 +75,14 @@ def radar_chart(request):
     
     chart = pyofc2.open_flash_chart() 
     chart.title = pyofc2.title(text='My course-map')
-    chart.title.style =("{font-size:20px; color : #93998A;}")
+    chart.title.style =("{font-size:20px; color : #B0BFBA;}")   # title colour
     area = pyofc2.area_hollow()
     area.width = 1
     area.dot_size = 1
     area.halo_size = 1
-    area.colour = '#2E2E33'         # area edge color
-    area.fill_colour = '#CC6622'    # area color
-    area.fill_alpha = 0.4
+    area.colour = '#B0BFBA'         # area edge color
+    area.fill_colour = '#FFFFFF'    # area color
+    area.fill_alpha = 0.5
     area.loop = True
     
     # values of courses taken-----------------
@@ -91,12 +91,12 @@ def radar_chart(request):
     chart.add_element(area) 
 
     # Max courses have taken in one dept (choose max=8)----------  
-    r = pyofc2.radar_axis(max=8)
+    r = pyofc2.radar_axis(max=8,steps=2)
     #------------------------------------------------------------
-    r.colour ='#E5C994'     # main axis color
-    r.grid_colour = '#E5C994'   # grid color
-    ra = pyofc2.radar_axis_labels(labels=['','','2','','4','','6'])
-    ra.colour = '#E5C994'   # label(on axis) color
+    r.colour ='#36647F'     # main axis color
+    r.grid_colour = '#36647F'   # grid color
+    ra = pyofc2.radar_axis_labels(labels=['','','2','','4','','6'],size=12)
+    ra.colour = '#B0BFBA'   # label(on axis) color
     r.labels = ra
     
     # courses names----------------------------------------------
@@ -106,16 +106,17 @@ def radar_chart(request):
                                     'Applied<br>Physics',
                                     'Humanity',
                                     'Math',
-                                    'Physecal<br>Education'])
+                                    'Physecal<br>Education']
+                                   ,size=40)
     #------------------------------------------------------------
-    sa.style="font-size:20px"
-    sa.colour = '#FFF4BC'   # label color
+    
+    sa.colour = '#B0BFBA'   # label color
     chart.radar_axis = r 
     r.spoke_labels = sa
     tip = pyofc2.tooltip()
     tip.proximity = 1
     chart.tooltip = tip
-    chart.bg_colour = '#FFF4BC'
+    chart.bg_colour = '#3B3B40' # background color
     return HttpResponse(chart.render())
 
     
