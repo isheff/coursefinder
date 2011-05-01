@@ -21,7 +21,9 @@ FACEBOOK_APP_SECRET = "cf8e2ce228f9a2d00f13357a826d0093"
 @csrf_exempt
 def canvas(request):
 	user = get_current_user(request)
-	return render_to_response('facebook_app/canvas.html', {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID})
+	institution = "California Insitute of Technology" #for testing attendance
+	attends_inst = attends_institution(user, institution)
+	return render_to_response('facebook_app/canvas.html', {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'institution':institution, 'attends_inst':attends_inst})
 
 def display_institution(request, institution_id):
 	# TODO: edit template to display courses and stuff. 
@@ -34,7 +36,6 @@ def display_institution(request, institution_id):
 		return HttpResponse("You do not attend this institution.")
 	
 	
-
 def display_course(request, course_id):
 	# TODO: Add form processing so reviews care added to database
 	# TODO: edit template so people can actually review course
@@ -45,9 +46,30 @@ def display_course(request, course_id):
 	else:
 		return HttpResponse("You do not attend this institution.")
 
+		
 def attends_institution(user, institution):
-	#TODO: make this method return whether the given user attends the given institution.
-	return True
+    """Returns whether the given user attends or has attended the given institution."""
+	# Grab user info.
+	# TODO: do this in a more elegant way.
+	graph = facebook.GraphAPI(user.access_token)
+	profile = graph.get_object("me")
+	education = profile["education"]
+	
+	# Get user's institution(s). 
+	#(Assume we have obtained permission to do so.  If we haven't, it will be blank anyway.)
+	# We use names as primary identifiers for schools.
+	
+	user_institution_names = []
+	for place in education:
+	    user_institution_names += place.school.name
+	
+	# Check whether given institution is in the user's education history.
+	inst_name = institution.name
+	return inst_name in user_institution_names
+	
+	# TODO: include possibility somewhere else for variability in institution name.
+	# TODO: Elsewhere, let user know if they have no institutions listed.
+
 
 def get_current_user(request):
 	user = None
@@ -69,20 +91,20 @@ def get_current_user(request):
 				user.save()
 	return user
 
-# dadar chart for course-map
+# Radar chart for course-map
 
 def radar_chart(request):
     
     chart = pyofc2.open_flash_chart() 
     chart.title = pyofc2.title(text='My course-map')
-    chart.title.style =("{font-size:20px; color : #B0BFBA;}")   # title colour
+    chart.title.style =("{font-size:20px; color : #93998A;}")
     area = pyofc2.area_hollow()
     area.width = 1
     area.dot_size = 1
     area.halo_size = 1
-    area.colour = '#B0BFBA'         # area edge color
-    area.fill_colour = '#FFFFFF'    # area color
-    area.fill_alpha = 0.5
+    area.colour = '#2E2E33'         # area edge color
+    area.fill_colour = '#CC6622'    # area color
+    area.fill_alpha = 0.4
     area.loop = True
     
     # values of courses taken-----------------
@@ -91,12 +113,12 @@ def radar_chart(request):
     chart.add_element(area) 
 
     # Max courses have taken in one dept (choose max=8)----------  
-    r = pyofc2.radar_axis(max=8,steps=2)
+    r = pyofc2.radar_axis(max=8)
     #------------------------------------------------------------
-    r.colour ='#36647F'     # main axis color
-    r.grid_colour = '#36647F'   # grid color
-    ra = pyofc2.radar_axis_labels(labels=['','','2','','4','','6'],size=12)
-    ra.colour = '#B0BFBA'   # label(on axis) color
+    r.colour ='#E5C994'     # main axis color
+    r.grid_colour = '#E5C994'   # grid color
+    ra = pyofc2.radar_axis_labels(labels=['','','2','','4','','6'])
+    ra.colour = '#E5C994'   # label(on axis) color
     r.labels = ra
     
     # courses names----------------------------------------------
@@ -106,17 +128,16 @@ def radar_chart(request):
                                     'Applied<br>Physics',
                                     'Humanity',
                                     'Math',
-                                    'Physecal<br>Education']
-                                   ,size=40)
+                                    'Physical<br>Education'])
     #------------------------------------------------------------
-    
-    sa.colour = '#B0BFBA'   # label color
+    sa.style="font-size:20px"
+    sa.colour = '#FFF4BC'   # label color
     chart.radar_axis = r 
     r.spoke_labels = sa
     tip = pyofc2.tooltip()
     tip.proximity = 1
     chart.tooltip = tip
-    chart.bg_colour = '#3B3B40' # background color
+    chart.bg_colour = '#FFF4BC'
     return HttpResponse(chart.render())
 
     
