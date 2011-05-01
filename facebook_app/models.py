@@ -177,7 +177,7 @@ class Grade(User_Course_Interaction):
 	"""
 	This is a model for recording the grade a user got in a course
 	"""
-	grade = models.IntegerField()	# The grade a user got in a course 0=F, 1=D, 2=C, 3=B, 4=F
+	grade = models.IntegerField()	# The grade a user got in a course 0=F, 1=D, 2=C, 3=B, 4=A
 	
 	def __unicode__(self):
 		"""

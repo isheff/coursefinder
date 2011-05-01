@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django import forms
@@ -6,7 +6,7 @@ from django.forms import ValidationError
 from django.core.context_processors import csrf
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
-from facebook_app.models import Facebook_User, Institution, Course
+from facebook_app.models import *
 from urllib import urlopen
 import BeautifulSoup,re
 import facebook
@@ -32,19 +32,154 @@ def display_institution(request, institution_id):
 		return render_to_response('facebook_app/display_institution.html', {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'institution':institute, 'courses':courses})
 	else:
 		return HttpResponse("You do not attend this institution.")
-	
-	
+
+
+
+@csrf_exempt
+def rate_course(request, course_id):
+	p = get_object_or_404(Course, id=int(course_id))
+	user=get_current_user(request)
+	if attends_institution(user, p.institution):
+		for teacher_id in p.teacher_ids:
+			if len(Facebook_User.objects.filter(id=teacher_id)) == 0:
+				course.teacher_ids.remove(teacher_id)
+				course.save()
+		if "Rating_Name" in request.REQUEST:
+			if "Overall_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
+				if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
+					over_rat = Overall_Rating.objects.filter(user=user, course=p)
+					if len(over_rat)==0:
+						over_rat = Overall_Rating( user=user, course=p)
+					else:
+						over_rat = over_rat[0]
+					over_rat.value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
+					over_rat.save()
+					return HttpResponse("Overall Rating of "+str(over_rat.value)+" saved.")
+			if "Grading_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
+				if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
+					grad_rat = Grading_Rating.objects.filter(user=user, course=p)
+					if len(grad_rat) == 0:
+						grad_rat = Grading_Rating(user=user, course=p)
+					else:
+						grad_rat = grad_rat[0]
+					grad_rat.value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
+					grad_rat.save()
+					return HttpResponse("Grading Rating of "+str(grad_rat.value)+" saved.")
+			if "Hours" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
+				if request.REQUEST["Rating_Value"] in map(str, range(1, 21)):
+					hours = Hours.objects.filter(user=user, course=p)
+					if len(hours) == 0:
+						hours = Hours(user=user, course=p)
+					else:
+						hours = hours[0]
+					hours.hours = (int(request.REQUEST["Rating_Value"])-1)
+					hours.save()
+					return HttpResponse("Hours of "+str(hours.hours)+" saved.")
+			if "Grade" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
+				if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
+					grade = Grade.objects.filter(user=user, course=p)
+					if len(grade) == 0:
+						grade = Grade(user=user, course=p)
+					else:
+						grade = grade[0]
+					grade.grade = (int(request.REQUEST["Rating_Value"])-1)
+					grade.save()
+					return HttpResponse("Grade of "+str(grade.grade)+" saved.")
+			for teacher_id in p.teacher_ids:
+				if "Teacher_"+str(teacher_id)+"_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
+					if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
+						teacher = Facebook_User.objects.get(id=teacher_id)
+						teach_rat = Teaching_Rating.objects.filter(teacher=teacher, course=p, user=user)
+						if len(teach_rat) == 0:
+							teach_rat=Teaching_Rating(teacher=teacher, course=p, user=user)
+						else:
+							teach_rat = teach_rat[0]
+						teach_rat.value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
+						teach_rat.save()
+						return HttpResponse("Teacher Rating of "+str(teach_rat.value)+" saved.")
+		if "Course_Comment_Text" in request.REQUEST:
+			com = Course_Comment.objects.filter(user=user, course=p)
+			if len(com) == 0:
+				com = Course_Comment(user=user, course=p)
+			else:
+				com = com[0]
+			com.content = request.REQUEST["Course_Comment_Text"]
+			com.privacy=int("Course_Comment_Privacy" in request.REQUEST) # i guess privacy 0 will be the "friends only" privacy level
+			com.save()
+			return HttpResponse("Comment "+str(com.content)+" saved.")
+		for teacher_id in p.teacher_ids:
+			comment_id = "Teacher_"+str(teacher_id)+"_Comment"
+			if comment_id+"_Text" in request.REQUEST:
+				teacher = Facebook_User.objects.get(id = teacher_id)
+				com = Teacher_Comment.objects.filter(teacher=teacher, user=user, course=p)
+				if len(com)==0:
+					com = Teacher_Comment(teacher=teacher, user=user, course=p)
+				else:
+					com = com[0]
+				com.content = request.REQUEST[comment_id+"_Text"]
+				com.privacy = int(comment_id+"_Privacy" in request.REQUEST)
+				com.save()
+				return HttpResponse("Comment "+str(com.content)+" saved.")
+	raise Http404
+
+
+
 @csrf_exempt
 def display_course(request, course_id):
-	# TODO: Add form processing so reviews care added to database
-	# TODO: edit template so people can actually review course
 	p = get_object_or_404(Course, id=int(course_id))
 	user=get_current_user(request)
 	if attends_institution(user, p.institution):
 		teachers = map(lambda x: Facebook_User.objects.get(id=x), p.teacher_ids)
-		if "Overall_Rating" in request.REQUEST:
-			p.name+= str(request.REQUEST["Overall_Rating"])
-		return render_to_response('facebook_app/display_course.html', {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'course':p, 'teachers':teachers})
+		for teacher in range(len(teachers)):
+			tr = Teaching_Rating.objects.filter(user=user, course=p, teacher=teachers[teacher])
+			if len(tr) == 0:
+				teachers[teacher].user_rating=0
+			else:
+				teachers[teacher].user_rating = int(tr[0].value*4.0 + 1.1)
+			cc = Teacher_Comment.objects.filter(teacher = teachers[teacher], user=user, course=p)
+			if len(cc) == 0:
+				teachers[teacher].course_comment=""
+				teachers[teacher].course_comment_privacy=0
+			else:
+				teachers[teacher].course_comment = cc[0].content
+				teachers[teacher].course_comment_privacy = int(cc[0].privacy)
+			# currently, we have no algorithm to predict ratings, so the predictions are all Null:
+			teachers[teacher].rating = 0
+		pass_to_template = {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'course':p}
+		pass_to_template['teachers'] = teachers
+		over_rat = Overall_Rating.objects.filter(user=user, course=p)
+		if len(over_rat) == 0:
+			pass_to_template['User_Overall_Rating']=0
+		else:
+			pass_to_template['User_Overall_Rating']=int(over_rat[0].value*4.0 + 1.1)
+		
+		grad_rat = Grading_Rating.objects.filter(user=user, course=p)
+		if len(over_rat) == 0:
+			pass_to_template['User_Grading_Rating']=0
+		else:
+			pass_to_template['User_Grading_Rating']=int(grad_rat[0].value*4.0 + 1.1)
+		
+		course_com = Course_Comment.objects.filter(user=user, course=p)
+		if len(course_com) == 0:
+			pass_to_template['Course_Comment'] = ""
+			pass_to_template['Course_Comment_Privacy'] = 0
+		else:
+			pass_to_template['Course_Comment'] = course_com[0].content
+			pass_to_template['Course_Comment_Privacy'] = int(course_com[0].privacy)
+		hours = Hours.objects.filter(user=user, course=p)
+		if len(hours)==0:
+			pass_to_template['Hours'] = 0
+		else:
+			pass_to_template['Hours'] = hours[0].hours+1
+		grade = Grade.objects.filter(user=user, course=p)
+		if len(grade) == 0:
+			pass_to_template['Grade'] = 0
+		else:
+			pass_to_template['Grade'] = grade[0].grade + 1
+		# currently, we have no algorithm to predict ratings, so the predictions are Null:
+		pass_to_template['Overall_Rating'] = 0
+		pass_to_template['Grading_Rating'] = 0
+		return render_to_response('facebook_app/display_course.html', pass_to_template)
 	else:
 		return HttpResponse("You do not attend this institution.")
 
@@ -54,6 +189,13 @@ def attends_institution(user, institution):
 
 def get_current_user(request):
 	user = None
+	
+	
+	# FOR OFF-GOOGLE TESTING ONLY***************
+	return get_object_or_404(Facebook_User, name="Isaac")
+	# FOR OFF-GOOGLE TESTING ONLY***************
+	
+	
 	cookie = facebook.get_user_from_cookie(request.COOKIES, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET)
 	if cookie:
 		user = Facebook_User.objects.filter(key_name=cookie["uid"])
