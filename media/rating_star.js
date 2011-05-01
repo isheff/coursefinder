@@ -103,7 +103,6 @@ function mooForm(formId, submitId, loadingDivId, successDivId, failDivId)
 	};
 	
 	
-	$(formId).set('send', {url:'submit.php', method:'POST'});
 	// Listen for click events on the submit button.
 	$(submitId).addEvent( 'click', function(evt){
 						 // Stops the submission of the form.

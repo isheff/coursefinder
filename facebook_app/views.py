@@ -266,8 +266,16 @@ def get_current_user(request):
 
 # dadar chart for course-map
 
-def radar_chart(request):
-    
+def radar_chart(request, user_id):
+	#user_thats_logged_in = get_object_or_404(Facebook_User, id=user_id)
+	#list_of_ratings = Overall_Rating.objects.filter(user = user_thats_logged_in)
+	#list_of_course_names = []
+	#for rating in list_of_ratings
+	#	list_of_course_names.append(rating.course.name)
+	#
+	#list_of_course_names = map(lambda x: x.course.name, list_of_ratings  )
+	
+	
     chart = pyofc2.open_flash_chart() 
     chart.title = pyofc2.title(text='My course-map')
     chart.title.style =("{font-size:20px; color : #B0BFBA;}")   # title colour
