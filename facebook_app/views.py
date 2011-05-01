@@ -219,7 +219,7 @@ def display_course(request, course_id):
 			pass_to_template['Hours'] = 0
 		else:
 			pass_to_template['Hours'] = hours[0].hours+1
-		Any Grade Previously input by the user must be passed to the Template
+		# Any Grade Previously input by the user must be passed to the Template
 		grade = Grade.objects.filter(user=user, course=p)
 		if len(grade) == 0:
 			pass_to_template['Grade'] = 0
