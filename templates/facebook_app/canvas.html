@@ -13,7 +13,7 @@
     </script>
   </head>
   <body>
-    <fb:login-button autologoutlink="true"></fb:login-button>
+    <fb:login-button autologoutlink="true" perms="user_education_history"></fb:login-button>
 
     {% if current_user %}
       <p><a href="{{ current_user.profile_url }}"><img src="http://graph.facebook.com/{{ current_user.key_name }}/picture?type=square"/></a></p>
@@ -37,8 +37,8 @@
         e.async = true;
         document.getElementById('fb-root').appendChild(e);
       }());
+            
     </script>
-	
 	<div class="chart" id="course_map"></div>
   </body>
 </html>

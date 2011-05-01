@@ -21,7 +21,7 @@ FACEBOOK_APP_SECRET = "cf8e2ce228f9a2d00f13357a826d0093"
 @csrf_exempt
 def canvas(request):
 	user = get_current_user(request)
-	institution = "California Insitute of Technology" #for testing attendance
+	institution = "California Institute of Technology" #for testing attendance
 	attends_inst = attends_institution(user, institution)
 	return render_to_response('facebook_app/canvas.html', {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'institution':institution, 'attends_inst':attends_inst})
 
@@ -49,27 +49,33 @@ def display_course(request, course_id):
 		
 def attends_institution(user, institution):
     """Returns whether the given user attends or has attended the given institution."""
-	# Grab user info.
-	# TODO: do this in a more elegant way.
-	graph = facebook.GraphAPI(user.access_token)
-	profile = graph.get_object("me")
-	education = profile["education"]
-	
+    return True
+
+    # Get user info.
+    # TODO: do this in a more elegant way.
+    try:
+        graph = facebook.GraphAPI(user.access_token)
+        profile = graph.get_object("me")
+        # Get user's education history.	
+        education_hist = profile["education"]
+    except KeyError:
+	    return False
+    
 	# Get user's institution(s). 
 	#(Assume we have obtained permission to do so.  If we haven't, it will be blank anyway.)
 	# We use names as primary identifiers for schools.
 	
-	user_institution_names = []
-	for place in education:
-	    user_institution_names += place.school.name
-	
-	# Check whether given institution is in the user's education history.
-	inst_name = institution.name
-	return inst_name in user_institution_names
+    user_institution_names = []
+    for place in education:
+        user_institution_names += place.school.name
+
+    # Check whether given institution is in the user's education history.
+    inst_name = institution.name
+    return inst_name in user_institution_names
 	
 	# TODO: include possibility somewhere else for variability in institution name.
 	# TODO: Elsewhere, let user know if they have no institutions listed.
-
+    
 
 def get_current_user(request):
 	user = None
