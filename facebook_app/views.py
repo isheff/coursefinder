@@ -242,7 +242,7 @@ def get_current_user(request):
 	
 	
 	# FOR OFF-GOOGLE TESTING ONLY***************
-	return get_object_or_404(Facebook_User, name="Isaac")
+	#return get_object_or_404(Facebook_User, name="Isaac")
 	# FOR OFF-GOOGLE TESTING ONLY***************
 	
 	
