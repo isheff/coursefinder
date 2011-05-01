@@ -53,14 +53,22 @@ def rate_course(request, course_id):
 	#
 	# If the form does not meet these specifications, the course does not exist, or the user does not attend the institution of the course, the 
 	# page 404s, otherwise, it responds with a line of text to tell you your data was saved. 
+	
+	# first, let's get the course, user, and make sure the user attends the course's institution:
 	p = get_object_or_404(Course, id=int(course_id))
 	user=get_current_user(request)
 	if attends_institution(user, p.institution):
+		
+		#now, just for bookeeping, if the course contains any teacher_ids not actually representative of teachers, delete them.
 		for teacher_id in p.teacher_ids:
 			if len(Facebook_User.objects.filter(id=teacher_id)) == 0:
 				course.teacher_ids.remove(teacher_id)
 				course.save()
+		
+		# If a rating name was submitted, that means we're dealing with Overall_Rating, Grading_Rating, Hours, Grade, or Teacher_<teacher_id in this course.teacher_ids>_Rating
 		if "Rating_Name" in request.REQUEST:
+			
+			# If an Overall_Rating was submitted, check to see if one exists, and overwrite it or create a new one.
 			if "Overall_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
 				if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
 					over_rat = Overall_Rating.objects.filter(user=user, course=p)
@@ -71,6 +79,8 @@ def rate_course(request, course_id):
 					over_rat.value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
 					over_rat.save()
 					return HttpResponse("Overall Rating of "+str(over_rat.value)+" saved.")
+			
+			# If an Grading_Rating was submitted, check to see if one exists, and overwrite it or create a new one.
 			if "Grading_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
 				if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
 					grad_rat = Grading_Rating.objects.filter(user=user, course=p)
@@ -81,6 +91,8 @@ def rate_course(request, course_id):
 					grad_rat.value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
 					grad_rat.save()
 					return HttpResponse("Grading Rating of "+str(grad_rat.value)+" saved.")
+			
+			# If an Hours was submitted, check to see if one exists, and overwrite it or create a new one.
 			if "Hours" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
 				if request.REQUEST["Rating_Value"] in map(str, range(1, 21)):
 					hours = Hours.objects.filter(user=user, course=p)
@@ -91,6 +103,8 @@ def rate_course(request, course_id):
 					hours.hours = (int(request.REQUEST["Rating_Value"])-1)
 					hours.save()
 					return HttpResponse("Hours of "+str(hours.hours)+" saved.")
+			
+			# If a Grade was submitted, check to see if one exists, and overwrite it or create a new one.
 			if "Grade" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
 				if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
 					grade = Grade.objects.filter(user=user, course=p)
@@ -101,6 +115,8 @@ def rate_course(request, course_id):
 					grade.grade = (int(request.REQUEST["Rating_Value"])-1)
 					grade.save()
 					return HttpResponse("Grade of "+str(grade.grade)+" saved.")
+			
+			# Now, for each teacher, if a Teacher_Rating was submitted for that teacher, check to see if one exists, and overwrite it or create a new one.
 			for teacher_id in p.teacher_ids:
 				if "Teacher_"+str(teacher_id)+"_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
 					if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
@@ -113,6 +129,9 @@ def rate_course(request, course_id):
 						teach_rat.value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
 						teach_rat.save()
 						return HttpResponse("Teacher Rating of "+str(teach_rat.value)+" saved.")
+		
+			
+		# If an Course_Comment was submitted, check to see if one exists, and overwrite it or create a new one.
 		if "Course_Comment_Text" in request.REQUEST:
 			com = Course_Comment.objects.filter(user=user, course=p)
 			if len(com) == 0:
@@ -123,6 +142,8 @@ def rate_course(request, course_id):
 			com.privacy=int("Course_Comment_Privacy" in request.REQUEST) # i guess privacy 0 will be the "friends only" privacy level
 			com.save()
 			return HttpResponse("Comment "+str(com.content)+" saved.")
+		
+		# for each teacher if a Teacher_Comment was submitted, check to see if one exists, and overwrite it or create a new one.
 		for teacher_id in p.teacher_ids:
 			comment_id = "Teacher_"+str(teacher_id)+"_Comment"
 			if comment_id+"_Text" in request.REQUEST:
@@ -136,6 +157,7 @@ def rate_course(request, course_id):
 				com.privacy = int(comment_id+"_Privacy" in request.REQUEST)
 				com.save()
 				return HttpResponse("Comment "+str(com.content)+" saved.")
+	# If no rating or comment was submitted that was findable or recordable, 404
 	raise Http404
 
 
