@@ -37,6 +37,22 @@ def display_institution(request, institution_id):
 
 @csrf_exempt
 def rate_course(request, course_id):
+	# this view, found at url "course/<course_id>/submit/", exists to recieve forms containing ONE of the following entries in form data:
+	#
+	# A Rating, Hours, or Grade:
+	# Rating_Name: Overall_Rating, Grading_Rating, Hours, Grade, or Teacher_<teacher_id in this course.teacher_ids>_Rating
+	# Rating_Value: some integer at least 1 appropriate for the number of stars or whatever for the Rating_Name's input
+	#
+	# A Course Comment:
+	# Course_Comment_Text: the text of the comment
+	# Course_Comment_Privacy: 0 for friends-only, 1 for public
+	# 
+	# A Teacher Comment:
+	# Teacher_<teacher_id in this course.teacher_ids>_Comment_Text: the text of a comment by this user on this class with this teacher
+	# Teacher_<teacher_id in this course.teacher_ids>_Comment_Privacy: 0 for friends-only, 1 for public
+	#
+	# If the form does not meet these specifications, the course does not exist, or the user does not attend the institution of the course, the 
+	# page 404s, otherwise, it responds with a line of text to tell you your data was saved. 
 	p = get_object_or_404(Course, id=int(course_id))
 	user=get_current_user(request)
 	if attends_institution(user, p.institution):
@@ -126,16 +142,22 @@ def rate_course(request, course_id):
 
 @csrf_exempt
 def display_course(request, course_id):
-	p = get_object_or_404(Course, id=int(course_id))
-	user=get_current_user(request)
-	if attends_institution(user, p.institution):
-		teachers = map(lambda x: Facebook_User.objects.get(id=x), p.teacher_ids)
+	# This view returns a webpage in which a user can rate a class, comment on it, and do all those other things
+	p = get_object_or_404(Course, id=int(course_id)) # The class to be displayed
+	user=get_current_user(request) # the user presently logged in
+	
+	#First, we must assemble the necessary information to display in the form. This includes comments and ratings previously made by the User
+	
+	if attends_institution(user, p.institution): # The page should only be displayed if this User attends this Course's institution
+		teachers = map(lambda x: Facebook_User.objects.get(id=x), p.teacher_ids) # the teachers teaching this course
 		for teacher in range(len(teachers)):
+			# Any rating the user has previously given this teacher on this course must be passed to the template in the teacher object
 			tr = Teaching_Rating.objects.filter(user=user, course=p, teacher=teachers[teacher])
 			if len(tr) == 0:
 				teachers[teacher].user_rating=0
 			else:
 				teachers[teacher].user_rating = int(tr[0].value*4.0 + 1.1)
+			# Any comment teh user has previously given this teacher on this course must be passed to the template in the teacher object
 			cc = Teacher_Comment.objects.filter(teacher = teachers[teacher], user=user, course=p)
 			if len(cc) == 0:
 				teachers[teacher].course_comment=""
@@ -143,22 +165,25 @@ def display_course(request, course_id):
 			else:
 				teachers[teacher].course_comment = cc[0].content
 				teachers[teacher].course_comment_privacy = int(cc[0].privacy)
-			# currently, we have no algorithm to predict ratings, so the predictions are all Null:
+			# currently, we have no algorithm to predict ratings, so the predictions are all 0:
+			# note that predictions are displayed as % of 5 stars, so we must convert our 0-1 floats to 20-100%
 			teachers[teacher].rating = 0
+		#The template will need the current user, the facebook_app_id, the course being rated, and the set of teachers for that course (with added info above)
 		pass_to_template = {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'course':p}
 		pass_to_template['teachers'] = teachers
+		# Any Overall Rating previously input by the user must be passed to the template
 		over_rat = Overall_Rating.objects.filter(user=user, course=p)
 		if len(over_rat) == 0:
 			pass_to_template['User_Overall_Rating']=0
 		else:
 			pass_to_template['User_Overall_Rating']=int(over_rat[0].value*4.0 + 1.1)
-		
+		# Any Grading Rating previously input by the user must be passed to the template
 		grad_rat = Grading_Rating.objects.filter(user=user, course=p)
 		if len(over_rat) == 0:
 			pass_to_template['User_Grading_Rating']=0
 		else:
 			pass_to_template['User_Grading_Rating']=int(grad_rat[0].value*4.0 + 1.1)
-		
+		#Any Course Comment previously input by the user must be passed to the template
 		course_com = Course_Comment.objects.filter(user=user, course=p)
 		if len(course_com) == 0:
 			pass_to_template['Course_Comment'] = ""
@@ -166,17 +191,20 @@ def display_course(request, course_id):
 		else:
 			pass_to_template['Course_Comment'] = course_com[0].content
 			pass_to_template['Course_Comment_Privacy'] = int(course_com[0].privacy)
+		# Any Hours previously input by the User must be passed to the template
 		hours = Hours.objects.filter(user=user, course=p)
 		if len(hours)==0:
 			pass_to_template['Hours'] = 0
 		else:
 			pass_to_template['Hours'] = hours[0].hours+1
+		Any Grade Previously input by the user must be passed to the Template
 		grade = Grade.objects.filter(user=user, course=p)
 		if len(grade) == 0:
 			pass_to_template['Grade'] = 0
 		else:
 			pass_to_template['Grade'] = grade[0].grade + 1
-		# currently, we have no algorithm to predict ratings, so the predictions are Null:
+		# currently, we have no algorithm to predict ratings, so the predictions are 0:
+		# note that predictions are displayed as % of 5 stars, so we must convert our 0-1 floats to 20-100%
 		pass_to_template['Overall_Rating'] = 0
 		pass_to_template['Grading_Rating'] = 0
 		return render_to_response('facebook_app/display_course.html', pass_to_template)
