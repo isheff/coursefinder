@@ -14,6 +14,12 @@ import pyofc2
 import random
 import time
 
+
+full_department_names = {
+"short":"long",
+"short":"long",
+"short":"long",
+}
 FACEBOOK_APP_ID = "174228859292999"
 FACEBOOK_APP_SECRET = "cf8e2ce228f9a2d00f13357a826d0093"
 
@@ -138,7 +144,7 @@ def rate_course(request, course_id):
 				com = Course_Comment(user=user, course=p)
 			else:
 				com = com[0]
-			com.content = request.REQUEST["Course_Comment_Text"]
+			com.content = request.REQUEST["Course_Comment_Text"][:1023]
 			com.privacy=int("Course_Comment_Privacy" in request.REQUEST) # i guess privacy 0 will be the "friends only" privacy level
 			com.save()
 			return HttpResponse("Comment "+str(com.content)+" saved.")
@@ -153,7 +159,7 @@ def rate_course(request, course_id):
 					com = Teacher_Comment(teacher=teacher, user=user, course=p)
 				else:
 					com = com[0]
-				com.content = request.REQUEST[comment_id+"_Text"]
+				com.content = request.REQUEST[comment_id+"_Text"][:1023]
 				com.privacy = int(comment_id+"_Privacy" in request.REQUEST)
 				com.save()
 				return HttpResponse("Comment "+str(com.content)+" saved.")
@@ -187,9 +193,9 @@ def display_course(request, course_id):
 			else:
 				teachers[teacher].course_comment = cc[0].content
 				teachers[teacher].course_comment_privacy = int(cc[0].privacy)
-			# currently, we have no algorithm to predict ratings, so the predictions are all 0:
+			# currently, the predictions are just average ratings:
 			# note that predictions are displayed as % of 5 stars, so we must convert our 0-1 floats to 20-100%
-			teachers[teacher].rating = 0
+			teachers[teacher].rating = int(80.0 * predict_teaching_rating(user, p, teachers[teacher])) + 20
 		#The template will need the current user, the facebook_app_id, the course being rated, and the set of teachers for that course (with added info above)
 		pass_to_template = {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'course':p}
 		pass_to_template['teachers'] = teachers
@@ -201,7 +207,7 @@ def display_course(request, course_id):
 			pass_to_template['User_Overall_Rating']=int(over_rat[0].value*4.0 + 1.1)
 		# Any Grading Rating previously input by the user must be passed to the template
 		grad_rat = Grading_Rating.objects.filter(user=user, course=p)
-		if len(over_rat) == 0:
+		if len(grad_rat) == 0:
 			pass_to_template['User_Grading_Rating']=0
 		else:
 			pass_to_template['User_Grading_Rating']=int(grad_rat[0].value*4.0 + 1.1)
@@ -225,17 +231,46 @@ def display_course(request, course_id):
 			pass_to_template['Grade'] = 0
 		else:
 			pass_to_template['Grade'] = grade[0].grade + 1
-		# currently, we have no algorithm to predict ratings, so the predictions are 0:
+		# currently, the predictions are just average ratings:
 		# note that predictions are displayed as % of 5 stars, so we must convert our 0-1 floats to 20-100%
-		pass_to_template['Overall_Rating'] = 0
-		pass_to_template['Grading_Rating'] = 0
+		pass_to_template['Overall_Rating'] = int(80.0 * predict_overall_rating(user, p)) + 20
+		pass_to_template['Grading_Rating'] = int(80.0 * predict_grading_rating(user, p)) + 20
 		return render_to_response('facebook_app/display_course.html', pass_to_template)
 	else:
 		return HttpResponse("You do not attend this institution.")
 
 def attends_institution(user, institution):
-	#TODO: make this method return whether the given user attends the given institution.
+	#TODO: make this function return whether the given user attends the given institution.
 	return True
+
+def is_friends(user1, user2):
+	#TODO: make this function return whether the input users are friends.
+	return False #by default, we're not going to expose an overabundence of information.
+
+def predict_overall_rating(user, course):
+	#TODO: implement anything better than just an average of existing rating predicitons.
+	overall_ratings = Overall_Rating.objects.filter(course=course)
+	if len(overall_ratings) == 0:
+		return -0.25
+	return sum(map(lambda x:x.value, overall_ratings))/float(len(overall_ratings))
+
+
+def predict_grading_rating(user, course):
+	#TODO: implement anything better than just an average of existing rating predicitons.
+	grading_ratings = Grading_Rating.objects.filter(course=course)
+	if len(grading_ratings)==0:
+		return -0.25
+	return sum(map(lambda x:x.value, grading_ratings))/float(len(grading_ratings))
+
+
+def predict_teaching_rating(user, course, teacher):
+	#TODO: implement anything better than just an average of existing rating predicitons.
+	teaching_ratings = Teaching_Rating.objects.filter(course=course, teacher=teacher)
+	if len(teaching_ratings)==0:
+		return -0.25
+	return sum(map(lambda x:x.value, teaching_ratings))/float(len(teaching_ratings))
+
+
 
 def get_current_user(request):
 	user = None
