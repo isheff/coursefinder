@@ -33,8 +33,9 @@ def populate_caltech_courses(request):
 
 	terms=['FA','WI','SP']
 	years = ['2007-08','2008-09','2009-10','2010-11']
-	for term in terms:
-		for year in years:
+	
+	for year in years:
+		for term in terms:
 			# Import the catalog webpage
 			data = urlopen('http://regis.caltech.edu/schedules/'+term+year+'.html')
 			# Parse the contents
@@ -107,21 +108,32 @@ def populate_caltech_courses(request):
 			#coursedict[name].description = ""
 			coursedict[name].institution = caltech
 			coursedict[name].department = map(lambda s: str(s.split()[0]), course_numb_out[course].split("/"))
-                        # get the course_description-------------------------------------------------------
-			course_dept_lower = [ w.lower() for w in map(lambda s: str(s.split()[0]), course_numb_out[course].split("/"))]
-			for dept in range(len(course_dept_lower)):
-                                data_des = urlopen('http://catalog.caltech.edu/courses/listing/'+course_dept_lower[dept]+'.html')
-                                soup_des0 = BeautifulSoup.BeautifulStoneSoup(data_des)
-                                soup_des1 = BeautifulSoup.BeautifulStoneSoup(str(soup_des0.findAll("p", {"class":"course"})))
-                                target_course = soup_des1.find(text=re.compile(str( course_name_out[course].strip() ) ))
-                                course_description = target_course.findNext('span').string + target_course.findNext('span').findNext('span').string
-                                course_description = course_description[:250]+" ..."                                                        
-                                
-                                if course_description.find('For course description')<0:
-                                        break
-                        coursedict[name].description = course_description
-                        #--------------------------------------------------------------------------------
+			# get the course_description-------------------------------------------------------
+			course_dept_lower = [ w.lower() for w in coursedict[name].department]
+			for dept in course_dept_lower:
+				data_des = urlopen('http://catalog.caltech.edu/courses/listing/'+dept+'.html')
+				soup_des0 = BeautifulSoup.BeautifulStoneSoup(data_des)
+				soup_des1 = BeautifulSoup.BeautifulStoneSoup(str(soup_des0.findAll("p", {"class":"course"})))
+				target_course = soup_des1.find(text=re.compile(str( course_name_out[course].strip() ) ))
+                                if target_course:
+                                        course_description_units = target_course.findNext('span')
+                                        if course_description_units:
+                                                course_description_contents = target_course.findNext('span').findNext('span')
+
+                                                if course_description_units:
+                                                        course_description1=course_description_units.string
+                                                        if course_description_contents:
+                                                                course_description1 = course_description1 + course_description_contents.string
+                                else:
+                                        course_description1=""
+                                course_description1 = course_description1[:250]+" ..."       
+				                                                        
+				if course_description1.find('For course description')<0:
+						break
+			coursedict[name].description = course_description1
+			#--------------------------------------------------------------------------------
 			teacher_names = map(lambda s: s.strip(), course_prof_out[course].split("/"))
+                        coursedict[name].teacher = teacher_names
 			coursedict[name].teacher_ids = []
 			for teacher_name in teacher_names:
 				teacher = Facebook_User.objects.filter(name=teacher_name)
@@ -135,8 +147,11 @@ def populate_caltech_courses(request):
 			coursedict[name].save()
 		
 		return " Success, I think. I got "+str(len(coursedict))+" courses."
-			
-			
-	
-	
+#================================================================================================
 
+def populate_url(request):
+	all_course = Course.objects.all()
+	for each_course in all_course:
+		each_course.url = '/course/'+str(each_course.id)
+		each_course.save()
+	return "url is added"

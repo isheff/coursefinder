@@ -86,6 +86,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'dbindexer.middleware.DBIndexerMiddleware'
 )
 
 
@@ -94,8 +95,21 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.request',
 )
-
-
+# dbindexer for searching
+DBINDEXER_SITECONF = 'dbindexes'
+DBINDEXER_BACKENDS = (
+    'dbindexer.backends.BaseResolver',
+    'dbindexer.backends.InMemoryJOINResolver',
+)
+DATABASES = {
+    'default': {
+        'ENGINE': 'dbindexer',
+        'TARGET': 'gae',
+    },
+    'gae': {
+        'ENGINE': 'djangoappengine.db',
+    },
+}
 
 # This test runner captures stdout and associates tracebacks with their
 # corresponding output. Helps a lot with print-debugging.
@@ -125,6 +139,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'djangotoolbox',
     'djangoappengine',
+    'dbindexer'
 )
 
 # A sample logging configuration. The only tangible logging

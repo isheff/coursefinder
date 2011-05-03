@@ -1,17 +1,41 @@
 // When the DOM is ready....
-function moonStarStars(ratingname)
+
+/*
+ This function generates a form containing a row of images (each 25x25), which when deselected are
+ emptyImage, and selected are fullImage. Under each image is an entry of optionNames, and the first 
+ defaultValue of them are selected. When a user makes a selection (some number of the images), the 
+ number of images the user selects is sent to "submit/" as Rating_Value, and ratingname is sent as 
+ Rating_Name. This is asynchronous. 
+ 
+ This is based upon the 5-star rating code, and expanded to be used for the Hours and Grade input 
+ as well.
+ */
+function moonStars(ratingname, defaultValue, emptyImage, fullImage, optionNames)
 {
 	
 	
-	
-	document.write("<form name=\""+ratingname+"form\">");
-	for(count=1; count<=5; count=count+1)
+	//Generate the actual form of images
+	document.write("<form name=\""+ratingname+"form\" class=\"Rating_item\" >");
+	for(count=1; count< optionNames.length+1; count=count+1)
 	{
-		document.write("<input type=\"radio\" name=\""+ratingname+"buttons\" value=\""+count+"\" />");
+		document.write("<input type=\"radio\" name=\""+ratingname+"buttons\" value=\""+(count)+"\" ");
+		if (defaultValue == count)
+		{
+			document.write("checked=\"True\"")
+		}
+		document.write("/>");
 	}
-	document.write("</form>");
+	document.write("</form><table cellspacing=\"0\"  class=\"Rating_item\"><tr>");
+	//generate the table of image labels
+	for(count=1; count< optionNames.length+1; count=count+1)
+	{
+		document.write("<td width=\"25\" style=\" text-align: center; padding: 0; border: 0; margin: 0;\">")
+		document.write(optionNames[count-1])
+		document.write("</td>")
+	}
+	document.write("</tr></table>")
 	
-	
+	//add the async function that colors and submits the image form
 	window.addEvent("domready",function() {  
 					
 		MooStarRatingImages.defaultImageFolder = '/media/'; //Default images folder definition. You will use your own  
@@ -22,20 +46,20 @@ function moonStarStars(ratingname)
 		   form: ratingname+'form', //Form name   
 		   radios: ratingname+'buttons', //Radios name  
 		   half: false, //if you need half star rating just make this true  
-		   imageEmpty: 'star_x_gray.png', //Default images are in definition. You will use your own  
-		   imageFull:  'star_x_gold.png',  
+		   imageEmpty: emptyImage, //Default images are in definition. You will use your own  
+		   imageFull:  fullImage,  
 		   imageHover: null,   
 		   width: 25,
 		   height: 25,   
-		   tip: 'Rate <i>[VALUE] / 5</i>', //Mouse rollover tip  
+		   tip: ' <i>[VALUE] / '+optionNames.length+'</i>', //Mouse rollover tip  
 		   tipTarget: $('htmlTip'), //Tip element  
 		   tipTargetType: 'html', //Tip type is HTML   
 		   
-		   // Send ajax request to server to save rating using "rating.php"  
+		   // Send ajax request to server to save rating 
 		   onClick: function(value) {  
 		   
 		   var requestHTMLData = new Request({  
-			 url: 'rating.php',  
+			 url: 'submit/',  
 			 data: {Rating_Value: value, Rating_Name: ratingname}  
 			 });  
 		   requestHTMLData.send();  
@@ -46,125 +70,110 @@ function moonStarStars(ratingname)
 }
 
 /*
+ This is a shortcut to use moonStars to create a simple 5-star rating that submits under the name ratingname, 
+ with some default value (between 1 and 5, or no default)
+ */
+function moonStarStars(ratingname, defaultValue)
+{
+	moonStars(ratingname, defaultValue, 'star_x_gray.png', 'star_x_gold.png', ["","","","",""])
+}
 
 
-// When the DOM is ready....  
-  window.addEvent("domready",function() {  
-    
-  MooStarRatingImages.defaultImageFolder = '/media/'; //Default images folder definition. You will use your own  
-     
-   // Create our instance  
-   // Advanced options  
-   var advancedRating = new MooStarRating({  
-    form: 'Overall_Ratingsform', //Form name   
-    radios: 'Overall_Rating', //Radios name  
-    half: false, //if you need half star rating just make this true  
-    imageEmpty: 'star_x_gray.png', //Default images are in definition. You will use your own  
-    imageFull:  'star_x_gold.png',  
-    imageHover: null,   
-    width: 25,
-    height: 25,   
-    tip: 'Rate <i>[VALUE] / 5</i>', //Mouse rollover tip  
-    tipTarget: $('htmlTip'), //Tip element  
-    tipTargetType: 'html', //Tip type is HTML   
-      
-    // Send ajax request to server to save rating using "rating.php"  
-    onClick: function(value) {  
-            
-     var requestHTMLData = new Request({  
-     url: 'rating.php',  
-     data: {Overall_Rating: value}  
-     });  
-     requestHTMLData.send();  
-     }  
-     });          
-     
-  });  
- //============================================================================= 
-  window.addEvent("domready",function() {  
-    
-  MooStarRatingImages.defaultImageFolder = '/media/';
-     var advancedRating = new MooStarRating({  
-    form: 'Content_Ratingsform', //Form name   
-    radios: 'Content_Rating', //Radios name  
-    half: false, //if you need half star rating just make this true  
-    imageEmpty: 'star_x_gray.png', //Default images are in definition. You will use your own  
-    imageFull:  'star_x_gold.png',  
-    imageHover: null,   
-    width: 25,
-    height: 25,   
-    tip: 'Rate <i>[VALUE] / 5</i>', //Mouse rollover tip  
-    tipTarget: $('htmlTip'), //Tip element  
-    tipTargetType: 'html', //Tip type is HTML   
-      
-    // Send ajax request to server to save rating using "rating.php"  
-    onClick: function(value) {  
-            
-     var requestHTMLData = new Request({  
-     url: 'rating.php',  
-     data: {Content_Rating: value}  
-     });  
-     requestHTMLData.send();  
-     }  
-     });          
-     
-  });  
- //=============================================================================
-  window.addEvent("domready",function() {  
-    
-  MooStarRatingImages.defaultImageFolder = '/media/';
-    var advancedRating = new MooStarRating({  
-    form: 'Teaching_Ratingsform', //Form name   
-    radios: 'Teaching_Rating', //Radios name  
-    half: false, //if you need half star rating just make this true  
-    imageEmpty: 'star_x_gray.png', //Default images are in definition. You will use your own  
-    imageFull:  'star_x_gold.png',  
-    imageHover: null,   
-    width: 25,
-    height: 25,   
-    tip: 'Rate <i>[VALUE] / 5</i>', //Mouse rollover tip  
-    tipTarget: $('htmlTip'), //Tip element  
-    tipTargetType: 'html', //Tip type is HTML   
-      
-    // Send ajax request to server to save rating using "rating.php"  
-    onClick: function(value) {  
-            
-     var requestHTMLData = new Request({  
-     url: 'rating.php',  
-     data: {Teaching_Rating: value}  
-     });  
-     requestHTMLData.send();  
-     }  
-     });          
-     
-  });      
-  //============================================================================
-  window.addEvent("domready",function() {  
-    
-  MooStarRatingImages.defaultImageFolder = '/media/';
-     var advancedRating = new MooStarRating({  
-    form: 'Grading_Ratingsform', //Form name   
-    radios: 'Grading_Rating', //Radios name  
-    half: false, //if you need half star rating just make this true  
-    imageEmpty: 'star_x_gray.png', //Default images are in definition. You will use your own  
-    imageFull:  'star_x_gold.png',  
-    imageHover: null,   
-    width: 25,
-    height: 25,   
-    tip: 'Rate <i>[VALUE] / 5</i>', //Mouse rollover tip  
-    tipTarget: $('htmlTip'), //Tip element  
-    tipTargetType: 'html', //Tip type is HTML   
-      
-    // Send ajax request to server to save rating using "rating.php"  
-    onClick: function(value) {  
-            
-     var requestHTMLData = new Request({  
-     url: 'rating.php',  
-     data: {Grading_Rating: value}  
-     });  
-     requestHTMLData.send();  
-     }  
-     });          
-     
-  });       
-*/
+// Hides the loading div, and shows the el div for
+// a period of four seconds.
+var showHide = function( el, effects ){
+	effects.loading.set(0);
+	(effects[ el ]).start(0,1);
+	(function(){ (effects[ el ]).start(1,0); }).delay( 4000 );
+}
+
+/*
+ Given the id of a form, and the id of its submit button, this function will submit the form asynchronously
+ when the submit button is clicked. It will decrease the opacity (make visible) of the element with id loadingDivId when the 
+ form is being submitted, and then hide it again when the form is done. Depending on whether the server responded
+ or threw an error, the form will then decrease the opacity (make visible) the element with the id 
+ successDivId or failDivId for 3 seconds
+ */
+function mooForm(formId, submitId, loadingDivId, successDivId, failDivId)
+{
+	var effects = {
+		'loading': new Fx.Tween( loadingDivId, {property:'opacity', duration:200 } ),
+		'success': new Fx.Tween( successDivId, {property:'opacity', duration:200 } ),
+		'fail': new Fx.Tween( failDivId, {property:'opacity', duration:200 } )
+	};
+	
+	
+	$(formId).set('send', {url:'submit.php', method:'POST'});
+	// Listen for click events on the submit button.
+	$(submitId).addEvent( 'click', function(evt){
+						 // Stops the submission of the form.
+						 new Event(evt).stop();
+						 
+						 
+						 ( new Request({ 
+									   url: $(formId).action, 
+									   data:document.id(formId), 
+									   method: 'post', 
+									   onRequest: function(){
+									   // Show loading div.
+									   effects.loading.start( 1,0 );
+									   }.bind(this),
+									   onSuccess: function(){
+									   // Hide loading and show success for 3 seconds.
+									   showHide( 'success', effects );
+									   }.bind(this),
+									   onFailure: function(){
+									   // Hide loading and show fail for 3 seconds.
+									   showHide( 'fail', effects );
+									   }.bind(this)
+									   }) 
+						  ).send() 
+						 } );
+}
+
+/*
+ Call this function instead of drawing a submit button on a form. It will use its own submit button (the blue rectangular image one)
+ and rig the form to submit asyncronously using mooForm. While loading, a loading symbol will appear next to the submit button, followed
+ by a check mark for success or an x for failure, which disappear after 3 seconds. 
+ */
+function mooSubmit(formId)
+{
+	document.write("<span>");
+	document.write("<input type=\"image\" src=\"/media/submit_button.png\" height=\"25\" width=\"60\" id=\""+formId+"_submit\" value=\"submit\" />");
+	document.write("<span id=\"response\" class=\"response\" style=\"position: relative; left: 5px; top: 0; padding: 5px; \">");
+	document.write("<img width=\"16\" height=\"16\" src=\"/media/ajax-loader.gif\" id=\""+formId+"_loading\" class=\"loading\" style=\"position: relative; top: 0; left: 0; position:absolute; visibility:hidden; \"/>");
+	document.write("<img width=\"16\" height=\"16\" src=\"/media/35px-Green_tick.svg.png\" id=\""+formId+"_success\" class=\"success\" style=\"position: absolute; top: 0; left: 0; position:absolute; visibility:hidden; \"/>");
+	document.write("<img width=\"16\" height=\"16\" src=\"/media/35px-Red_x.svg.png\" id=\""+formId+"_failure\" class=\"failure\" style=\"position: absolute; top: 0; left: 0; position:absolute; visibility:hidden; \"/>");
+	document.write("</span>");
+	document.write("</span>");
+	mooForm(formId, formId+"_submit", formId+"_loading", formId+"_success", formId+"_failure");
+}
+
+/*
+ This function uses mooSubmit to build a 750 wide comment submission form. It titles the comment commentName, 
+ fills the comment value with defaultValue, the privacy checkbox with defaultPrivacy. The form will have id 
+ commentId, with the textarea input commentId+"_Text" and the privacy box commentId+"_Privacy." The form submits
+ to "submit/" asynchronously. It requires the existence fo the CSS class Rating_item.
+ */
+function mooComment(commentId, commentName, defaultValue, defaultPrivacy)
+{
+	document.write("<form id=\""+commentId+"\" action=\"submit/\" method=\"POST\"  class=\"Rating_item\" >");
+	document.write(commentName);
+	document.write("<br />");
+	document.write("<textarea   title=\"Write a comment...\" name=\""+commentId+"_Text\" style=\"height: 50px; width: 750px;\">");
+	document.write(defaultValue);
+	document.write("</textarea>");
+	document.write("<table><tr><td width=\"200\">");
+	mooSubmit(commentId);
+	document.write("</td><td>");
+	document.write("<input type=\"checkbox\" name=\""+commentId+"_Privacy\" ");
+	if (defaultPrivacy)
+	{
+		document.write("checked=\"True\"");
+	}
+	document.write("/>");
+	document.write("Public Comment");
+	document.write("</td></table></form><br />");
+}
+
+

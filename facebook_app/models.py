@@ -62,7 +62,7 @@ class Course(DateStamped):
 	institution = models.ForeignKey('Institution', related_name="Courses_Institution")	# the institution offering this course
 	url = models.URLField(verify_exists=True, max_length=255, blank=True, default="")	# a url for this course. (optional)
 	department = ListField(models.CharField(max_length=100))							# a list of this course's departments. 
-																						#	Not sure if this is the best way to store this
+	teacher = ListField(models.CharField(max_length=200))																					#	Not sure if this is the best way to store this
 	teacher_ids = ListField(models.IntegerField())										# a list of ids of teacher models teaching this course
 	
 	def __unicode__(self):
@@ -177,7 +177,7 @@ class Grade(User_Course_Interaction):
 	"""
 	This is a model for recording the grade a user got in a course
 	"""
-	grade = models.IntegerField()	# The grade a user got in a course 0=F, 1=D, 2=C, 3=B, 4=F
+	grade = models.IntegerField()	# The grade a user got in a course 0=F, 1=D, 2=C, 3=B, 4=A
 	
 	def __unicode__(self):
 		"""
