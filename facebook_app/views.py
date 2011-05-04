@@ -261,7 +261,7 @@ def get_current_user(request):
         
         
         # FOR OFF-GOOGLE TESTING ONLY***************
-        #return get_object_or_404(Facebook_User, name="Isaac")
+        return get_object_or_404(Facebook_User, name="Isaac")
         # FOR OFF-GOOGLE TESTING ONLY***************
         
         
@@ -289,8 +289,10 @@ def radar_chart(request,user_key_name):
     user=get_current_user(request) # the user presently logged in
     user_key_name = user.key_name
     user_name = user.name
-    user_current = Rating.user.filter(name=user_name)
-    user_dept = user_current.course.department
+    user_current = Overall_Rating.objects.filter(user=user)
+    user_dept=[]
+    for i in range(len(user_current)):
+	    user_dept.append(user_current[i].course.department)
     #--------------------------------------------------------------------------
     # 1. convert dept list to value&name lists
     [course_taken_fullname,course_taken_value]=course_value_convert(user_dept)        
@@ -305,11 +307,11 @@ def radar_chart(request,user_key_name):
 		    course_value_label.insert(i,str(i))
 	    else:
 		    course_value_label.insert(i,'')
-	    course[0]=''
+	    course_value_label[0]=''
 
     #--------------------------------------------------------------------------
     chart = pyofc2.open_flash_chart() 
-    chart.title = pyofc2.title(text=user.name+' course-map')
+    chart.title = pyofc2.title(text=user.name+"'s  course-map")
     chart.title.style =("{font-size:20px; color : #B0BFBA;}")   # title colour
     area = pyofc2.area_hollow()
     area.width = 1
