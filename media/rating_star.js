@@ -51,7 +51,7 @@ function moonStars(ratingname, defaultValue, emptyImage, fullImage, optionNames)
 		   imageHover: null,   
 		   width: 25,
 		   height: 25,   
-		   tip: ' <i>[VALUE] / '+optionNames.length+'</i>', //Mouse rollover tip  
+		   tip: '[VALUE] / '+optionNames.length, //Mouse rollover tip  
 		   tipTarget: $('htmlTip'), //Tip element  
 		   tipTargetType: 'html', //Tip type is HTML   
 		   
@@ -150,7 +150,7 @@ function mooSubmit(formId)
 }
 
 /*
- This function uses mooSubmit to build a 750 wide comment submission form. It titles the comment commentName, 
+ This function uses mooSubmit to build a 480 wide comment submission form. It titles the comment commentName, 
  fills the comment value with defaultValue, the privacy checkbox with defaultPrivacy. The form will have id 
  commentId, with the textarea input commentId+"_Text" and the privacy box commentId+"_Privacy." The form submits
  to "submit/" asynchronously. It requires the existence fo the CSS class Rating_item.
@@ -160,7 +160,7 @@ function mooComment(commentId, commentName, defaultValue, defaultPrivacy)
 	document.write("<form id=\""+commentId+"\" action=\"submit/\" method=\"POST\"  class=\"Rating_item\" >");
 	document.write(commentName);
 	document.write("<br />");
-	document.write("<textarea   title=\"Write a comment...\" name=\""+commentId+"_Text\" style=\"height: 50px; width: 750px;\">");
+	document.write("<textarea   title=\"Write a comment...\" name=\""+commentId+"_Text\" style=\"height: 50px; width: 480px;\">");
 	document.write(defaultValue);
 	document.write("</textarea>");
 	document.write("<table><tr><td width=\"200\">");
