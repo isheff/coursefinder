@@ -12,7 +12,7 @@ urlpatterns = patterns('facebook_app.views',
 
 # the chart data views
 urlpatterns += patterns('facebook_app.views',
-    (r'^data/(?P<user_id>\d+)/$','radar_chart'),
+    (r'^data/(?P<user_key_name>\d+)/$','radar_chart'),
 )
 # the front page
 urlpatterns += patterns('django.views.generic.simple',

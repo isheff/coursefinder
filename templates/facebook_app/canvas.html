@@ -9,7 +9,7 @@
     	swfobject.embedSWF(
     	  "/media/open-flash-chart.swf", "course_map",
     	  "250", "250", "9.0.0", "/media/expressInstall.swf",
-	  {"data-file":"/data/"{{current_user.id|escape}}} );
+	  {"data-file":"/data/{{current_user.key_name|escape}}" });
   </script>
 <style type="text/css">
 <!--
@@ -51,6 +51,7 @@ padding-left: 6px;
 padding-bottom: 6px;
 color: #515151;
 text-decoration:none;
+font-family:Verdana, Arial, Helvetica, sans-serif;
 }
 .c1:hover {
 	font-size: 10pt;
@@ -64,6 +65,7 @@ text-decoration:none;
 	padding-bottom: 6px;
 	color: #515151;
 	text-decoration:none;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
 }
 -->
 </style>
@@ -107,7 +109,7 @@ FB.Canvas.setSize(obj);
   <tr>
     <td height="10"  colspan="2"><table width="500" border="0" cellpadding="2">
       <tr>
-        <td>coming soon...22 </td>
+        <td>coming soon</td>
       </tr>
       <tr>
         <td>&nbsp;</td>
@@ -225,8 +227,9 @@ FB.Canvas.setSize(obj);
 	<ul style="list-style-type:none;">
 	{% for course in results %}
 		<li margin-top:2em; margin-bottom:2em><a class="c1" href="{{course.url}}">
-			{% for dept in course.department|join:"/"  %}{{dept|escape}}&nbsp;{% endfor %}{{course.numb|escape}}&nbsp;{{course.name|escape}}
-		</a></li><li>&nbsp;</li>{% endfor %}
+			{% for dept in course.department|join:"/"  %}{{dept|escape}}{% endfor %}{{course.numb|escape}}&nbsp;{{course.name|escape}}
+		</a></li>
+		<li>&nbsp;</li>{% endfor %}
 	</ul>
 	{% endif %}	</td>
   </tr>
@@ -242,7 +245,9 @@ FB.Canvas.setSize(obj);
   <tr>
     <td colspan="0"><table width="300" border="0" cellpadding="0">
       <tr>
-        <td width="200" height="200" ><div class="chart" id="course_map"></div></td>
+        <td width="200" height="200" >
+		<div class="chart" id="course_map"></div>
+		</td>
         <td></td>
       </tr>
     </table></td>

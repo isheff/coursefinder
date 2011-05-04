@@ -33,8 +33,8 @@ def canvas(request):
                
         elif query_dept:
                 results= Course.objects.filter(department=query_dept)
-                #if query_numb:
-                #        results = results.filter(name__icontains=query_numb)
+                if query_numb:
+                        results = results.filter(name__icontains=str(query_numb))
         #elif query_prof:
         #        results= Course.objects.filter(teacher__icontains=query_prof)
         else:
@@ -285,10 +285,11 @@ def get_current_user(request):
 
 # radar chart for course-map
 
-def radar_chart(request,user_id):
+def radar_chart(request,user_key_name):
     user=get_current_user(request) # the user presently logged in
-    user_id = user.id
-    user_current = Rating.objects.filter(name=user.name)
+    user_key_name = user.key_name
+    user_name = user.name
+    user_current = Rating.user.filter(name=user_name)
     user_dept = user_current.course.department
     #--------------------------------------------------------------------------
     # 1. convert dept list to value&name lists
