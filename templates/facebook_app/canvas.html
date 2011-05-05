@@ -3,7 +3,12 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Facebook Example</title>
+
+    	<script src="/media/prototype.js" type="text/javascript"></script>
+	<script src="/media/jquery-1.2.6.min.js" type="text/javascript"></script>
 	
+
+
 	<script type="text/javascript" src="/media/swfobject.js"></script>
     <script type="text/javascript">
     	swfobject.embedSWF(
@@ -11,6 +16,26 @@
     	  "320", "320", "9.0.0", "/media/expressInstall.swf",
 	  {"data-file":"/data/{{current_user.key_name|escape}}" });
   </script>
+  <script type="text/javascript">
+	  OFC={};
+	OFC.jquery={
+		name:"jQuery",
+     		version: function(src){return$('#'+src)[0].get_version()},
+		rasterize:function(src,dst){ $('#'+ dst).replaceWith(OFC.jquery.image(src)) },
+		image: function(src) { return "<img src='data:image/png;base64," + $('#'+src)[0].get_img_binary() + "' />"},
+		popup: function(src) {
+			        var img_win = window.open('', 'Charts: Export as Image')
+					        with(img_win.document) {
+							            write('<html><head><title>Charts: Export as Image<\/title><\/head><body>' + OFC.jquery.image(src) + '<\/body><\/html>') }
+						// stop the 'loading...' message
+						img_win.document.close();
+						     }
+	}
+
+	if (typeof(Control == "undefined")) {var Control = {OFC: OFC.jquery}}
+	function save_image() { OFC.jquery.popup('course_map') }
+</script>
+
 <style type="text/css">
 <!--
 .Course_detail {
@@ -83,7 +108,7 @@ FB.Canvas.setSize(obj);
 	
 	
   </head>
-  <body>
+  <body onload="framesetsize(500,1500)">
   <div id="fb-root"></div> <!--this div is required by the Javascript SDK-->
 <div style="height: 2000px">
   <table width="510" border="0"  cellpadding="0">

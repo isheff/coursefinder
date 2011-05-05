@@ -62,7 +62,9 @@ class Course(DateStamped):
 	institution = models.ForeignKey('Institution', related_name="Courses_Institution")	# the institution offering this course
 	url = models.URLField(verify_exists=True, max_length=255, blank=True, default="")	# a url for this course. (optional)
 	department = ListField(models.CharField(max_length=100))							# a list of this course's departments. 
-	teacher = ListField(models.CharField(max_length=200))																					#	Not sure if this is the best way to store this
+	teacher = ListField(models.CharField(max_length=200))
+	teacher_lastname=ListField(models.CharField(max_length=(200)))
+	#	Not sure if this is the best way to store this
 	teacher_ids = ListField(models.IntegerField())										# a list of ids of teacher models teaching this course
 	
 	def __unicode__(self):

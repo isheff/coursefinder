@@ -135,6 +135,10 @@ def populate_caltech_courses(request):
 			teacher_names = map(lambda s: s.strip(), course_prof_out[course].split("/"))
                         coursedict[name].teacher = teacher_names
 			coursedict[name].teacher_ids = []
+			# teacher's last name
+			coursedict[name].teacher_lastname=[]
+			for teacher_name in teacher_names:
+				coursedict[name].teacher_lastname.append(teacher_name[:-3])
 			for teacher_name in teacher_names:
 				teacher = Facebook_User.objects.filter(name=teacher_name)
 				if len(teacher) == 0:
