@@ -97,25 +97,26 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 					<table width="510" border="0" cellpadding="0">
 						<tr>
 							<td>
-								<a href="http://apps.facebook.com/coursefinder/?ref=bookmarks"><img src="/media/Caltech_namecopy.png" alt="Caltech_name" width="350" height="100" border="0" /></a> </td>
+								<a href="http://apps.facebook.com/coursefinder"><img src="/media/Caltech_namecopy.png" alt="Caltech_name" width="350" height="100" border="0" /></a> </td>
 							<td>
 								<img src="/media/Caltech_logo.png" alt="Caltech_logo" width="100" height="100" />							</td>
 						</tr>
 					</table>				</td>
 			</tr>
 			<tr>
-			  <td height="40">&nbsp;</td>
+			  <td height="40"><a href="http://apps.facebook.com/coursefinder"><img src=/media/searchback.png" border="0"  /></a></td>
 		  </tr>
 			<tr>
 				<td height="40"><table width="500" border="0" cellpadding="0" style="border:1px #3B5998  solid">
                   <tr>
                     <td width="100" rowspan="2"><table width="88" border="0" cellpadding="0">
                       <tr>
-                        <td width="90" height="88"  style="border:1px gray  solid"><span class="Course_detail"><img src="/media/dept/{{course.department|first}}.png" alt="course_tmp" width="85" height="85" /></span></td>
+                        <td width="90" height="88"  style="border:1px gray  solid"><span class="Course_detail"><img src="/media/dept/{{course.department|first}}.png" alt="course_tmp" width="85" height="85" align="absmiddle" /></span></td>
                       </tr>
                     </table></td>
                     <td width="15" rowspan="3">&nbsp;</td>
-                    <td colspan="2"><span class="Course_title">{% for department in course.department %} {{department}} {% endfor %} {{ course.name }}</span></td>
+                    {% for department in course.department %}<td><span class="Course_title"> {{department}}  </span></td>{% endfor %}
+                    <td><span class="Course_title">{{ course.name }}</span></td>
                   </tr>
                   <tr>
                     <td colspan="2"><span class="Course_detail">{{course.description}}</span></td>
@@ -125,13 +126,11 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
                     <td width="90"><span class="Course_instructor">Instructors:</span></td>
                     {% for teacher in teachers %}
 					<td width="278"><span class="Course_instructor">{{ teacher.title }} {{ teacher.name }} </span></td>
-					{% endfor %}
-                  </tr>
+					{% endfor %}                  </tr>
                 </table></td>
 			</tr>
 			<tr>
-				<td>
-					</td>
+				<td>					</td>
 			</tr>
 			<tr>
 				<td height="10">&nbsp;				</td>
@@ -208,17 +207,9 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 						</tr>
 				  </table>				</td>
 			</tr>
-			<tr><td height="15">&nbsp;</td></tr>
 			<tr>
-				<td>
-					<div style="width: 510px; background-color: #EDEFF4;">
-						<script type="text/javascript">
-							mooComment("Course_Comment", "Course Comment", "{{Course_Comment}}", {{Course_Comment_Privacy}});
-							{% for teacher in teachers %}
-								mooComment("Teacher_{{ teacher.id }}_Comment", "Instructor Comment: {{teacher.title}} {{teacher.name}}", "{{teacher.course_comment}}", {{teacher.course_comment_privacy}});
-							{% endfor %}
-						</script>
-						<p  class="Rating_item">
+			  <td height="15">
+			  <p  class="Rating_item">
 							Number of hours spent/ week on this class (at least):						</p>
 						<script type="text/javascript">
 							moonStars("Hours", {{Hours}}, "clock_grey.png", "clock.png", [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
@@ -228,6 +219,19 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 						<script type="text/javascript">
 							moonStars("Grade", {{Grade}}, "25px-grey-check.png", "25px-green-check.png", ["F", "D", "C", "B", "A"]);
 						</script>
+			  </td>
+		  </tr>
+			<tr><td height="15">&nbsp;</td></tr>
+			<tr>
+				<td>
+					<div style="width: 510px; background-color: #EDEFF4;">
+						<script type="text/javascript">
+							mooComment("Course_Comment", "Course Comment [optional]", "{{Course_Comment}}", {{Course_Comment_Privacy}});
+							{% for teacher in teachers %}
+								mooComment("Teacher_{{ teacher.id }}_Comment", "Instructor Comment: {{teacher.title}} {{teacher.name}} [optional]", "{{teacher.course_comment}}", {{teacher.course_comment_privacy}});
+							{% endfor %}
+						</script>
+						
 					</div>				</td>
 			</tr>
 			<tr>
@@ -284,7 +288,7 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 				<td height="10">&nbsp;				</td>
 			</tr>
 			<tr>
-				<td height="10">&nbsp;				</td>
+				<td height="10"><a href="http://apps.facebook.com/coursefinder"><img src=/media/searchback.png" border="0"  /></a></td>
 			</tr>
 			<tr>
 				<td height="10">&nbsp;				</td>

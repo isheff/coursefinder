@@ -34,9 +34,9 @@ def canvas(request):
         elif query_dept:
                 results= Course.objects.filter(department=query_dept)
                 if query_numb:
-                        results = results.filter(name__icontains=str(query_numb))
-        #elif query_prof:
-        #        results= Course.objects.filter(teacher__icontains=query_prof)
+                        results = Course.objects.filter(department=query_dept).filter(name__icontains=str(query_numb))
+        elif query_prof:
+                results= Course.objects.filter(teacher_lastname=query_prof.capitalize())
         else:
                 results = []
 
@@ -299,7 +299,7 @@ def radar_chart(request,user_key_name):
     # 2. max courses have taken in one dept
     course_value_max=round(max(course_taken_value))
     if course_value_max %2!=0: course_value_max += course_value_max
-    if course_value_max <8: course_value_max = 8
+    if course_value_max <6: course_value_max = 6
     # 3. make labels
     course_value_label = []
     for i in range(course_value_max):
