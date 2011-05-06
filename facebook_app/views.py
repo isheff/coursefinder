@@ -235,6 +235,10 @@ def display_course(request, course_id):
 		# note that predictions are displayed as % of 5 stars, so we must convert our 0-1 floats to 20-100%
 		pass_to_template['Overall_Rating'] = int(80.0 * predict_overall_rating(user, p)) + 20
 		pass_to_template['Grading_Rating'] = int(80.0 * predict_grading_rating(user, p)) + 20
+		
+		#now, we must input all the comments made by other users, to be displayed.
+		friends_comments = 
+		
 		return render_to_response('facebook_app/display_course.html', pass_to_template)
 	else:
 		return HttpResponse("You do not attend this institution.")
@@ -251,7 +255,7 @@ def predict_overall_rating(user, course):
 	#TODO: implement anything better than just an average of existing rating predicitons.
 	overall_ratings = Overall_Rating.objects.filter(course=course)
 	if len(overall_ratings) == 0:
-		return -0.25
+		return -0.25 # the "-1 star" rating that represents no avaliable data
 	return sum(map(lambda x:x.value, overall_ratings))/float(len(overall_ratings))
 
 
@@ -259,7 +263,7 @@ def predict_grading_rating(user, course):
 	#TODO: implement anything better than just an average of existing rating predicitons.
 	grading_ratings = Grading_Rating.objects.filter(course=course)
 	if len(grading_ratings)==0:
-		return -0.25
+		return -0.25 # the "-1 star" rating that represents no avaliable data
 	return sum(map(lambda x:x.value, grading_ratings))/float(len(grading_ratings))
 
 
@@ -267,7 +271,7 @@ def predict_teaching_rating(user, course, teacher):
 	#TODO: implement anything better than just an average of existing rating predicitons.
 	teaching_ratings = Teaching_Rating.objects.filter(course=course, teacher=teacher)
 	if len(teaching_ratings)==0:
-		return -0.25
+		return -0.25 # the "-1 star" rating that represents no avaliable data
 	return sum(map(lambda x:x.value, teaching_ratings))/float(len(teaching_ratings))
 
 
