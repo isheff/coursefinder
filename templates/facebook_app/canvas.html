@@ -36,6 +36,65 @@
 	function save_image() { OFC.jquery.popup('course_map') }
 </script>
 
+<script type="text/javascript">
+<!--
+	$(function(){
+		// 取得要加上提示的元素並一一設定
+		$(":text, textarea").each(function(i, ele){
+			// 先把目前元素轉換成 jQuery 物件後記錄起來
+			// 再取得 title 及 className 屬性值
+			var _text = $(ele),
+				_title = _text.attr("title"),
+				_class = _text.attr("className") || "";
+
+			// 如果有 title 或是 className 值的話，則進行改造
+			if(!!_title || !!_class){
+				// 在 body 中插入一個空白的 Div 區塊來當提示區塊
+				var _water = $("<div></div>").appendTo("body");
+				// 設定提示區塊的 css 屬性(基本是讓它跟輸入框一樣)
+				// position 一定要設成 absolute 才能移來移去
+				_water.css({
+					position: "absolute",
+					width: _text.width(),
+					height: _text.height(),
+					fontSize: _text.css("fontSize"),
+					lineHeight: _text.css("lineHeight"),
+					top: _text.position().top + parseInt(_text.css("borderTopWidth"), 10) + "px",
+					left: _text.position().left + parseInt(_text.css("borderLeftWidth"), 10) + "px",
+					paddingTop: _text.css("paddingTop"),
+					paddingBottom: _text.css("paddingBottom"),
+					paddingLeft: _text.css("paddingLeft"),
+					paddingRight: _text.css("paddingRight"),
+					marginTop: _text.css("marginTop"),
+					marginBottom: _text.css("marginBottom"),
+					marginLeft: _text.css("marginLeft"),
+					marginRight: _text.css("marginRight"),
+					cursor: "text",
+					overflow: "hidden"
+				// 把提示區塊的內容設成輸入框的 title 值
+				}).html(_title).click(function(){
+					// 當提示區塊被點擊時，觸發輸入框的 focus 事件
+					_text.trigger("focus");
+				// 最後加上額外的 className
+				}).addClass(_class);
+				
+				// 設定輸入框的 focus 及 blur 事件
+				_text.focus(function(){
+					// 隱藏提示區塊
+					_water.hide();
+				}).blur(function(){
+					// 如果輸入框中沒有值則再顯示提示區塊
+					if(this.value=="") _water.show();
+				});
+			}
+		});
+	});
+//-->
+</script>
+
+
+
+
 <style type="text/css">
 <!--
 .Course_detail {
@@ -92,6 +151,26 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 	text-decoration:none;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 }
+.search {
+	width:60px;
+	height:25px;
+	border: none;
+	background-image:url(/media/search_button.png);
+	background-position:center;
+	background-repeat: no-repeat;
+	text-decoration: none;
+	cursor: pointer;
+	}
+.search:hover {
+	width:60px;
+	height:25px;
+	border: none;
+	background-image:url(/media/search_button_link.png);
+	background-position:center;
+	background-repeat: no-repeat;
+	text-decoration: none;
+	cursor: pointer;
+	}
 -->
 </style>
 	
@@ -122,7 +201,7 @@ FB.Canvas.setSize(obj);
   </tr>
   <tr>
     <td height="40" colspan="2"><div align="right"><fb:login-button autologoutlink="true"></fb:login-button>
-    <div id="fb-root"></div>
+    
     </div></td>
   </tr>
   <tr>
@@ -168,26 +247,20 @@ FB.Canvas.setSize(obj);
 			<option value="APh">APh</option>
 			<option value="Art">Art</option>
 			<option value="Ay">Ay</option>
-			<option value="BCH">BCH</option>
 			<option value="BE">BE</option>
 			<option value="BEM">BEM</option>
 			<option value="Bi">Bi</option>
 			<option value="BMB">BMB</option>
-			<option value="CAM">CAM</option>
 			<option value="CDS">CDS</option>
 			<option value="CE">CE</option>
 			<option value="Ch">Ch</option>
 			<option value="ChE">ChE</option>
 			<option value="CNS">CNS</option>
-			<option value="CORE">CORE</option>
-			<option value="CPH">CPH</option>
 			<option value="CS">CS</option>
 			<option value="E">E</option>
 			<option value="Ec">Ec</option>
 			<option value="EE">EE</option>
 			<option value="En">En</option>
-			<option value="ENV">ENV</option>
-			<option value="ES">ES</option>
 			<option value="ESE">ESE</option>
 			<option value="ESL">ESL</option>
 			<option value="EST">EST</option>
@@ -197,10 +270,8 @@ FB.Canvas.setSize(obj);
 			<option value="HPS">HPS</option>
 			<option value="Hum">Hum</option>
 			<option value="IST">IST</option>
-			<option value="JP">JP</option>
 			<option value="L">L</option>
 			<option value="Law">Law</option>
-			<option value="LIT">LIT</option>
 			<option value="Ma">Ma</option>
 			<option value="ME">ME</option>
 			<option value="MS">MS</option>
@@ -208,10 +279,9 @@ FB.Canvas.setSize(obj);
 			<option value="PA">PA</option>
 			<option value="PE">PE</option>
 			<option value="Ph">Ph</option>
-			<option value="PL">PL</option>
+			<option value="Pl">Pl</option>
 			<option value="PS">PS</option>
 			<option value="Psy">Psy</option>
-			<option value="SES">SES</option>
 			<option value="SS">SS</option>
 			<option value="UCL">UCL</option>
 		</select></td>
@@ -221,7 +291,7 @@ FB.Canvas.setSize(obj);
       <tr>
         <td width="102" height="30" class="Search_name">Professor:</td>
         <td height="30" colspan="2" align="left">
-		<input type="text" size="20" id="course_prof" name="course_prof" ></td>
+		<input type="text"  title="Last name" size="20" id="course_prof" name="course_prof" ></td>
       </tr>
       <tr>
         <td height="30" class="Search_name">Keywords:</td>
@@ -230,7 +300,7 @@ FB.Canvas.setSize(obj);
       <tr>
         <td width="102" height="30" class="Search_name">&nbsp;</td>
         <td height="30" colspan="2"><div>
-          <input name="Submit" type="image"  id="Submit" src="/media/search_button.png" align="middle" />
+          <button name="Submit" type="submit"  id="Submit" class="search"   />
 		  </form>
           
 			</div>        </td>
@@ -252,7 +322,7 @@ FB.Canvas.setSize(obj);
 	<ul style="list-style-type:none;">
 	{% for course in results %}
 		<li margin-top:2em; margin-bottom:2em><a class="c1" href="{{course.url}}">
-			{% for dept in course.department|join:"/"  %}{{dept|escape}}{% endfor %}{{course.numb|escape}}&nbsp;{{course.name|escape}}
+			{% for dept in course.department|join:"/"  %}{{dept|escape}}{% endfor %}{{course.numb|escape}}&nbsp;{{course.name|escape|truncatewords:6}}
 		</a></li>
 		<li>&nbsp;</li>{% endfor %}
 	</ul>
@@ -287,10 +357,25 @@ FB.Canvas.setSize(obj);
 </table>
   
   
-  
+  <div id="fb-root"></div>
   </div>
-<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
-  
+
+		<script>
+			window.fbAsyncInit = function() {
+				FB.init({appId: '{{ facebook_app_id }}', status: true, cookie: true,
+					xfbml: true});
+				FB.Event.subscribe('{% if current_user %}auth.logout{% else %}auth.login{% endif %}', function(response) {
+					window.location.reload();
+				});
+			};
+			(function() {
+				var e = document.createElement('script');
+				e.type = 'text/javascript';
+				e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+				e.async = true;
+				document.getElementById('fb-root').appendChild(e);
+			}());
+		</script>  
     
 	
 	

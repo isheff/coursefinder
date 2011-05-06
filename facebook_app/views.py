@@ -30,11 +30,14 @@ def canvas(request):
         
         if query_name:
                results= Course.objects.filter(name__icontains=query_name)
-               
+        elif query_dept and query_numb:
+                results_dept = Course.objects.filter(department=query_dept)
+                results_numb = Course.objects.filter(name__icontains=query_numb)
+                results = list(set(results_dept).intersection(set(results_numb)))
         elif query_dept:
                 results= Course.objects.filter(department=query_dept)
-                if query_numb:
-                        results = Course.objects.filter(department=query_dept).filter(name__icontains=str(query_numb))
+        elif query_numb:
+                results = Course.objects.filter(name__icontains=str(query_numb))                                        
         elif query_prof:
                 results= Course.objects.filter(teacher_lastname=query_prof.capitalize())
         else:
