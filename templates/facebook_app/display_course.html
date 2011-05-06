@@ -39,7 +39,6 @@
 	color: #333;
 }
 .Search_name {font-size: 14px; font-weight: normal; color: #333; font-family: Verdana, Arial, Helvetica, sans-serif; }
-.style2 {color: #515151; font-family: Georgia, "Times New Roman", Times, serif; font-size: 24px; }
 .Title {
 	color: #515151;
 	font-family: Georgia, "Times New Roman", Times, serif;
@@ -75,8 +74,47 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 	text-decoration:none;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 }
+.searchback {
+		background-image: url(/media/searchback.png);
+		text-decoration: none;
+		background-position:center;
+		background-repeat: no-repeat;
+		height:25px;
+		width:78px;
+		border: none;
+		}
+.searchback:hover {
+		background-image: url(/media/searchback_link.png);
+		text-decoration: none;
+		background-position:center;
+		background-repeat: no-repeat;
+		height:25px;
+		width:78px;
+		border: none;
+		}
+
+.submit {
+	width:60px;
+	height:25px;
+	border: none;
+	background-image:url(/media/submit_button.png);
+	background-position:center;
+	background-repeat: no-repeat;
+	text-decoration: none;
+	cursor: pointer;
+	}
+.submit:hover {
+	width:60px;
+	height:25px;
+	border: none;
+	background-image:url(/media/submit_button_link.png);
+	background-position:center;
+	background-repeat: no-repeat;
+	text-decoration: none;
+	cursor: pointer;
+	}
 -->
-</style>
+    </style>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>
 			Course Corner - {% for department in course.department %} {{department}} {% endfor %} {{ course.name }}		</title>
@@ -86,11 +124,42 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 		<script src="/media/rating_star.js"></script>
 	    <style type="text/css">
 <!--
-.teacher {font-size: 12px}
+
+.style3 {
+	font-size: 9px;
+	font-weight: bold;
+}
+.style4 {color: #000000}
 -->
         </style>
-</head>
-	<body>
+        <script type="text/JavaScript">
+<!--
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+</script>
+	</head>
+	<body onload="MM_preloadImages('/media/searchback_link.png')">
 		<table width="510" border="0" cellpadding="0">
 			<tr>
 				<td>
@@ -104,28 +173,32 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 					</table>				</td>
 			</tr>
 			<tr>
-			  <td height="40"><a href="http://apps.facebook.com/coursefinder"><img src=/media/searchback.png" border="0"  /></a></td>
+			  <td height="40">
+			  <button class="searchback" onclick="history.back(-1)"/>
+			  
+			  </td>
 		  </tr>
 			<tr>
-				<td height="40"><table width="500" border="0" cellpadding="0" style="border:1px #3B5998  solid">
+				<td height="40">
+				<table width="500" border="0" cellpadding="0" style="border:1px #3B5998  solid">
                   <tr>
-                    <td width="100" rowspan="2"><table width="88" border="0" cellpadding="0">
+                    <td width="95" rowspan="2">
+					<table width="95" border="0" cellpadding="0">
                       <tr>
-                        <td width="90" height="88"  style="border:1px gray  solid"><span class="Course_detail"><img src="/media/dept/{{course.department|first}}.png" alt="course_tmp" width="85" height="85" align="absmiddle" /></span></td>
+                        <td height="85"  ><span ><img src="/media/dept/{{course.department|first}}.png" alt="course_tmp" width="85" height="85" align="absmiddle" style="border:1px gray  solid"/></span></td>
                       </tr>
                     </table></td>
-                    <td width="15" rowspan="3">&nbsp;</td>
-                    {% for department in course.department %}<td><span class="Course_title"> {{department}}  </span></td>{% endfor %}
-                    <td><span class="Course_title">{{ course.name }}</span></td>
+                    <td width="10" rowspan="3">&nbsp;</td>
+                    <td colspan="2" ><span class="Course_title"> {% for department in course.department %}{{department}} {% endfor %} </span><span class="Course_title">{{ course.name }}</span></td>
                   </tr>
                   <tr>
                     <td colspan="2"><span class="Course_detail">{{course.description}}</span></td>
                   </tr>
                   <tr>
-                    <td width="100">&nbsp;</td>
-                    <td width="90"><span class="Course_instructor">Instructors:</span></td>
+                    <td width="95">&nbsp;</td>
+                    <td width="80" ><span class="Course_instructor">Instructors:</span></td>
                     {% for teacher in teachers %}
-					<td width="278"><span class="Course_instructor">{{ teacher.title }} {{ teacher.name }} </span></td>
+					<td width="280" ><span class="Course_instructor">{{ teacher.title }} {{ teacher.name }} </span></td>
 					{% endfor %}                  </tr>
                 </table></td>
 			</tr>
@@ -144,10 +217,10 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 								Algorithmic Estimate							</td>
 							<td width="50">							</td>
 							<td width="121">
-								Your Rating							</td>
+								My Rating							</td>
 						</tr>
 						<tr>
-							<td width="100" height="25">
+							<td width="120" height="25">
 								Overall:							</td>
 							<td width="200">
 								{% if Overall_Rating %}
@@ -167,9 +240,9 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 						</tr>
 						{% for teacher in teachers %}
 							<tr>
-								<td width="100"  height="25" class="Rating_item">
-									Instructor: <span class="teacher">{{teacher.title}} {{teacher.name}}</span> </td>
-								<td width="200">
+								<td width="120"  height="11" class="Rating_item">
+									Instructor: </td>
+								<td width="200" rowspan="2">
 									{% if teacher.rating %}
 										<div class="rating_bar">
 											<div style="width:{{teacher.rating}}%">											</div>
@@ -177,17 +250,20 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 									{% else %}
 										Not Yet Avaliable
 									{% endif %}							  </td>
-								<td width="50">
-								<td width="200" height="25">
+								<td width="50" rowspan="2">
+								<td width="200" height="25" rowspan="2">
 									<div>
 										<script type="text/javascript" language="javascript">
 											moonStarStars("Teacher_{{teacher.id}}_Rating", {{teacher.user_rating}});
 										</script>
 									</div>							  </td>
 							</tr>
+							<tr>
+							  <td  height="12" class="Rating_item"><span class="style3">{{teacher.title}} {{teacher.name}}</span> </td>
+					  </tr>
 						{% endfor %}
 						<tr>
-							<td width="100"  height="25" class="Rating_item">
+							<td width="120"  height="25" class="Rating_item">
 								Grading:							</td>
 							<td width="200">		
 								{% if Grading_Rating %}
@@ -212,7 +288,7 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 			  <p  class="Rating_item">
 							Number of hours spent/ week on this class (at least):						</p>
 						<script type="text/javascript">
-							moonStars("Hours", {{Hours}}, "clock_grey.png", "clock.png", [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+							moonStars("Hours", {{Hours}}, "clock_grey.png", "clock.png", [1,'','','',5,'','','','',10,'','','','',15,'','','','',20]);
 						</script>
 						<p  class="Rating_item">
 							Grade in this class (at least):						</p>
@@ -288,7 +364,9 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 				<td height="10">&nbsp;				</td>
 			</tr>
 			<tr>
-				<td height="10"><a href="http://apps.facebook.com/coursefinder"><img src=/media/searchback.png" border="0"  /></a></td>
+				<td height="10">
+				<button class="searchback" onclick="history.back(-1)"/>
+				</td>
 			</tr>
 			<tr>
 				<td height="10">&nbsp;				</td>
@@ -313,5 +391,5 @@ font-family:Verdana, Arial, Helvetica, sans-serif;
 				document.getElementById('fb-root').appendChild(e);
 			}());
 		</script>
-	</body>
+</body>
 </html>

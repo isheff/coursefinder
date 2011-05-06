@@ -43,7 +43,7 @@ class Institution(DateStamped):
 	This model represents a university or college, or whatever else offers classes.
 	"""
 	name = models.CharField(max_length=255)												# Insititution's Name
-	description = models.CharField(max_length=1023)										# Insititution's Description
+	description = models.CharField(max_length=2023)										# Insititution's Description
 	url = models.URLField(verify_exists=True, max_length=255, blank=True, default="")	# a url for this university. (optional)
 	
 	def __unicode__(self):
