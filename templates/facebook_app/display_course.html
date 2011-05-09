@@ -268,30 +268,32 @@
 								</tr>
 								<tr>
 									{% for comment in comment_pair %}
-										<td>
-											<table>
-												<tr>
-													{% if comment.privacy == 0 %}
-														<td width = "50">
-															<img src="http://graph.facebook.com/{{ comment.user.key_name }}/picture?type=square" />
-														</td>
-													{% endif %}
-													<td>
-														{{comment.content }}
-													</td>
-												</tr>
-												<tr>
-													{% if comment.privacy == 0 %}
+										{% if comment %}
+											<td>
+												<table>
+													<tr>
+														{% if comment.privacy == 0 %}
+															<td width = "50">
+																<img src="http://graph.facebook.com/{{ comment.user.key_name }}/picture?type=square" />
+															</td>
+														{% endif %}
 														<td>
-															{{comment.user.name }}
+															{{comment.content }}
 														</td>
-													{% endif %}
-													<td>
-														 - {{comment.date }}
-													</td>
-												</tr>
-											</table>
-										</td>
+													</tr>
+													<tr>
+														{% if comment.privacy == 0 %}
+															<td>
+																{{comment.user.name }}
+															</td>
+														{% endif %}
+														<td>
+															 - {{comment.date }}
+														</td>
+													</tr>
+												</table>
+											</td>
+										{% endif %}
 									{% endfor %}
 								</tr>
 						{% endfor %}

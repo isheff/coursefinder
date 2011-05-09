@@ -1,0 +1,105 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{ amssymb }
+\usepackage{tikz}
+\usepackage{ textcomp }
+\title{Course Recommendations \\Using the Social Network\\ {\Large \bf Midterm Report}}
+\author{Wen-Hao Lee, Jamie Jackson, and Isaac Sheff}
+\begin{document}
+ \maketitle 
+ 
+
+ 
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Motivation}
+
+Many businesses consider it a huge boon to be able to accurately predict which products a customer may want. They have worked so hard at this that they've actually generated hidden networks of users sorted and linked by their mutual interests. Traditionally, such networks are formed using learning algorithms that attempt to establish similarities between the preferences of sets of users. 
+
+Consider, however, that the actual likes and dislikes of customers are highly affiliated with that user's social network.  A product enjoyed by a user's friends is probably more likely to be enjoyed by that user. In fact, traditionally, people seek out advice in such decisions from those closest to them on a social network. In fact, a study by Rashimi Sinha and Kirsten Swearingen at UC Berkely found that amongst books and movies, recommendations by friends were 30-40\% more likely to be ``Good" or ``Usefull" than traditional network recommendation systems [1].
+
+Enter course recommendations. In a collegiate environment, especially at large institutions with extensive catalogues, students often rely on friends' recommendations to make important, periodic decisions: which courses to take. Students consider themselves more likely to enjoy courses their friends have enjoyed, with professors their friends have found effective. 
+
+This provides an excellent testing ground for such a hybrid recommendation system, which would use traditional learning algorithms to suggest courses based on a student's past experience, compared with that of similar students, weighted accordingly for the distance of other students in the social network. 
+
+
+\section{Prior Related Work}
+
+Many traditional recommendation systems, such as Netflix, make use of Collaborative Filtering, in which a database of users' ratings of items is used to predict what a given user will rate an item based upon their past ratings [2]. A traditional, ``Memory-Based CF" system calculates a correlation factor between all users, and possibly all items, based on users existing rankings, and predicts rankings of a user's unranked items using the correlation weighted average of other users' rankings. It then recommends the top-ranked ones. There are a wide variety of alterations and improvements upon this simple idea for specific circumstances, computational constraints, and applications.
+
+One such subset is the neighbor-based collaborative filtering model, in which a weighted average of rankings is taken only from a limited number of users most similar to the user in question. This is in some ways analogous to a limited ``friend" group on a social network, but the ``neighborhood" is made by the algorithm, not the user. 
+
+Recommendation networks, however, do not take into account other factors in a user's life that can drive decision-making besides prior experience in the narrow field of whichever item type is being recommended. While many recommendation systems seek to account for such factors, generalization is extremely difficult. However, users seeking recommendations from friends receive an advantage over anonymous systems: trust. A test done at the Department of Computer Science and Engineering, Indian Institute of Technology, Delhi, found that users are more likely to receive better recommendations from other users they trust more, and that to a large extent, friendship on social networks (they used Orkut), mimics trust [3]. 
+
+The idea of social-network based recommendations is not new. For example, the experimental service FilmTrust attempts to utilize Memory-Based CF calculating the similarity weighting between users as the trust between those users using the FOAF trust model [4].  Synclab Consulting's Hooks App for facebook recommends music found in the libraries of users' friends with many mutual songs in their playlists [5]. A study at the University of Illinois Champaign-Urbana found 95 \% of users on an experimental  social network-based news recommendation system to be ``somewhat to very useful" [6].  
+
+
+As of yet, however, there appears to be a lack of course recommendation services making use of social networks, and a lack overall of social network ranking combined with collaborative filtering weighting users by both similarity and social distance. To study the feasibility of such a system, and to identify the appropriate weighting of social connections versus past user ranking similarity, we propose the creation of a facebook App, in which users rate and comment upon their past courses and professors, which will recommend additional courses and professors based upon the ratings of similar users, weighted by distance in the social network. By using Facebook, we gain a notable advantage over previous studes such as FilmTrust, which required users to build a trusted list inside its own framework. Facebook provides a similar system (friends, albeit without varying trust levels) ready-made. To begin with, we might use an algorithm which calculates the trust of various users via the FOAF model [4], and multiplies that by the measured similarity based upon past rankings (standard CF technique [2]), to determine the weight for each user. This algorithm will be adapted and conceivably radically changed to improve the system over the course of the project.  
+
+
+
+
+
+
+\section{Objective}
+
+\subsection{Facebook App}
+The objective of this project shall be to produce a facebook app wherein users can specify their institute, classes they have taken, and the instructors for those classes. For each instructor and for each class users can rate quality as well as provide brief comments. The comments will be visible only to their friends. The ratings will be used in a hybridized CF recommendation system to predict what courses each user would also find to be of high quality, taking into account their past ratings compared with those of other users, as well as their social relations to those other users. 
+
+To evaluate the effectiveness of a particular recommendation algorithm over the course of this project (since there will be insufficient time for users to take new classes, and respond with how well prediction matched reality), an assessment could be made of the average correlation between predicted ratings and actual ratings (average of ``how would this have been predicted to have been rated had I not rated it over how I did in fact rate it"). 
+
+By testing which algorithm is best, in the optimal scenario, this app will identify what role, if any, social relations should play in course recommendations, which is likely to be similar to many other recommendation systems.
+
+In order to acquire lots of users, the app will need to be sufficiently easy to use, and popularized through the developers' social contacts, contacting professors who might use the app for course feedback, and perhaps even advertising if necessary. Large institutes, with larger course catalogues and even larger student bodies, will likely make for better test data sources. 
+
+\subsection{Science}
+
+The worst case scenario is one in which insufficient user data can be acquired in time to analyze. Attempts shall be made to avoid this scenario through advertising and asking people to help us participate in an experiment through a wide variety of social channels, but ultimately it is possible that the experiment will be ignored. In this case, very limited conclusions can be drawn about the success or failure of cross-network data extraction. The week six evaluation period should catch on to this, and make any possible major project reevaluations. 
+
+\section{Back End}
+
+\subsection{Data Structure}
+
+\subsection{Google App Engine}
+
+\subsection{Django}
+
+
+
+\section{Front End}
+
+\subsection{Site Map}
+
+\subsection{Layout}
+
+
+
+\section{References}
+
+\begin{enumerate}
+\item Rashmi R. Sinha and Kirsten Swearingen. Comparing recommendations made by online systems and friends. In {\it DELOS Workshop: Personalisation and Recom- mender Systems in Digital Libraries}, 2001.
+
+\item
+Xiaoyuan Su and Taghi M. Khoshgoftaar, ``A Survey of Collaborative Filtering Techniques," {\it Advances in Artificial Intelligence}, vol. 2009, Article ID 421425, 19 pages, 2009.
+
+\item
+K. Sarda, P. Gupta, D. Mukherjee, S. Padhy, and H. Saran, ``A distributed trust-based recommendation system on social networks," in { \it HotWeb Õ08: Proc. of the 2nd IEEE Workshop on Hot Topics in Web Systems and Technologies}, 2008.
+
+\item
+Goldbeck, J. and Hendler, J.	2006.	FilmTrust: Movie recommendations using trust in Web-based
+social networks. In { \it Proceedings of the IEEE Consumer Communications and Networking
+Conference}. Las Vegas, NV.
+
+\item
+Synclab Consulting, "Hooks for Facebook."  {\it synclab consulting } 11 Mar. 2011, $<$http://www.synclab.com/hooks-for-facebook/$>$.
+
+\item
+M. Agrawal, M. Karimzadehgan, and C. Zhai. An online news recommender system for social networks. { \it SIGIR-SSM}, 2009.
+
+\end{enumerate}
+\end{document}
