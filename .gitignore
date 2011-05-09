@@ -1,0 +1,7 @@
+# Files that will be ignored by Git. #
+
+# Compiled Python files #
+*.pyc
+
+# OS generated files #
+.DS_Store?
