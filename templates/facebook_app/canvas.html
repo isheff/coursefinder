@@ -244,11 +244,8 @@
 			 </td>
 			 <td colspan="2">
 				 <a class="search_result_item" href="/course/{{course.id}}">
-				 {% if course.department|length > 1 %}
-				 {{course.name|slice:"440"|escape}}
-				 {% else %}
-				 {{course.name|slice:"500"|escape}}
-				 {% endif %}</a></td>
+				{{course.name|escape}}
+				</a></td>
 	 </tr>
 	  <tr>
 	 <td width="40" height="25">&nbsp;</td>
