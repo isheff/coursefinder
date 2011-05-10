@@ -50,7 +50,7 @@ def course_value_convert(user_dept):
                 'An':'Anthropology',
                 'ACM':'Applied and Computational Mathematics',
                 'AM':'Applied Mechanics',
-                'APh':'',
+                'APh':'Applied Physics',
                 'Art':'Art History',
                 'Ay':'Astrophysics',
                 'BMB':'Biochemistry and Molecular Biophysics',
