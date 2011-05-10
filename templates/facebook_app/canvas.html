@@ -1,40 +1,37 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml" >
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Facebook Example</title>
+    <title>Course finder @Caltech</title>
 
     	<script src="/media/prototype.js" type="text/javascript"></script>
 	<script src="/media/jquery-1.2.6.min.js" type="text/javascript"></script>
-	
-
-
 	<script type="text/javascript" src="/media/swfobject.js"></script>
-    <script type="text/javascript">
-    	swfobject.embedSWF(
-    	  "/media/open-flash-chart.swf", "course_map",
-    	  "320", "320", "9.0.0", "/media/expressInstall.swf",
-	  {"data-file":"/data/{{current_user.key_name|escape}}" });
-  </script>
-  <script type="text/javascript">
-	  OFC={};
-	OFC.jquery={
-		name:"jQuery",
-     		version: function(src){return$('#'+src)[0].get_version()},
-		rasterize:function(src,dst){ $('#'+ dst).replaceWith(OFC.jquery.image(src)) },
-		image: function(src) { return "<img src='data:image/png;base64," + $('#'+src)[0].get_img_binary() + "' />"},
-		popup: function(src) {
-			        var img_win = window.open('', 'Charts: Export as Image')
-					        with(img_win.document) {
-							            write('<html><head><title>Charts: Export as Image<\/title><\/head><body>' + OFC.jquery.image(src) + '<\/body><\/html>') }
-						// stop the 'loading...' message
-						img_win.document.close();
-						     }
-	}
+	<script type="text/javascript">
+   	 	swfobject.embedSWF(
+    		  "/media/open-flash-chart.swf", "course_map",
+    		  "350", "350", "9.0.0", "/media/expressInstall.swf",
+		  {"data-file":"/data/{{current_user.key_name|escape}}" });
+ 	</script>
+	<script type="text/javascript">
+		OFC={};
+		OFC.jquery={
+			name:"jQuery",
+     			version: function(src){return$('#'+src)[0].get_version()},
+			rasterize:function(src,dst){ $('#'+ dst).replaceWith(OFC.jquery.image(src)) },
+			image: function(src) { return "<img src='data:image/png;base64," + $('#'+src)[0].get_img_binary() + "' />"},
+			popup: function(src) {
+				        var img_win = window.open('', 'Charts: Export as Image')
+						        with(img_win.document) {
+								            write('<html><head><title>Charts: Export as Image<\/title><\/head><body>' + OFC.jquery.image(src) + '<\/body><\/html>') }
+							// stop the 'loading...' message
+							img_win.document.close();
+						    	 }
+		}	
 
-	if (typeof(Control == "undefined")) {var Control = {OFC: OFC.jquery}}
-	function save_image() { OFC.jquery.popup('course_map') }
-</script>
+		if (typeof(Control == "undefined")) {var Control = {OFC: OFC.jquery}}
+		function save_image() { OFC.jquery.popup('course_map') }
+	</script>
 
 <script type="text/javascript">
 <!--
@@ -70,7 +67,8 @@
 					marginLeft: _text.css("marginLeft"),
 					marginRight: _text.css("marginRight"),
 					cursor: "text",
-					overflow: "hidden"
+					overflow: "hidden",
+					color: "gray",
 				// 把提示區塊的內容設成輸入框的 title 值
 				}).html(_title).click(function(){
 					// 當提示區塊被點擊時，觸發輸入框的 focus 事件
@@ -92,104 +90,20 @@
 //-->
 </script>
 
-
-
-
-<style type="text/css">
-<!--
-.Course_detail {
-	font-size: 11px;
-	color: #333;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	text-align: justify;
-}
-.Course_title {
-	font-size: 14px;
-	font-weight: bold;
-	color: #333;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-}
-.Course_instructor {
-	font-size: 12px;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	color: #333;
-}
-.Search_name {font-size: 14px; font-weight: normal; color: #333; font-family: Verdana, Arial, Helvetica, sans-serif; }
-.style2 {color: #515151; font-family: Georgia, "Times New Roman", Times, serif; font-size: 24px; }
-.Title {
-	color: #515151;
-	font-family: Georgia, "Times New Roman", Times, serif;
-	font-weight: bold;
-	font-size: 20px;
-}
-
-.c1 {
-font-size: 10pt;
-border-top: 0px solid #3B5998;
-border-right: 0px solid #3B5998;
-border-left: 0px solid #3B5998;
-border-bottom: 0px solid #3B5998;
-padding-top: 6px;
-padding-right: 6px;
-padding-left: 6px;
-padding-bottom: 6px;
-color: #515151;
-text-decoration:none;
-font-family:Verdana, Arial, Helvetica, sans-serif;
-}
-.c1:hover {
-	font-size: 10pt;
-	border-top: 1px solid #3B5998;
-	border-right: 1px solid #3B5998;
-	border-left: 1px solid #3B5998;
-	border-bottom: 1px solid #3B5998;
-	padding-top: 6px;
-	padding-right: 6px;
-	padding-left: 6px;
-	padding-bottom: 6px;
-	color: #515151;
-	text-decoration:none;
-	font-family:Verdana, Arial, Helvetica, sans-serif;
-}
-.search {
-	width:60px;
-	height:25px;
-	border: none;
-	background-image:url(/media/search_button.png);
-	background-position:center;
-	background-repeat: no-repeat;
-	text-decoration: none;
-	cursor: pointer;
-	}
-.search:hover {
-	width:60px;
-	height:25px;
-	border: none;
-	background-image:url(/media/search_button_link.png);
-	background-position:center;
-	background-repeat: no-repeat;
-	text-decoration: none;
-	cursor: pointer;
-	}
--->
-</style>
-	
-	
-	
 	<script type="text/javascript">
-function framesetsize(w,h){
-var obj =   new Object;
-obj.width=w;
-obj.height=h;
-FB.Canvas.setSize(obj);
-}
-</script>
+	function framesetsize(w,h){
+	var obj =   new Object;
+	obj.width=w;
+	obj.height=h;
+	FB.Canvas.setSize(obj);
+	}
+	</script>
 	
-	
+	<link rel="stylesheet" type="text/css" href="/media/display_course.css" />	
   </head>
-  <body onload="framesetsize(500,1500)">
-  <div id="fb-root"></div> <!--this div is required by the Javascript SDK-->
-<div style="height: 2000px">
+  <body >
+	  {% load my_filters %}
+<div >
   <table width="510" border="0"  cellpadding="0">
   <tr>
     <td width="100" colspan="2"><table width="510" border="0" cellpadding="0">
@@ -200,9 +114,10 @@ FB.Canvas.setSize(obj);
     </table></td>
   </tr>
   <tr>
-    <td height="40" colspan="2"><div align="right"><fb:login-button autologoutlink="true"></fb:login-button>
-    
-    </div></td>
+	  <td height="40" colspan="2">
+		<div id="fb-root"></div> <div align="right"><fb:login-button autologoutlink="true"></fb:login-button>
+		</div>
+	</td>
   </tr>
   <tr>
     <td colspan="2"><span class="Title">Top 3 recommended </span></td>
@@ -291,7 +206,7 @@ FB.Canvas.setSize(obj);
       <tr>
         <td width="102" height="30" class="Search_name">Professor:</td>
         <td height="30" colspan="2" align="left">
-		<input type="text"  title="Last name" size="20" id="course_prof" name="course_prof" ></td>
+		<input type="text"  title=" Last name" size="20" id="course_prof" name="course_prof" ></td>
       </tr>
       <tr>
         <td height="30" class="Search_name">Keywords:</td>
@@ -309,7 +224,7 @@ FB.Canvas.setSize(obj);
     </table>    </td>
   </tr>
   <tr>
-    <td height="19" colspan="2">{% if results %}
+    <td height="19" colspan="2">{% if Search_results %}
 	<span class="Title">Search results</span></td>
   </tr>
   <tr>
@@ -318,14 +233,32 @@ FB.Canvas.setSize(obj);
   <tr>
     <td height="19" colspan="2">
 	
-	
-	<ul style="list-style-type:none;">
-	{% for course in results %}
-		<li margin-top:2em; margin-bottom:2em><a class="c1" href="{{course.url}}">
-			{% for dept in course.department|join:"/"  %}{{dept|escape}}{% endfor %}{{course.numb|escape}}&nbsp;{{course.name|escape|truncatewords:6}}
-		</a></li>
-		<li>&nbsp;</li>{% endfor %}
-	</ul>
+
+	    {% for course in Search_results %}
+    <table width="450" border="0" cellpadding="0" onMouseOver="this.style.background='#d8dfea'" onMouseOut="this.style.background='#ffffff'">
+	 <tr>
+		 <td    >
+			 <a class="search_result_item" style="vertical-align:text-top"  href="/course/{{course.id}}">
+				 {% for dept in course.department|join:"/"  %}{{dept|escape}}{% endfor %}</a>
+				 
+			 </td>
+			 <td colspan="2">
+				 <a class="search_result_item" href="/course/{{course.id}}">
+				{{course.name|escape}}
+				</a></td>
+	 </tr>
+	  <tr>
+	 <td width="40" height="25">&nbsp;</td>
+	 <td width="100" height="25"><div class="rating_bar_small"> 
+		 <div style="width:{{Search_results_value|lookup:course}}%"></div>
+		</div>
+	 </td>
+	 <td height="25" class="search_result_tag">My rating: </td>
+	 </tr>
+	 </table>
+	&nbsp;
+	{% endfor %}
+
 	{% endif %}	</td>
   </tr>
   <tr>
@@ -352,14 +285,13 @@ FB.Canvas.setSize(obj);
   </tr>
   <tr>
     <td colspan="2">
-	    <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script><fb:like href="" send="false" width="450" show_faces="true" font="verdana"></fb:like>	</td>
+	    <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script><fb:like href="" send="false" width="450" show_faces="true" font="verdana"></fb:like>
+</td>
   </tr>
 </table>
   
-  
-  <div id="fb-root"></div>
   </div>
-
+ 		<div id="fb-root"></div>
 		<script>
 			window.fbAsyncInit = function() {
 				FB.init({appId: '{{ facebook_app_id }}', status: true, cookie: true,

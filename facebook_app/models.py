@@ -133,7 +133,10 @@ class Rating(User_Course_Interaction):
 	
 	class Meta:
 		abstract = True
-
+class Interest(User_Course_Interaction):
+	value = models.IntegerField() # the interest tag is 0 (none) or 1 (interested in)
+	def __unicode__(self):
+		return str(self.user.name) + ": "+str(self.value)+" " +str(self.course.name)
 
 class Overall_Rating(Rating):
 	"""

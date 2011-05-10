@@ -9,6 +9,42 @@
 		<script src="/media/mootools-core-1.3.2.js"></script>
 		<script src="/media/moostarrating.js"></script>  
 		<script src="/media/rating_star.js"></script>
+	    <style type="text/css">
+<!--
+
+.style3 {
+	font-size: 9px;
+	font-weight: bold;
+}
+.style4 {color: #000000}
+-->
+        </style>
+        <script type="text/JavaScript">
+<!--
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+</script>
 	</head>
 	<body onload="MM_preloadImages('/media/searchback_link.png')">
 		<table width="760" border="0" cellpadding="0">
@@ -17,10 +53,14 @@
 					<table width="760" border="0" cellpadding="0">
 						<tr>
 							<td>
+<<<<<<< .merge_file_OpvqFG
 								<a href="http://apps.facebook.com/coursefinder">
 									<img src="/media/Caltech_namecopy.png" alt="Caltech_name" width="350" height="100" border="0" />
 								</a>
 							</td>
+=======
+								<a href="/"><img src="/media/Caltech_namecopy.png" alt="Caltech_name" width="350" height="100" border="0" /></a> </td>
+>>>>>>> .merge_file_iFbe7R
 							<td>
 								<img src="/media/Caltech_logo.png" alt="Caltech_logo" width="100" height="100" />
 							</td>
@@ -29,9 +69,45 @@
 				</td>
 			</tr>
 			<tr>
+<<<<<<< .merge_file_OpvqFG
 				<td height="40">
 					<button class="searchback" onclick="history.back(-1)"></button>
 				</td>
+=======
+			  <td height="40">
+			  <button class="searchback" onclick="location.href='/'"/>
+			  
+			  </td>
+		  </tr>
+			<tr>
+				<td height="40">
+				<table width="500" border="0" cellpadding="0" style="border:1px #3B5998  solid">
+                  <tr>
+                    <td width="95" rowspan="2">
+					<table width="95" border="0" cellpadding="0">
+                      <tr>
+                        <td height="85"  ><span ><img src="/media/dept/{{course.department|first}}.png" alt="course_tmp" width="85" height="85" align="absmiddle" style="border:1px gray  solid"/></span></td>
+                      </tr>
+                    </table></td>
+                    <td width="10" rowspan="3">&nbsp;</td>
+                    <td colspan="2" ><span class="Course_title"> {% for department in course.department %}{{department}} {% endfor %} </span><span class="Course_title">{{ course.name }}</span></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"><span class="Course_detail">{{course.description}}</span></td>
+                  </tr>
+                  <tr>
+			  <td width="95"> {% if Overall_Rating %} 
+				  <div aling="center" class="rating_bar_small">
+					  <div style="width:{{Overall_Rating}}%">
+					  </div>
+				  </div> {% endif %}
+	  </td>
+                    <td width="80" ><span class="Course_instructor">Instructors:</span></td>
+                    {% for teacher in teachers %}
+					<td width="280" ><span class="Course_instructor">{{ teacher.title }} {{ teacher.name }} </span></td>
+					{% endfor %}                  </tr>
+                </table></td>
+>>>>>>> .merge_file_iFbe7R
 			</tr>
 			<tr>
 				<td height="40">
@@ -103,10 +179,15 @@
 							</td>
 							<td width="200">
 								{% if Overall_Rating %}
+<<<<<<< .merge_file_OpvqFG
 									<div class="rating_bar">
 										<div style="width:{{Overall_Rating}}%">
 										</div>
 									</div>	
+=======
+								<div class="rating_bar" ><div style="width:{{Overall_Rating}}%">	</div>	</div>	
+								<div >	({{Overall_Rating_value|floatformat:1}})</div>	
+>>>>>>> .merge_file_iFbe7R
 								{% else %}
 									Not Yet Avaliable
 								{% endif %}
@@ -172,6 +253,7 @@
 				</td>
 			</tr>
 			<tr>
+<<<<<<< .merge_file_OpvqFG
 				<td height="15">
 					<p  class="Rating_item">
 						Number of hours spent/ week on this class (at least):						
@@ -186,6 +268,20 @@
 						moonStars("Grade", {{Grade}}, "25px-grey-check.png", "25px-green-check.png", ["F", "D", "C", "B", "A"]);
 					</script>
 				</td>
+=======
+			  <td height="15">
+			  <p  class="Rating_item">
+							Number of hours spent/ week on this class (at least):						</p>
+						<script type="text/javascript">
+							moonStars("Hours", {{Hours}}, "time_bar_gray.png", "time_bar_blue.png", [1,'','','',5,'','','','',10,'','','','',15,'','','','',20]);
+						</script>
+						<p  class="Rating_item">
+							Grade in this class (at least):						</p>
+						<script type="text/javascript">
+							moonStars("Grade", {{Grade}}, "25px-grey-check.png", "25px-green-check.png", ["F", "D", "C", "B", "A"]);
+						</script>
+			  </td>
+>>>>>>> .merge_file_iFbe7R
 		  </tr>
 			<tr><td height="15">&nbsp;</td></tr>
 			<tr>
@@ -230,14 +326,13 @@
   -->
 			<tr>
 				<td height="10" class="Title">
-					Course Comments
-				</td>
+					Comments				</td>
 			</tr>
 			<tr>
-				<td height="1" bgcolor="#808080">
-				</td>
+				<td height="1" bgcolor="#808080">				</td>
 			</tr>
 			<tr>
+<<<<<<< .merge_file_OpvqFG
 				<td>
 					<table width="760" border="0" cellpadding="0" class="Rating_item">
 						<tr>
@@ -341,22 +436,38 @@
 						{% endfor %}
 					</table>
 				</td>
+=======
+				<td height="30">
+					<table width="470" border="0" cellpadding="0" class="Rating_item">
+						<tr>
+							<td width="235" height="30">
+								FB friends comments							</td>
+							<td width="235" height="30">
+								FB public comments							</td>
+						</tr>
+						<tr>
+							<td>
+								Not Yet Avaliable							</td>
+							<td>
+								Not Yet Avaliable							</td>
+						</tr>
+					</table>				</td>
+>>>>>>> .merge_file_iFbe7R
+			</tr>
+			<tr>
+				<td height="10">&nbsp;				</td>
 			</tr>
 			<tr>
 				<td height="10">
-					&nbsp;
-				</td>
-			</tr>
-			{% endfor %}
-			<tr>
-				<td height="10">
+<<<<<<< .merge_file_OpvqFG
 					<button class="searchback" onclick="history.back(-1)"></button>
+=======
+				<button class="searchback" onclick="location.href='index'"/>
+>>>>>>> .merge_file_iFbe7R
 				</td>
 			</tr>
 			<tr>
-				<td height="10">
-					&nbsp;
-				</td>
+				<td height="10">&nbsp;				</td>
 			</tr>
 		</table>
 		<fb:login-button autologoutlink="true"></fb:login-button>
@@ -378,5 +489,10 @@
 				document.getElementById('fb-root').appendChild(e);
 			}());
 		</script>
+<<<<<<< .merge_file_OpvqFG
 	</body>
 </html>
+=======
+</body>
+</html>
+>>>>>>> .merge_file_iFbe7R
