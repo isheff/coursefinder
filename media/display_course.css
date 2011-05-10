@@ -33,7 +33,12 @@
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	color: #333;
 }
-.Search_name {font-size: 14px; font-weight: normal; color: #333; font-family: Verdana, Arial, Helvetica, sans-serif; }
+.Search_name {
+	font-size: 14px;
+	font-weight: normal;
+	color: #333;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
 .Title {
 	color: #515151;
 	font-family: Georgia, "Times New Roman", Times, serif;

@@ -160,7 +160,7 @@ function mooComment(commentId, commentName, defaultValue, defaultPrivacy)
 	document.write("<form id=\""+commentId+"\" action=\"submit/\" method=\"POST\"  class=\"Rating_item\" >");
 	document.write(commentName);
 	document.write("<br />");
-	document.write("<textarea   title=\"Write a comment...\" name=\""+commentId+"_Text\" style=\"height: 50px; width: 480px;\">");
+	document.write("<textarea   title=\"Write a comment...\" name=\""+commentId+"_Text\" style=\"height: 50px; width: 750px;\">");
 	document.write(defaultValue);
 	document.write("</textarea>");
 	document.write("<table><tr><td width=\"200\">");

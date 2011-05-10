@@ -3,165 +3,207 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>
-			Course Corner - {% for department in course.department %} {{department}} {% endfor %} {{ course.name }}		</title>
+			Course Corner - {% for department in course.department %} {{department}} {% endfor %} {{ course.name }}
+		</title>
 		<link rel="stylesheet" type="text/css" href="/media/display_course.css" />
 		<script src="/media/mootools-core-1.3.2.js"></script>
 		<script src="/media/moostarrating.js"></script>  
 		<script src="/media/rating_star.js"></script>
 	</head>
 	<body onload="MM_preloadImages('/media/searchback_link.png')">
-		<table width="510" border="0" cellpadding="0">
+		<table width="760" border="0" cellpadding="0">
 			<tr>
 				<td>
-					<table width="510" border="0" cellpadding="0">
+					<table width="760" border="0" cellpadding="0">
 						<tr>
 							<td>
-								<a href="http://apps.facebook.com/coursefinder"><img src="/media/Caltech_namecopy.png" alt="Caltech_name" width="350" height="100" border="0" /></a> </td>
+								<a href="http://apps.facebook.com/coursefinder">
+									<img src="/media/Caltech_namecopy.png" alt="Caltech_name" width="350" height="100" border="0" />
+								</a>
+							</td>
 							<td>
-								<img src="/media/Caltech_logo.png" alt="Caltech_logo" width="100" height="100" />							</td>
+								<img src="/media/Caltech_logo.png" alt="Caltech_logo" width="100" height="100" />
+							</td>
 						</tr>
-					</table>				</td>
+					</table>
+				</td>
 			</tr>
-			<tr>
-			  <td height="40">
-			  <button class="searchback" onclick="history.back(-1)"/>
-			  
-			  </td>
-		  </tr>
 			<tr>
 				<td height="40">
-				<table width="500" border="0" cellpadding="0" style="border:1px #3B5998  solid">
-                  <tr>
-                    <td width="95" rowspan="2">
-					<table width="95" border="0" cellpadding="0">
-                      <tr>
-                        <td height="85"  ><span ><img src="/media/dept/{{course.department|first}}.png" alt="course_tmp" width="85" height="85" align="absmiddle" style="border:1px gray  solid"/></span></td>
-                      </tr>
-                    </table></td>
-                    <td width="10" rowspan="3">&nbsp;</td>
-                    <td colspan="2" ><span class="Course_title"> {% for department in course.department %}{{department}} {% endfor %} </span><span class="Course_title">{{ course.name }}</span></td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><span class="Course_detail">{{course.description}}</span></td>
-                  </tr>
-                  <tr>
-                    <td width="95">&nbsp;</td>
-                    <td width="80" ><span class="Course_instructor">Instructors:</span></td>
-                    {% for teacher in teachers %}
-					<td width="280" ><span class="Course_instructor">{{ teacher.title }} {{ teacher.name }} </span></td>
-					{% endfor %}                  </tr>
-                </table></td>
+					<button class="searchback" onclick="history.back(-1)"></button>
+				</td>
 			</tr>
 			<tr>
-				<td>					</td>
+				<td height="40">
+					<table width="750" border="0" cellpadding="0" style="border:1px #3B5998  solid">
+						<tr>
+							<td width="95" rowspan="2">
+								<img src="/media/dept/{{course.department|first}}.png" alt="course_tmp" width="85" height="85" align="absmiddle" style="border:1px gray  solid"/>\
+							</td>
+							<td width="10" rowspan="3">
+								&nbsp;
+							</td>
+							<td>
+								<span class="Course_title">
+									{% for department in course.department %}{{department}} {% endfor %}
+								</span>
+								<span class="Course_title">
+									{{ course.name }}
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="Course_detail">
+									{{course.description}}
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								&nbsp;
+							</td>
+							<td>
+								<span class="Course_instructor">
+									Instructors:
+								</span>
+								{% for teacher in teachers %}
+									<span class="Course_instructor">
+										{{ teacher.title }} {{ teacher.name }} &nbsp;
+									</span>
+								{% endfor %}
+							</td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 			<tr>
-				<td height="10">&nbsp;				</td>
+				<td height="10">
+					&nbsp;
+				</td>
 			</tr>
 			<tr>
 				<td>
-					<table width="500" border="0" cellpadding="0" class="Rating_item">
+					<table width="750" border="0" cellpadding="0" class="Rating_item">
 						<tr>
-							<td width="100">							</td>
+							<td width="350">
+							</td>
 							<td width="200">
-								Algorithmic Estimate							</td>
-							<td width="50">							</td>
-							<td width="121">
-								My Rating							</td>
+								Algorithmic Estimate
+							</td>
+							<td width="50">
+							</td>
+							<td width="150">
+								My Rating
+							</td>
 						</tr>
 						<tr>
 							<td width="120" height="25">
-								Overall:							</td>
+								Overall:
+							</td>
 							<td width="200">
 								{% if Overall_Rating %}
 									<div class="rating_bar">
-										<div style="width:{{Overall_Rating}}%">										</div>
+										<div style="width:{{Overall_Rating}}%">
+										</div>
 									</div>	
 								{% else %}
 									Not Yet Avaliable
-								{% endif %}						  </td>
-							<td width="50">&nbsp;							</td>
+								{% endif %}
+							</td>
+							<td width="50">
+								&nbsp;
+							</td>
 							<td width="200" height="25" valign="middle">
 								<div>
 									<script type="text/javascript" language="javascript">
 										moonStarStars("Overall_Rating", {{ User_Overall_Rating }});
 									</script>
-								</div>						  </td>
+								</div>
+							</td>
 						</tr>
 						{% for teacher in teachers %}
 							<tr>
-								<td width="120"  height="11" class="Rating_item">
-									Instructor: </td>
-								<td width="200" rowspan="2">
+								<td class="Rating_item">
+									Instructor: {{teacher.title}} {{teacher.name}}
+								</td>
+								<td>
 									{% if teacher.rating %}
 										<div class="rating_bar">
-											<div style="width:{{teacher.rating}}%">											</div>
+											<div style="width:{{teacher.rating}}%">											
+											</div>
 										</div>	
 									{% else %}
 										Not Yet Avaliable
-									{% endif %}							  </td>
-								<td width="50" rowspan="2">
-								<td width="200" height="25" rowspan="2">
-									<div>
-										<script type="text/javascript" language="javascript">
-											moonStarStars("Teacher_{{teacher.id}}_Rating", {{teacher.user_rating}});
-										</script>
-									</div>							  </td>
+									{% endif %}							  
+								</td>
+								<td>
+								<td height="25">
+									<script type="text/javascript" language="javascript">
+										moonStarStars("Teacher_{{teacher.id}}_Rating", {{teacher.user_rating}});
+									</script>
+								</td>
 							</tr>
-							<tr>
-							  <td  height="12" class="Rating_item"><span class="style3">{{teacher.title}} {{teacher.name}}</span> </td>
-					  </tr>
 						{% endfor %}
 						<tr>
-							<td width="120"  height="25" class="Rating_item">
-								Grading:							</td>
-							<td width="200">		
+							<td class="Rating_item">
+								Grading:							
+							</td>
+							<td >		
 								{% if Grading_Rating %}
 									<div class="rating_bar">
-										<div style="width:{{Grading_Rating}}%">										</div>
+										<div style="width:{{Grading_Rating}}%">										
+										</div>
 									</div>		
 								{% else %}
 									Not Yet Avaliable
-								{% endif %}						  </td>
-							<td width="50">&nbsp;							</td>
-							<td width="200" height="25">
-								<div>
-									<script type="text/javascript" language="javascript">
-										moonStarStars("Grading_Rating", {{User_Grading_Rating}});
-									</script>
-								</div>						  </td>
+								{% endif %}						  
+							</td>
+							<td>
+								&nbsp;							
+							</td>
+							<td height="25">
+								<script type="text/javascript" language="javascript">
+									moonStarStars("Grading_Rating", {{User_Grading_Rating}});
+								</script>					  
+							</td>
 						</tr>
-				  </table>				</td>
+				  </table>				
+				</td>
 			</tr>
 			<tr>
-			  <td height="15">
-			  <p  class="Rating_item">
-							Number of hours spent/ week on this class (at least):						</p>
-						<script type="text/javascript">
-							moonStars("Hours", {{Hours}}, "clock_grey.png", "clock.png", [1,'','','',5,'','','','',10,'','','','',15,'','','','',20]);
-						</script>
-						<p  class="Rating_item">
-							Grade in this class (at least):						</p>
-						<script type="text/javascript">
-							moonStars("Grade", {{Grade}}, "25px-grey-check.png", "25px-green-check.png", ["F", "D", "C", "B", "A"]);
-						</script>
-			  </td>
+				<td height="15">
+					<p  class="Rating_item">
+						Number of hours spent/ week on this class (at least):						
+					</p>
+					<script type="text/javascript">
+						moonStars("Hours", {{Hours}}, "clock_grey.png", "clock.png", [1,'','','',5,'','','','',10,'','','','',15,'','','','',20]);
+					</script>
+					<p  class="Rating_item">
+						Grade in this class (at least):						
+					</p>
+					<script type="text/javascript">
+						moonStars("Grade", {{Grade}}, "25px-grey-check.png", "25px-green-check.png", ["F", "D", "C", "B", "A"]);
+					</script>
+				</td>
 		  </tr>
 			<tr><td height="15">&nbsp;</td></tr>
 			<tr>
 				<td>
-					<div style="width: 510px; background-color: #EDEFF4;">
+					<div style="width: 760px; background-color: #EDEFF4;">
 						<script type="text/javascript">
 							mooComment("Course_Comment", "Course Comment [optional]", "{{Course_Comment}}", {{Course_Comment_Privacy}});
 							{% for teacher in teachers %}
 								mooComment("Teacher_{{ teacher.id }}_Comment", "Instructor Comment: {{teacher.title}} {{teacher.name}} [optional]", "{{teacher.course_comment}}", {{teacher.course_comment_privacy}});
 							{% endfor %}
 						</script>
-						
-					</div>				</td>
+					</div>				
+				</td>
 			</tr>
 			<tr>
-				<td height="20">&nbsp;				</td>
+				<td height="20">
+					&nbsp;
+				</td>
 			</tr>
 <!-- At some point, we should make this happen, but I'm not up to it as of the time I'm writing this comment. 
   <tr>
@@ -197,16 +239,16 @@
 			</tr>
 			<tr>
 				<td>
-					<table width="470" border="0" cellpadding="0" class="Rating_item">
+					<table width="760" border="0" cellpadding="0" class="Rating_item">
 						<tr>
-							<td width="235" height="30">
+							<td width="375" height="30">
 								FB friends comments
 							</td>
-							<td width="235" height="30">
+							<td width="375" height="30">
 								FB public comments
 							</td>
+						</tr>
 						{% for comment_pair in Course_Comments %}
-							</tr>
 							<tr>
 								{% for comment in comment_pair %}
 									<td>
@@ -256,12 +298,12 @@
 				</tr>
 				<tr>
 					<td>
-						<table width="470" border="0" cellpadding="0" class="Rating_item">
+						<table width="760" border="0" cellpadding="0" class="Rating_item">
 							<tr>
-								<td width="235" height="30">
+								<td width="375" height="30">
 									FB friends comments
 								</td>
-								<td width="235" height="30">
+								<td width="375" height="30">
 									FB public comments
 								</td>
 							{% for comment_pair in teacher.comments %}
@@ -308,7 +350,7 @@
 			{% endfor %}
 			<tr>
 				<td height="10">
-				<button class="searchback" onclick="history.back(-1)"/>
+					<button class="searchback" onclick="history.back(-1)"></button>
 				</td>
 			</tr>
 			<tr>
@@ -336,5 +378,5 @@
 				document.getElementById('fb-root').appendChild(e);
 			}());
 		</script>
-</body>
+	</body>
 </html>

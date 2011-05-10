@@ -93,7 +93,7 @@ class Comment(User_Course_Interaction):
 	every other Comment based model
 	"""
 	content = models.CharField(max_length=1023)	# Comment text
-	privacy = models.IntegerField()				# Comment privacy rating. Not sure how we'll standardize this, but it should be an integer
+	privacy = models.IntegerField()				# 0 = friends only, 1 = Public Comment
 	
 	def __unicode__(self):
 		"""
