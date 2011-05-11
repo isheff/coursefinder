@@ -77,6 +77,13 @@ def canvas(request):
 	user_not_rate_course = []
 	for dept in user_not_rate_dept:
 		user_not_rate_course += Course.objects.filter(department=dept) 
+	if len(user_not_rate_course)<8:
+		user_not_rate_course=[]
+		all_course = Course.objects.all()
+		for course in all_course:
+			user_not_rate_course.append(course)
+		random.shuffle(user_not_rate_course)
+		del user_not_rate_course[200:]
 	#---------------------------------------------------------------------------
 	recommend_value={}
 	#	add value(estimated) to each course(user_not_rate)
@@ -366,7 +373,7 @@ def get_current_user(request):
         
         
         # FOR OFF-GOOGLE TESTING ONLY***************
-        return get_object_or_404(Facebook_User, name="lee")
+        #return get_object_or_404(Facebook_User, name="lee")
         # FOR OFF-GOOGLE TESTING ONLY***************
         
         
