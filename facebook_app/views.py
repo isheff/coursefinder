@@ -219,6 +219,16 @@ def display_course(request, course_id):
                         # currently, we have no algorithm to predict ratings, so the predictions are all 0:
                         # note that predictions are displayed as % of 5 stars, so we must convert our 0-1 floats to 20-100%
                         teachers[teacher].rating = 0
+                        # Teacher comments for this course and this teacher:
+			comments_friends = []
+			comments_public  = []
+			for comment in Teacher_Comment.objects.filter(teacher=teachers[teacher], course=p).order_by("-date"):
+				if is_friends(user, comment.user):
+					comments_friends.append(comment)
+				elif (comment.privacy == 1):
+					comments_public.append(comment)
+			teachers[teacher].comments = comment_list_pair(comments_friends, comments_public)
+						
                 #The template will need the current user, the facebook_app_id, the course being rated, and the set of teachers for that course (with added info above)
                 pass_to_template = {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'course':p}
                 pass_to_template['teachers'] = teachers
@@ -259,11 +269,23 @@ def display_course(request, course_id):
                 pass_to_template['Overall_Rating'] = 0
                 pass_to_template['Grading_Rating'] = 0
 		Overall_Rating_value = 0
-		# Use the temp algorithm here
+		# Use the temp algorithm here-----------------------------
 		Overall_Rating_value = Rating_alg(user,p,Overall_Rating)	
 		pass_to_template['Overall_Rating']=Overall_Rating_value
 		pass_to_template['Overall_Rating_value']=float(Overall_Rating_value/20)
-			
+                #---------------------------------------------------------
+
+		# OK, so now we need the set of comments written by friends, and public comments.
+		# Note that comments not by friends are anonymous. That is, their username will not be displayed.
+		comments_friends = []
+		comments_public = []
+		for comment in Course_Comment.objects.filter(course=p).order_by("-date"):
+			if is_friends(comment.user, user):
+				comments_friends.append(comment)
+			elif(comment.privacy == 1):
+				comments_public.append(comment)
+		pass_to_template['Course_Comments'] = comment_list_pair(comments_friends, comments_public)
+	
                 return render_to_response('facebook_app/display_course.html', pass_to_template)
         else:
                 return HttpResponse("You do not attend this institution.")
@@ -277,6 +299,21 @@ def Rating_alg(user,course,Rating_item):
 			Rating_item_value += course.value
 			Rating_item_value = int(round((Rating_item_value/len(Rating_item_course))*80 +20))
 	return Rating_item_value
+
+def comment_list_pair(comments_friends, comments_public):
+	answer = []
+	for comment_num in range(max(len(comments_friends), len(comments_public))):
+		next = []
+		if comment_num < len(comments_friends):
+			next.append(comments_friends[comment_num])
+		else:
+			next.append(None)
+		if comment_num < len(comments_public):
+			next.append(comments_public[comment_num])
+		else:
+			next.append(None)
+		answer.append(next)
+	return answer
 
 def attends_institution(user, institution):
         #TODO: make this method return whether the given user attends the given institution.
@@ -308,6 +345,11 @@ def get_current_user(request):
                                 user.access_token = cookie["access_token"]
                                 user.save()
         return user
+
+def is_friends(user1, user2):
+		# in the future, this will return a boolean value representing whether the input users are friends.
+		return (user1.id == user2.id)
+
 
 # radar chart for course-map
 

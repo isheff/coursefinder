@@ -104,9 +104,10 @@
   <body >
 	  {% load my_filters %}
 <div >
-  <table width="510" border="0"  cellpadding="0">
+  <table width="700" border="0"  cellpadding="0">
   <tr>
-    <td width="100" colspan="2"><table width="510" border="0" cellpadding="0">
+    <td width="100" colspan="2">
+    <table width="700" border="0" cellpadding="0">
       <tr>
         <td><img src="/media/Caltech_namecopy.png" alt="Caltech_name" width="350" height="100" /></td>
         <td><img src="/media/Caltech_logo.png" alt="Caltech_logo" width="100" height="100" /></td>
@@ -220,7 +221,7 @@
           
 			</div>        </td>
       </tr>
-
+      <tr><td colspan="2">&nbsp;</td></tr>
     </table>    </td>
   </tr>
   <tr>
@@ -235,7 +236,7 @@
 	
 
 	    {% for course in Search_results %}
-    <table width="450" border="0" cellpadding="0" onMouseOver="this.style.background='#d8dfea'" onMouseOut="this.style.background='#ffffff'">
+    <table width="500" border="0" cellpadding="0" onMouseOver="this.style.background='#d8dfea'" onMouseOut="this.style.background='#ffffff'">
 	 <tr>
 		 <td    >
 			 <a class="search_result_item" style="vertical-align:text-top"  href="/course/{{course.id}}">
@@ -244,8 +245,8 @@
 			 </td>
 			 <td colspan="2">
 				 <a class="search_result_item" href="/course/{{course.id}}">
-				{{course.name|escape}}
-				</a></td>
+				 {{course.name|escape}}
+				 </a></td>
 	 </tr>
 	  <tr>
 	 <td width="40" height="25">&nbsp;</td>
