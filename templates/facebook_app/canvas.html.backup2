@@ -36,32 +36,6 @@
 		function save_image() { OFC.jquery.popup('course_map') }
 	</script>
 
-<style type="text/css" media="screen">
-    #recommend_list{
-        margin:0 auto;
-        height:200px;
-        width:700px;
-        overflow:hidden;
-        position:relative;
-        background-color: #ffffff;
-    }
-    #recommend_list ul,
-    #recommend_list li{
-        list-style:none;
-        margin:0;
-        padding:0;
-    }
-    #recommend_list a{
-        position:absolute;
-        text-decoration: none;
-        color:#000000;
-    }
-    #recommend_list a:hover{
-        color:#260101;
-    }
-</style>
-
-
 <script type="text/javascript">
 <!--
 	$(function(){
@@ -160,7 +134,7 @@
         <td>
   <div id="recommend_list">
 	<ul> {% for course in Recommend %}
-	  <li><a href="/course/{{course.id}}">{% for dept in course.department|join:"/"  %}{{dept|escape}}{% endfor %}{{course.name|escape}}</a></li>
+	  <li><a href="/course/{{course.id}}">{{course.name|escape}}{{course.name|escape}}</a></li>
 	  {% endfor %} </ul>
 </div>
 </td>
@@ -329,80 +303,7 @@
 </td>
   </tr>
 </table>
-
-<script type="text/javascript">
-
-$(document).ready(function(){
-    
-//Setup variables
-var element = $('#recommend_list a'); // all the list elements
-var offset = 0;             // angle offset for animation
-var stepping = 0;        // how fast the list rotates
-var list = $('#recommend_list');      // the list wrapper
-var $list = $(list);
-
-/* Handles mouse movement, the closer to the center
-the faster the list will rotate */
-$list.mousemove(function(e){
-    
-    var topOfList = $list.eq(0).offset().top
-    var listHeight = $list.height()
-    
-    // Sets variable that controls the speed of rotation.
-    stepping = ((e.clientY - topOfList) /  listHeight * 0.2 - 0.1)*0.25;
-    
-});
-
-
-/* Disperse elements evenly around the circle */
-for (var i = element.length - 1; i >= 0; i--)
-{
-    element[i].elemAngle = i * Math.PI * 2 / element.length;
-}
-
-// call render function over and over
-setInterval(render, 20);
-
-
-// Handles how and where each element will be rendered.
-function render(){
-    
-    //Steps through each element...
-    for (var i = element.length - 1; i >= 0; i--){
-        
-        // offset adds degrees to where the element 
-        // is currently on the circle
-        var angle = element[i].elemAngle + offset;
-        
-        // Trig to figure out the size and where the
-        // text should go
-        x = 120 + Math.sin(angle) * 30;
-        y = 45 + Math.cos(angle) * 40;
-        size = Math.round(8 - Math.sin(angle) * 8);
-        
-        // Centers the text, instead of being left aligned.
-        var elementCenter = $(element[i]).width() / 2;
-        
-        // Figure out the x value of the element.
-        var leftValue = (($list.width()/2) * x / 100 - elementCenter - 20) + "px"
-        
-        
-        // Apply the values to the text
-        $(element[i]).css("fontSize", size + "pt");
-        $(element[i]).css("opacity",size/50);
-        $(element[i]).css("zIndex" ,size);
-        $(element[i]).css("left" ,leftValue);
-        $(element[i]).css("top", y + "%");
-    }
-    
-    // Rotate the circle
-    offset += stepping;
-}
-    
-    
-});
-</script>
-
+  
   </div>
  		<div id="fb-root"></div>
 		<script>

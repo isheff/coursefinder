@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>
-			Course finder - {% for department in course.department %} {{department}} {% endfor %} {{ course.name }}
+			Course Corner - {% for department in course.department %} {{department}} {% endfor %} {{ course.name }}
 		</title>
 		<link rel="stylesheet" type="text/css" href="/media/display_course.css" />
 		<script src="/media/mootools-core-1.3.2.js"></script>
@@ -13,8 +13,8 @@
 	<body onload="MM_preloadImages('/media/searchback_link.png')">
 		<table width="700" border="0" cellpadding="0">
 			<tr>
-			<td>
-			<table width="700" border="0" cellpadding="0">
+				<td>
+					<table width="700" border="0" cellpadding="0">
 						<tr>
 							<td>
 								<a href="/"><img src="/media/Caltech_namecopy.png" alt="Caltech_name" width="350" height="100" border="0" /></a> </td>
@@ -46,8 +46,8 @@
                     <td colspan="2"><span class="Course_detail">{{course.description}}</span></td>
                   </tr>
                   <tr>
-			  <td width="95" align="center"> {% if Overall_Rating %} 
-				  <div  class="rating_bar_small">
+			  <td width="95"> {% if Overall_Rating %} 
+				  <div aling="center" class="rating_bar_small">
 					  <div style="width:{{Overall_Rating}}%">
 					  </div>
 				  </div> {% endif %}
@@ -97,7 +97,7 @@
 							<td width="150" height="25" valign="middle">
 								<div>
 									<script type="text/javascript" language="javascript">
-										moonStarStars("Overall_Rating", {{ User_Overall_Rating }},{{course.id}});
+										moonStarStars("Overall_Rating", {{ User_Overall_Rating }});
 									</script>
 								</div>
 							</td>
@@ -120,7 +120,7 @@
 								<td>
 								<td height="25">
 									<script type="text/javascript" language="javascript">
-										moonStarStars("Teacher_{{teacher.id}}_Rating", {{teacher.user_rating}},{{course.id}});
+										moonStarStars("Teacher_{{teacher.id}}_Rating", {{teacher.user_rating}});
 									</script>
 								</td>
 							</tr>
@@ -144,7 +144,7 @@
 							</td>
 							<td height="25">
 								<script type="text/javascript" language="javascript">
-									moonStarStars("Grading_Rating", {{User_Grading_Rating}},{{course.id}});
+									moonStarStars("Grading_Rating", {{User_Grading_Rating}});
 								</script>					  
 							</td>
 						</tr>
@@ -157,13 +157,13 @@
 						Number of hours spent/ week on this class (at least):						
 					</p>
 					<script type="text/javascript">
-						moonStars("Hours", {{Hours}}, "time_bar_gray.png", "time_bar_blue.png", [1,'','','',5,'','','','',10,'','','','',15,'','','','',20],{{course.id}});
+							moonStars("Hours", {{Hours}}, "time_bar_gray.png", "time_bar_blue.png", [1,'','','',5,'','','','',10,'','','','',15,'','','','',20]);
 						</script>
 					<p  class="Rating_item">
 						Grade in this class (at least):						
 					</p>
 					<script type="text/javascript">
-						moonStars("Grade", {{Grade}}, "25px-grey-check.png", "25px-green-check.png", ["F", "D", "C", "B", "A"],{{course.id}});
+						moonStars("Grade", {{Grade}}, "25px-grey-check.png", "25px-green-check.png", ["F", "D", "C", "B", "A"]);
 					</script>
 				</td>
 		  </tr>

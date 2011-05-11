@@ -10,7 +10,7 @@
  This is based upon the 5-star rating code, and expanded to be used for the Hours and Grade input 
  as well.
  */
-function moonStars(ratingname, defaultValue, emptyImage, fullImage, optionNames)
+function moonStars(ratingname, defaultValue, emptyImage, fullImage, optionNames,course_id)
 {
 	
 	
@@ -59,7 +59,7 @@ function moonStars(ratingname, defaultValue, emptyImage, fullImage, optionNames)
 		   onClick: function(value) {  
 		   
 		   var requestHTMLData = new Request({  
-			 url: 'submit/',  
+			 url: '/course/'+course_id+'/submit/',  
 			 data: {Rating_Value: value, Rating_Name: ratingname}  
 			 });  
 		   requestHTMLData.send();  
@@ -73,9 +73,9 @@ function moonStars(ratingname, defaultValue, emptyImage, fullImage, optionNames)
  This is a shortcut to use moonStars to create a simple 5-star rating that submits under the name ratingname, 
  with some default value (between 1 and 5, or no default)
  */
-function moonStarStars(ratingname, defaultValue)
+function moonStarStars(ratingname, defaultValue,course_id)
 {
-	moonStars(ratingname, defaultValue, 'star_x_gray.png', 'star_x_gold.png', ["","","","",""])
+	moonStars(ratingname, defaultValue, 'star_x_gray.png', 'star_x_gold.png', ["","","","",""],course_id)
 }
 
 

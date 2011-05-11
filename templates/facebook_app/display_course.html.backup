@@ -1,120 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-	<style type="text/css">
-<!--
-.Rating_item {
-	color: #333;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 14px;
-}
-.rating_bar {
-	width: 125px;
-	background-image: url(star_x_gray.png);
-	background-repeat: repeat-x;
-	background-position: 0 0;
-}
-
-.rating_bar div {
-	height: 25px;
-	background-image: url(star_x_red.png);
-	background-repeat: repeat-x;
-	background-position: 0 0;
-}
-.Course_detail {
-	font-size: 11px;
-	color: #333;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	text-align: justify;
-}
-.Course_title {
-	font-size: 14px;
-	font-weight: bold;
-	color: #333;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-}
-.Course_instructor {
-	font-size: 12px;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	color: #333;
-}
-.Search_name {font-size: 14px; font-weight: normal; color: #333; font-family: Verdana, Arial, Helvetica, sans-serif; }
-.Title {
-	color: #515151;
-	font-family: Georgia, "Times New Roman", Times, serif;
-	font-weight: bold;
-	font-size: 20px;
-}
-
-.c1 {
-font-size: 10pt;
-border-top: 0px solid #3B5998;
-border-right: 0px solid #3B5998;
-border-left: 0px solid #3B5998;
-border-bottom: 0px solid #3B5998;
-padding-top: 6px;
-padding-right: 6px;
-padding-left: 6px;
-padding-bottom: 6px;
-color: #515151;
-text-decoration:none;
-font-family:Verdana, Arial, Helvetica, sans-serif;
-}
-.c1:hover {
-	font-size: 10pt;
-	border-top: 1px solid #3B5998;
-	border-right: 1px solid #3B5998;
-	border-left: 1px solid #3B5998;
-	border-bottom: 1px solid #3B5998;
-	padding-top: 6px;
-	padding-right: 6px;
-	padding-left: 6px;
-	padding-bottom: 6px;
-	color: #515151;
-	text-decoration:none;
-	font-family:Verdana, Arial, Helvetica, sans-serif;
-}
-.searchback {
-		background-image: url(/media/searchback.png);
-		text-decoration: none;
-		background-position:center;
-		background-repeat: no-repeat;
-		height:25px;
-		width:78px;
-		border: none;
-		}
-.searchback:hover {
-		background-image: url(/media/searchback_link.png);
-		text-decoration: none;
-		background-position:center;
-		background-repeat: no-repeat;
-		height:25px;
-		width:78px;
-		border: none;
-		}
-
-.submit {
-	width:60px;
-	height:25px;
-	border: none;
-	background-image:url(/media/submit_button.png);
-	background-position:center;
-	background-repeat: no-repeat;
-	text-decoration: none;
-	cursor: pointer;
-	}
-.submit:hover {
-	width:60px;
-	height:25px;
-	border: none;
-	background-image:url(/media/submit_button_link.png);
-	background-position:center;
-	background-repeat: no-repeat;
-	text-decoration: none;
-	cursor: pointer;
-	}
--->
-    </style>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>
 			Course Corner - {% for department in course.department %} {{department}} {% endfor %} {{ course.name }}		</title>
@@ -166,7 +52,7 @@ function MM_swapImage() { //v3.0
 					<table width="510" border="0" cellpadding="0">
 						<tr>
 							<td>
-								<a href="http://apps.facebook.com/coursefinder"><img src="/media/Caltech_namecopy.png" alt="Caltech_name" width="350" height="100" border="0" /></a> </td>
+								<a href="/"><img src="/media/Caltech_namecopy.png" alt="Caltech_name" width="350" height="100" border="0" /></a> </td>
 							<td>
 								<img src="/media/Caltech_logo.png" alt="Caltech_logo" width="100" height="100" />							</td>
 						</tr>
@@ -195,7 +81,12 @@ function MM_swapImage() { //v3.0
                     <td colspan="2"><span class="Course_detail">{{course.description}}</span></td>
                   </tr>
                   <tr>
-                    <td width="95">&nbsp;</td>
+			  <td width="95"> {% if Overall_Rating %} 
+				  <div aling="center" class="rating_bar_small">
+					  <div style="width:{{Overall_Rating}}%">
+					  </div>
+				  </div> {% endif %}
+	  </td>
                     <td width="80" ><span class="Course_instructor">Instructors:</span></td>
                     {% for teacher in teachers %}
 					<td width="280" ><span class="Course_instructor">{{ teacher.title }} {{ teacher.name }} </span></td>

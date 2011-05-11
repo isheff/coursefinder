@@ -1,4 +1,6 @@
 from __future__ import division
+from operator import itemgetter
+import random
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import Context, loader
 from django.shortcuts import render_to_response, get_object_or_404
@@ -48,9 +50,49 @@ def canvas(request):
 	for course in results:
 		results_value[course]=Rating_alg(user,course,Overall_Rating)
 	pass_to_template['Search_results_value'] = results_value
-	
+	# 3. current user rating value
+        #	 Any Overall Rating previously input by the user must be passed to the template
+	over_rat={}
+	for course in results:
+		over_rat[course] = Overall_Rating.objects.filter(user=user, course=course)
+        	if len(over_rat[course]) == 0:
+			over_rat[course]=0
+        	else:
+			over_rat[course]=int(over_rat[course][0].value*4.0 + 1.1)
+        pass_to_template['User_Overall_Rating']=over_rat
+        # 4. top recommended rating value (estimated)
+	''' This is used to exclude user rated course (but not working)
+	user_not_rate = Overall_Rating.objects.exclude(user=user)
+	user_not_rate_course=[]
+	for item in user_not_rate:
+		user_not_rate_course.append(item.course)
+	'''
+	# Currently I'm using all courses that user-rated-courses' departments as source
+	user_not_rate = Overall_Rating.objects.filter(user=user)
+	user_not_rate_dept=[]
+	for item in user_not_rate:
+		user_not_rate_dept.append(item.course.department)
+	user_not_rate_dept = [item for sublist in user_not_rate_dept for item in sublist]
+	user_not_rate_dept = list(set(user_not_rate_dept))
+	user_not_rate_course = []
+	for dept in user_not_rate_dept:
+		user_not_rate_course += Course.objects.filter(department=dept) 
+	#---------------------------------------------------------------------------
+	recommend_value={}
+	#	add value(estimated) to each course(user_not_rate)
+	for course in user_not_rate_course:
+		recommend_value[course]=(Rating_alg(user,course,Overall_Rating))
+	#	sorting & truncate & random shuffle (from 8 get 5)
+	recommend_value_sort = sorted(recommend_value.iteritems(),key=itemgetter(1),reverse=True)
+	del recommend_value_sort[8:]
+	random.shuffle(recommend_value_sort)
+	#	get the recommend courses
+	recommend = []
+	for i in range(5):
+		recommend.append(recommend_value_sort[i][0])
+	pass_to_template['Recommend']= recommend
 
-        return render_to_response('facebook_app/canvas.html', pass_to_template)
+	return render_to_response('facebook_app/canvas.html', pass_to_template)
 
 def display_institution(request, institution_id):
         # TODO: edit template to display courses and stuff. 
