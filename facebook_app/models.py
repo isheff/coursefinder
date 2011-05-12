@@ -93,7 +93,7 @@ class Comment(User_Course_Interaction):
 	every other Comment based model
 	"""
 	content = models.CharField(max_length=1023)	# Comment text
-	privacy = models.IntegerField()				# 0 = friends only, 1 = Public Comment
+	privacy = models.IntegerField()				# Comment privacy rating. Not sure how we'll standardize this, but it should be an integer
 	
 	def __unicode__(self):
 		"""
@@ -133,7 +133,10 @@ class Rating(User_Course_Interaction):
 	
 	class Meta:
 		abstract = True
-
+class Interest(User_Course_Interaction):
+	value = models.IntegerField() # the interest tag is 0 (none) or 1 (interested in)
+	def __unicode__(self):
+		return str(self.user.name) + ": "+str(self.value)+" " +str(self.course.name)
 
 class Overall_Rating(Rating):
 	"""
