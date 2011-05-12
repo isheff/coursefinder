@@ -1,5 +1,7 @@
 # my_filters.py
 # Additional custom filters
+import re
+from django.utils.encoding import force_unicode
 from django.template.defaultfilters import register
 
 @register.filter(name = "lookup")
@@ -22,4 +24,10 @@ def truncatechars(s, num):
       		else:
            		string.append(word)
 	return u' '.join(string)
-
+@register.filter(name="removefirstword")
+def removefirstword(s):
+	s = force_unicode(s)
+	words = s.split()
+	if len(words) >1:
+		words = words[1:]
+	return u' '.join(words)

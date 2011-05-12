@@ -39,8 +39,8 @@
 <style type="text/css" media="screen">
     #recommend_list{
         margin:0 auto;
-        height:200px;
-        width:700px;
+        height:175px;
+        width:650px;
         overflow:hidden;
         position:relative;
         background-color: #ffffff;
@@ -54,10 +54,12 @@
     #recommend_list a{
         position:absolute;
         text-decoration: none;
-        color:#000000;
+	color:#302C29;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
     }
-    #recommend_list a:hover{
-        color:#260101;
+    #recommend_list a:hover {
+	color:#6C8C84;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
     }
 </style>
 
@@ -149,7 +151,7 @@
 	</td>
   </tr>
   <tr>
-    <td colspan="2"><span class="Title">Top 3 recommended </span></td>
+    <td colspan="2"><span class="Title">Top 5 recommended </span></td>
   </tr>
   <tr>
    <td height="1" bgcolor="#808080"></td>
@@ -160,7 +162,7 @@
         <td>
   <div id="recommend_list">
 	<ul> {% for course in Recommend %}
-	  <li><a href="/course/{{course.id}}">{% for dept in course.department|join:"/"  %}{{dept|escape}}{% endfor %}{{course.name|escape}}</a></li>
+	  <li><a href="/course/{{course.id}}">{{course.name|removefirstword|escape}}</a></li>
 	  {% endfor %} </ul>
 </div>
 </td>
@@ -349,7 +351,7 @@ $list.mousemove(function(e){
     var listHeight = $list.height()
     
     // Sets variable that controls the speed of rotation.
-    stepping = ((e.clientY - topOfList) /  listHeight * 0.2 - 0.1)*0.25;
+    stepping = ((e.clientY - topOfList) /  listHeight * 0.2 - 0.1)*0.15;
     
 });
 
@@ -378,8 +380,8 @@ function render(){
         // text should go
         x = 120 + Math.sin(angle) * 30;
         y = 45 + Math.cos(angle) * 40;
-        size = Math.round(8 - Math.sin(angle) * 8);
-        
+        size = Math.round(30 - Math.sin(angle) * 30);
+       	size_font = Math.round(size /5)
         // Centers the text, instead of being left aligned.
         var elementCenter = $(element[i]).width() / 2;
         
@@ -388,8 +390,8 @@ function render(){
         
         
         // Apply the values to the text
-        $(element[i]).css("fontSize", size + "pt");
-        $(element[i]).css("opacity",size/50);
+        $(element[i]).css("fontSize", size_font + "pt");
+        $(element[i]).css("opacity",size);
         $(element[i]).css("zIndex" ,size);
         $(element[i]).css("left" ,leftValue);
         $(element[i]).css("top", y + "%");

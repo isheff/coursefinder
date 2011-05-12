@@ -415,8 +415,8 @@ def radar_chart(request,user_key_name):
     [course_taken_fullname,course_taken_value]=course_value_convert(user_dept)        
     # 2. max courses have taken in one dept
     course_value_max=round(max(course_taken_value))
-    if course_value_max %2!=0: course_value_max += course_value_max
-    if course_value_max <8: course_value_max = 8
+    if course_value_max %2!=0: course_value_max = course_value_max +1
+    if course_value_max <6: course_value_max = 6
     # 3. make labels
     course_value_label = []
     for i in range(course_value_max):
