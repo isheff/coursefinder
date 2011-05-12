@@ -254,9 +254,59 @@ This is an abstract class (there are no objects with this class) designed so tha
 
 \section{Front End}
 
-\subsection{Site Map}
+\begin{figure}[h]
+  \caption{Site Map}
+  \centering
+    \includegraphics[width=3in]{Sitemap.pdf}
 
-\subsection{Layout}
+\end{figure}
+
+\begin{figure}[h]
+  \caption{Layout}
+  \centering
+    \includegraphics[width=2.5in]{canvas.pdf}
+    \includegraphics[width=2.5in]{course.pdf}
+
+\end{figure}
+
+
+
+\subsection{Main Page}
+\begin{verbatim}http://courserecommendation.appspot.com/
+\end{verbatim}
+
+\subsubsection{Recommendation List}Currently, top recommendation courses are calculated from overall rating averages. Candidates are selected from the same department that user has rated. We use 3D tag cloud by JQuery to present the recommend list. First, setup the mouse event and figure out how far the mouse is away from the center and assign it to a variable controlling the speed of the scrolling list. Then step through each element in the list and give each one a spot on 3D circle. For loop walks through each one, and assigns an angle to each element. Finally, call the render function repeatedly. 
+
+\subsubsection{Search Course}Search courses from the database by filtering given specific input. Input can be department only, last name of the professor only, part of the course name only or department with course number. Search results will be displayed right after this section. Search results lists include each course’s estimated rating and provide rating bars for user to click.
+
+\subsubsection{Course Map}From courses user has rated, we present user’s personal course map by Flash chart. Open flash chart project here provides following advantages: 
+\begin{enumerate}\item	Tooltips encourage user interactivity and data exploration\item	We can save the chart as an image\item	Quick and easy to plot radar chart
+\end{enumerate}
+First, we gather the user’s rating from the data base. Calculate number of courses in each department. Select top numbered departments and write the data to the json file for each user. Open flash chart reads the json file and generate the radar Flash chart as course map.
+\subsection{Course Page}
+\begin{verbatim}http://courserecommendation.appspot.com/course/<course id>
+\end{verbatim}
+
+\subsubsection{Algorithmic Estimated Rating}Currently, we use the averaging rating as predicted rating. The rating values are stored between 0 and 1. Convert the value to percent in total to tell how many golden stars are displayed. The result shows the rating bar by CSS with gray star background images. 
+
+\subsubsection{Rating Items}For user submitting ratings for each item, we use Mootool to deal with it asynchronous. The Javascript generate forms on the course page with user’s previous rating value given. Every time the user clicks on rating items, it sends the value to the server asynchronous.
+
+\subsubsection{Search Back Button}It’s import to have users return to the search page easily. Two access buttons to the main page are on the top and bottom of the course page.
+
+\subsubsection{Visual Effects}As a Facebook App, we choose themes that similar to Facebook for consistency. Colors of buttons and characters are the same with Facebook color. We use golden star rating bar to meet the universal stereotype rating bar. For estimated ratings, red star bar can strongly attract attentions. We make pages clean and neat to let users seeking specific information easily. More importantly, it can make users think it is easy to rate courses.
+
+\subsection{Data}
+\subsubsection{Course Rating Data}
+\begin{verbatim}http://courserecommendation.appspot.com/course/<course id>/submit
+\end{verbatim}
+
+For javascript submission only.
+
+\subsubsection{User Dourse Map Data}
+\begin{verbatim}http://courserecommendation.appspot.com/data/<user id>
+\end{verbatim}
+
+For JSON retrieval only.
 
 
 

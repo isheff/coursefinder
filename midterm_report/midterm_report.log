@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009) (format=pdflatex 2009.11.7)  12 MAY 2011 10:52
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009) (format=pdflatex 2009.11.7)  12 MAY 2011 11:11
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -487,14 +487,14 @@ Overfull \hbox (7.46422pt too wide) in paragraph at lines 14--14
 -tamped) [][]  
  []
 
-)
+[2])
 \tf@toc=\write4
 \openout4 = `midterm_report.toc'.
 
- [2] [3] [4] [5] [6] [7] <data_structure.pdf, id=30, 1168.365pt x 612.2875pt>
+ [3] [4] [5] [6] [7] [8]
+<data_structure.pdf, id=33, 1168.365pt x 612.2875pt>
 File: data_structure.pdf Graphic file (type pdf)
-
-<use data_structure.pdf>
+ <use data_structure.pdf>
 Overfull \hbox (43.62pt too wide) in paragraph at lines 99--100
  [][] 
  []
@@ -502,35 +502,60 @@ Overfull \hbox (43.62pt too wide) in paragraph at lines 99--100
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[8] [9 <./data_structure.pdf>] [10] [11]
+[9] [10 <./data_structure.pdf>] [11] [12]
 Overfull \hbox (1.10567pt too wide) in paragraph at lines 223--225
 \OT1/cmr/m/n/12 de-signed to de-fine the re-quired fields for ev-ery other mode
 l for Rat-ing Courses. 
  []
 
-[12]
+[13] <Sitemap.pdf, id=75, 319.41212pt x 290.98782pt>
+File: Sitemap.pdf Graphic file (type pdf)
+ <use Sitemap.pdf>
+<canvas.pdf, id=76, 371.65018pt x 561.9929pt>
+File: canvas.pdf Graphic file (type pdf)
+ <use canvas.pdf>
+<course.pdf, id=77, 371.0979pt x 558.78862pt>
+File: course.pdf Graphic file (type pdf)
+ <use course.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[14 <./Sitemap.pdf>]
+Missing character: There is no Õ in font cmr12!
+ [15 <./canvas.pdf> <./course.pdf>]
+Missing character: There is no Õ in font cmr12!
+Missing character: There is no Õ in font cmr12!
+Missing character: There is no Õ in font cmr12!
+Missing character: There is no Õ in font cmr12!
+ [16]
+Overfull \hbox (11.3752pt too wide) in paragraph at lines 321--321
+[]\OT1/cmtt/m/n/12 http://courserecommendation.appspot.com/course/<course id>/s
+ubmit[] 
+ []
+
 Missing character: There is no Õ in font cmti12!
- [13] [14] (./midterm_report.aux) ) 
+[17] [18] (./midterm_report.aux) ) 
 Here is how much of TeX's memory you used:
- 8568 strings out of 493848
- 146914 string characters out of 3149207
- 190227 words of memory out of 3000000
- 11679 multiletter control sequences out of 15000+200000
- 13387 words of font info for 51 fonts, out of 3000000 for 9000
+ 8585 strings out of 493848
+ 147147 string characters out of 3149207
+ 191227 words of memory out of 3000000
+ 11692 multiletter control sequences out of 15000+200000
+ 13556 words of font info for 52 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
  47i,6n,49p,1292b,226s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2009/texmf-dist/fonts/en
-c/dvips/cm-super/cm-super-ts1.enc}</usr/local/texlive/2009/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2009/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1
-/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmr12.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmr17.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmti12.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/public
-/cm-super/sfrm1200.pfb>
-Output written on midterm_report.pdf (14 pages, 168372 bytes).
+{/usr/local/texlive/2009/texmf-dist/fonts/enc
+/dvips/cm-super/cm-super-ts1.enc}</usr/local/texlive/2009/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr12.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmr17.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmti12.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmtt12.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/public/c
+m-super/sfrm1200.pfb>
+Output written on midterm_report.pdf (18 pages, 380397 bytes).
 PDF statistics:
- 104 PDF objects out of 1000 (max. 8388607)
+ 153 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 18 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 33 words of extra memory for PDF output out of 10000 (max. 10000000)
 
