@@ -169,6 +169,17 @@ def rate_course(request, course_id):
                                         grad_rat.value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
                                         grad_rat.save()
                                         return HttpResponse("Grading Rating of "+str(grad_rat.value)+" saved.")
+                        # If an Interest was submitted, check to see if one exists, and overwrite it or create a new one.
+                        if "Interest" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
+                                if request.REQUEST["Rating_Value"] in ["0", "1"]:
+                                        interest = Interest.objects.filter(user=user, course=p)
+                                        if len(interest) == 0:
+                                                interest = Interest(user=user, course=p)
+                                        else:
+                                                interest = interest[0]
+                                        interest.value = int(request.REQUEST["Rating_Value"])
+                                        interest.save()
+                                        return HttpResponse("Interest of "+str(interest.value)+" saved.")
                         
                         # If an Hours was submitted, check to see if one exists, and overwrite it or create a new one.
                         if "Hours" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
@@ -364,6 +375,22 @@ def comment_list_pair(comments_friends, comments_public):
 		answer.append(next)
 	return answer
 
+def Interest_list(request, user_id):
+	user = get_current_user(request) # the user presently logged in
+	user_id = user.key_name
+	pass_to_template={'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID,}
+	interest = Interest.objects.filter(user=user)
+	if len(interest)==0:
+		pass_to_template['Interest']=[]
+	else:
+		interest_list=[]
+		for item in interest:
+			interest_list.append(item)
+		pass_to_template['Interest']=interest_list
+
+	return render_to_response('facebook_app/interest_list.html', pass_to_template)
+
+
 def attends_institution(user, institution):
         #TODO: make this method return whether the given user attends the given institution.
         return True
@@ -373,7 +400,7 @@ def get_current_user(request):
         
         
         # FOR OFF-GOOGLE TESTING ONLY***************
-        #return get_object_or_404(Facebook_User, name="lee")
+        return get_object_or_404(Facebook_User, name="lee")
         # FOR OFF-GOOGLE TESTING ONLY***************
         
         
