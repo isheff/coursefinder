@@ -63,11 +63,192 @@ The worst case scenario is one in which insufficient user data can be acquired i
 
 \section{Back End}
 
-\subsection{Data Structure}
+To host a Facebook application, a web server must provide reliable access for all users of that application to a web page. This web page is displayed inside Facebook's frame, but the actual access is directly from the user's browser to the host's web server. The web server itself as well as the javascript in the web page are granted access to Facebook's Graph API, with which they can access user information and send out wall posts, messages, and the like. Google's App Engine cloud service hosts Coursefinder. 
 
 \subsection{Google App Engine}
 
+Google's App Engine service was selected as Coursefinder's host because of its reliability, flexibility, and budget constraints. 
+
+App Engine is a cloud service, meaning it is maintained as a distributed system across several large data centers owned and operated by Google. As such, the probability of any ``App" it runs becoming unavailable at any one time is extremely small. Additionally, the large number of available servers means that while intense average use may be equally costly, there is little danger of usage spikes overloading the server system, as opposed to a single server just for Coursefinder, which would likely have great difficulty if a large number of users decided to use the app at once. The combination of extremely low downtime and high spike tolerance make App Engine much more reliable than alternative, more traditional hosts, such as Caltech's notoriously poorly maintained UGCS, or a dedicated server. 
+
+Several aspects of App Engine make it extremely flexible. For example, App Engine allows services written for the Java Runtime Environment and Python. Coursefinder is written in Python because, as a pure scripting language, and an incredibly flexible one, it allows great ease of manipulation and modularization of services. App Engine's support for Python made it a strong candidate. Additionally, because App Engine uses a noSQL hash table based database structure, data storage of any size is equally fast. In fact, aside from financial concerns over larger server usage, Coursefinder should be able to expand to an arbitrarily large set of institutions and users without speed or algorithmic problems. Furthermore, App Engine allows simultaneous deployment of different versions, allowing multiple tests to be run on the production server without interfering with regular service. This is extremely useful when, for example, different developers are simultaneously testing various new features and need to do so with real or large simulated data. 
+
+As a small endeavor, Coursefinder has few resources with which to acquire, set up, run, and maintain a dedicated server facility. In effect, it requires a free service to run. While several are available, including Caltech's own UGCS, App Engine's free service offers more than Coursefinder is likely to require in the near future, and this on top of its other advantages made it the host of choice. 
+
+
+There are some penalties for this. For example, while eventual consistency of data is assured, it is possible that reads from the database that take place shortly after writes to it will not pick up the new data. In the case of Coursefinder, this is not terribly troublesome, as it is not particulary important that data portrayed by ``up to the second." A more vexing problem is the noSQL database structure, which makes some forms of data relationships more difficult. Most notably, queries to the database cannot be nearly as complex, with serious problems concerning logical ``OR" operations. Again, these are usually minor problems for a system with fairly straightforward data storage and retrieval. 
+
+
+ Coursefinder is hosted at http://courserecommendation.appspot.com.
+
 \subsection{Django}
+
+
+Django is a popular web development framework based in Python and built to run atop a variety of server setups. Django-nonrel, built for noSQL databases such as App Engine, was selected as a framework for Coursefinder because of its  portability and modularity. 
+
+Django is built to be extremely portable. A running instance of Django, called a ``project," need only change a few settings variables to switch servers, databases, and even database structures. As a python framework, it is in no way platform specific, and it is entirely open source. Even within a project, the actual services offered, or ``apps," can be moved between projects with relative ease. One fortunate side effect is that it is extremely easy to run an instance of Django exactly as it would be run on App Engine on a local machine for testing purposes. It is equally easy to deploy to the production server. App Engine in particular has a number of features built in that are borrowed from Django, such as models and templates (and their associated syntax). Because of these, Django is an especially attractive option when developing on App Engine, but Coursefinder could relatively easily be modified to run on most any other server capable of running Django, should it at any time become a superior option to do so. 
+
+Django is also extremely modular, which is useful when developing along separate tracks or as a team. It allows easier division of tasks, and overall more efficient rapid development. For example, rather than a traditional url to file hierarchy structure, Django replies to each HTTP request with the output of a function called a view, which is any function that takes in the HTTP request data and returns a web page. Which view is determined by a regular expression table. This means that it is very easy to add, subtract, and manipulate the ``structure" of urls independently from the construction of actual pages. It allows, for instance, the extremely simple ``/course/<course number here>/" urls, as opposed to some more complicated PHP scheme with GET url inputs. As another example, django's template system allows a well-designed seperation between content and formatting on the server side by allowing a view to fetch content, and pass it to a template, where the python content is easily inserted into the html template using ``{{ }}" tags, including basic flow control such as loops. This type of system allows, for instance, one developer to focus on content fetching and generation, while another focuses on formatting and presentation.
+
+
+\subsection{Data Structure}
+
+\begin{figure}[h]
+  \caption{Data Structure}
+  \centering
+    \includegraphics[width=6in]{data_structure.pdf}
+    {\small \\Data structure UML for Coursefinder. Note that department is a list of string department abbreviations, and teacher\_ids is a list of valid ids of Facebook\_User objects. Also please note that the hideousness of UML is not my fault. }
+\end{figure}
+
+
+The data for Corusefinder is stored in the form of Django Models, for which a similar system is implemented natively for App Engine. Models, rather than the traditional way of thinking of data in tables, are simply objects of specific classes for which certain attributes, called fields, can be saved to the database and searched for in order to retrieve the object again. The types of fields used are CharField (string), DataTimeField, IntegerField, FloatField, URLField, ForeignKey (a link to another object stored in the database), and ListField, a field type specific to App Engine, which stores a list of any other kind of field. Notably, App Engine, as a noSQL database, cannot hand Many-to-Many fields, which store multiple other objects in the database. ListFields of ids, such as the ids of teachers for a course, are used instead. 
+
+Django Models also support abstract inheritance. This allows abstract classes controlling common model features to be easily built upon or modified as may be needed. For example, there is an abstract Rating model, which allows the three different kinds of ratings (Teacher, Grading, and Overall), to only specify what differentiates them, and any common aspects of ratings to be changed easily. All models used in Coursefinder inherit the abstract model DateStamped, which ensures they all have a created DateTime storing the creation time of that object, and an updated DateTime, storing the last updated time of that object. 
+
+The models, grouped by inheritance, employed to store the data for Coursefinder, are:
+
+\subsubsection{DateStamped (Abstract)}
+This is an abstract class (there are no objects with this class) designed so that classes which inherit it
+	have creation and update timestamps.
+\begin{itemize}
+\item created: DateTimeField - date upon which this object was created
+\item updated: DateTimeField - date upon which this object was last updated
+\end{itemize}
+
+
+\subsubsection{Facebook\_User (inherits DateStamped)}
+	
+	This is the model for a facebook user, as defined by Facebook's Python-SDK google appengine example
+	
+	Title is for use with teachers, and  the facebook-provided fields are optionally blank, so 
+	Teachers can be created as Facebook\_Users without actually knowing their facebook info. 
+	
+	\begin{itemize}
+	\item title : CharField, maximum length 100, optional, default ``": user's title 
+	\item name : CharField, maximum length 100:  user's name 
+	\item key\_name : CharField, maximum length 100, optional, default ``":  users's facebook ID
+	\item profile\_url : CharField, maximum length 200, optional, default ``":  user's profile's URL
+	\item access\_token : CharField, maximum length 255, optional, default ``":  user's oauth access token (facebook defined, changes)
+\end{itemize}
+
+\subsubsection{Institution (inherits DateStamped)}
+
+	This model represents a university or college, or whatever else offers classes.
+	
+		\begin{itemize}
+	\item name : CharField, maximum length 255, Insititution's Name
+	\item description : CharField, maximum length 2023, Insititution's Description
+	\item url = URLField, maximum length 255, optional, default ``": a url for this university. (optional)
+\end{itemize}
+
+\subsubsection{Course (inherits DateStamped)}
+
+	This model represents a Course offered at a university of college.
+	
+	\begin{itemize}
+	\item name : CharField, maximum length 255:  Course Name
+	\item description : CharField, maximum length 1023:  Course Description
+	\item institution = ForeignKey:  the institution offering this course
+	\item url =URLField, maximum length 255, optional, default ``":  a url for this course. 
+	\item department = ListField of CharField max length 100 chars each:  a list of this course's departments. 
+	\item teacher = ListField of CharField max length 200 chars each
+	\item teacher\_lastname=ListField of CharField max length 200 chars each
+	\item teacher\_ids = ListField of IntegerField:  a list of ids of teacher models teaching this course
+\end{itemize}
+
+\subsubsection{User\_Course\_Interaction (Abstract, inherits DateStamped)}
+
+
+	This is an abstract model, no objects actually have this class, designed to define the required fields for
+	every other model which features a user and a course. (comments, ratings, etc . . . )
+	
+	\begin{itemize}
+		\item user  : ForeignKey:  the user involved. 
+		\item course  : ForeignKey:  the course involved
+		\item date  : DateField, defaults to date created:  ideally the date the was taken.
+\end{itemize}
+
+\subsubsection{Hours (inherits User\_Course\_Interaction)}
+
+	This is a model for recording the number of hours a user spent on a course
+	
+	\begin{itemize}
+		\item hours  : IntegerField:  The number of hours the user spent on the course
+\end{itemize}
+
+\subsubsection{Grade (inherits User\_Course\_Interaction)}
+
+	This is a model for recording the grade a user got in a course
+	
+	\begin{itemize}
+		\item grade  : IntegerField: The grade a user got in a course 0=F, 1=D, 2=C, 3=B, 4=A
+\end{itemize}
+
+
+\subsubsection{Comment (Abstract, inherits User\_Course\_Interaction)}
+
+
+	This is an abstract model, meaning you can't actually create and save these, designed to define the required fields for
+	every other Comment based model
+	
+	\begin{itemize}
+		\item content : CharField, maximum length 1023: Comment text
+	\item privacy  : IntegerField:  Comment privacy rating. 0 for friends only, 1 for public
+\end{itemize}
+
+
+\subsubsection{Course\_Comment (inherits Comment)}
+
+	A course comment, at the moment at least, has nothing more than a generic comment.
+	
+
+
+\subsubsection{Teacher\_Comment (inherits Comment)}
+	
+	A comment on a teacher, for a class.
+	
+	\begin{itemize}
+		\item teacher  : ForeignKey:  the Teacher involved. 
+\end{itemize}
+	
+\subsubsection{Interest (inherits User\_Course\_Interaction)}
+
+	
+	\begin{itemize}
+		\item value  : IntegerField:  the interest tag is 0 (none) or 1 (interested in)
+\end{itemize}
+
+
+\subsubsection{Rating (Abstract, inherits User\_Course\_Interaction)}
+	This is an abstract model, meaning you can't actually create and save these, designed to define the required fields for
+	every other model for Rating Courses.
+	
+	\begin{itemize}
+		\item value  : FloatField:  the value of a rating is a float. Let's standardize now. 0 is bad. 1 is good. Rate however you want.	
+\end{itemize}
+
+\subsubsection{Overall\_Rating (inherits Rating)}
+
+	This is the overall rating for a course. It is just a rating. Nothing to add.
+	
+
+
+\subsubsection{Grading\_Rating (inherits Rating)}
+
+	This is the Grading rating for a course. It is just a rating. Nothing to add.
+
+
+\subsubsection{Teaching\_Rating (inherits Rating)}
+
+	This is the teaching rating for a course, and a teacher. It is a rating, but now with both a course and a teacher.
+	
+	\begin{itemize}
+		\item teacher  : ForeignKey:  the Teacher involved.
+\end{itemize}
+
+
+
+
 
 
 
