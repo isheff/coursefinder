@@ -6,38 +6,16 @@
 	<link rel="stylesheet" type="text/css" href="/media/display_course.css" />	
 	<script src="/media/mootools-core-1.3.2.js"></script>
 	<script src="/media/moostarrating.js"></script>
-	<script src="/media/rating_star.js"></script>
-    	<script src="/media/prototype.js" type="text/javascript"></script>
+	
+	<!---<script src="/media/prototype.js" type="text/javascript"></script>-->
 	<script src="/media/jquery-1.2.6.min.js" type="text/javascript"></script>
-	<script type="text/javascript" src="/media/swfobject.js"></script>
 	<script type="text/javascript">
-   	 	swfobject.embedSWF(
-    		  "/media/open-flash-chart.swf", "course_map",
-    		  "350", "350", "9.0.0", "/media/expressInstall.swf",
-		  {"data-file":"/data/{{current_user.key_name|escape}}" });
-	  </script>
-	<script type="text/javascript">
-		OFC={};
-		OFC.jquery={
-			name:"jQuery",
-     			version: function(src){return$('#'+src)[0].get_version()},
-			rasterize:function(src,dst){ $('#'+ dst).replaceWith(OFC.jquery.image(src)) },
-			image: function(src) { return "<img src='data:image/png;base64," + $('#'+src)[0].get_img_binary() + "' />"},
-			popup: function(src) {
-				        var img_win = window.open('', 'Charts: Export as Image')
-						        with(img_win.document) {
-								            write('<html><head><title>Charts: Export as Image<\/title><\/head><body>' + OFC.jquery.image(src) + '<\/body><\/html>') }
-							// stop the 'loading...' message
-							img_win.document.close();
-						    	 }
-		}	
+	    $.noConflict();
+jQuery(document).ready(function($) {
+    // Code that uses jQuery's $ can follow here.
 
-		if (typeof(Control == "undefined")) {var Control = {OFC: OFC.jquery}}
-		function save_image() { OFC.jquery.popup('course_map') }
-	</script>
 
-<script type="text/javascript">
-<!--
+
 	$(function(){
 		// 取得要加上提示的元素並一一設定
 		$(":text, textarea").each(function(i, ele){
@@ -90,8 +68,205 @@
 			}
 		});
 	});
-//-->
+
+
+$(document).ready(function(){
+    
+//Setup variables
+var element = $('#recommend_list a'); // all the list elements
+var offset = 0;             // angle offset for animation
+var stepping = 0;        // how fast the list rotates
+var list = $('#recommend_list');      // the list wrapper
+var $list = $(list);
+
+/* Handles mouse movement, the closer to the center
+the faster the list will rotate */
+$list.mousemove(function(e){
+    
+    var topOfList = $list.eq(0).offset().top
+    var listHeight = $list.height()
+    
+    // Sets variable that controls the speed of rotation.
+    stepping = ((e.clientY - topOfList) /  listHeight * 0.2 - 0.1)*0.15;
+    
+});
+
+
+/* Disperse elements evenly around the circle */
+for (var i = element.length - 1; i >= 0; i--)
+{
+    element[i].elemAngle = i * Math.PI * 2 / element.length;
+}
+
+// call render function over and over
+setInterval(render, 20);
+
+
+// Handles how and where each element will be rendered.
+function render(){
+    
+    //Steps through each element...
+    for (var i = element.length - 1; i >= 0; i--){
+        
+        // offset adds degrees to where the element 
+        // is currently on the circle
+        var angle = element[i].elemAngle + offset;
+        
+        // Trig to figure out the size and where the
+        // text should go
+        x = 120 + Math.sin(angle) * 30;
+        y = 45 + Math.cos(angle) * 40;
+        size = Math.round(30 - Math.sin(angle) * 30);
+       	size_font = Math.round(size /5)
+        // Centers the text, instead of being left aligned.
+        var elementCenter = $(element[i]).width() / 2;
+        
+        // Figure out the x value of the element.
+        var leftValue = (($list.width()/2) * x / 100 - elementCenter - 20) + "px"
+        
+        
+        // Apply the values to the text
+        $(element[i]).css("fontSize", size_font + "pt");
+        $(element[i]).css("opacity",size);
+        $(element[i]).css("zIndex" ,size);
+        $(element[i]).css("left" ,leftValue);
+        $(element[i]).css("top", y + "%");
+    }
+    
+    // Rotate the circle
+    offset += stepping;
+}
+    
+    
+});
+
+
+
+  });
+
+
+
+
+
+	    // Code that uses other library's $ can follow here.
+	  function moonStars(ratingname, defaultValue, emptyImage, fullImage, optionNames,course_id)
+{
+	
+	
+	//Generate the actual form of images
+	document.write("<form name=\""+ratingname+course_id+"form\" class=\"Rating_item\" >");
+	for(count=1; count< optionNames.length+1; count=count+1)
+	{
+		document.write("<input type=\"radio\" name=\""+ratingname+"buttons\" value=\""+(count)+"\" ");
+		if (defaultValue == count)
+		{
+			document.write("checked=\"True\"")
+		}
+		document.write("/>");
+	}
+	document.write("</form><table cellspacing=\"0\"  class=\"Rating_item\"><tr>");
+	//generate the table of image labels
+	for(count=1; count< optionNames.length+1; count=count+1)
+	{
+		document.write("<td width=\"25\" style=\" text-align: center; padding: 0; border: 0; margin: 0;\">")
+		document.write(optionNames[count-1])
+		document.write("</td>")
+	}
+	document.write("</tr></table>")
+	
+	//add the async function that colors and submits the image form
+	window.addEvent("domready",function() {  
+					
+		MooStarRatingImages.defaultImageFolder = '/media/'; //Default images folder definition. You will use your own  
+
+		// Create our instance  
+		// Advanced options  
+		var advancedRating = new MooStarRating({  
+		   form: ratingname+course_id+'form', //Form name   
+		   radios: ratingname+'buttons', //Radios name  
+		   half: false, //if you need half star rating just make this true  
+		   imageEmpty: emptyImage, //Default images are in definition. You will use your own  
+		   imageFull:  fullImage,  
+		   imageHover: null,   
+		   width: 25,
+		   height: 25,   
+		   tip: '[VALUE] / '+optionNames.length, //Mouse rollover tip  
+		   tipTarget: $('htmlTip'), //Tip element  
+		   tipTargetType: 'html', //Tip type is HTML   
+		   
+		   // Send ajax request to server to save rating 
+		   onClick: function(value) {  
+		   
+		   var requestHTMLData = new Request({  
+			 url: '/course/'+course_id+'/submit/',  
+			 data: {Rating_Value: value, Rating_Name: ratingname}  
+			 });  
+		   requestHTMLData.send();  
+		   }  
+		   });          
+					
+	}); 
+}
+	</script>
+	<script type="text/javascript" src="/media/swfobject.js"></script>
+	<script type="text/javascript">
+   	 	swfobject.embedSWF(
+    		  "/media/open-flash-chart.swf", "course_map",
+    		  "350", "350", "9.0.0", "/media/expressInstall.swf",
+		  {"data-file":"/data/{{current_user.key_name|escape}}" });
+	  </script>
+
+
+<script type="text/javascript">
+OFC={};
+		OFC.jquery={
+			name:"jQuery",
+     			version: function(src){return$('#'+src)[0].get_version()},
+			rasterize:function(src,dst){ $('#'+ dst).replaceWith(OFC.jquery.image(src)) },
+			image: function(src) { return "<img src='data:image/png;base64," + $('#'+src)[0].get_img_binary() + "' />"},
+			popup: function(src) {
+				        var img_win = window.open('', 'Charts: Export as Image')
+						        with(img_win.document) {
+								            write('<html><head><title>Charts: Export as Image<\/title><\/head><body>' + OFC.jquery.image(src) + '<\/body><\/html>') }
+							// stop the 'loading...' message
+							img_win.document.close();
+						    	 }
+		}	
+
+		if (typeof(Control == "undefined")) {var Control = {OFC: OFC.jquery}}
+		function save_image() { OFC.jquery.popup('course_map') }
 </script>
+
+
+<style type="text/css" media="screen">
+    #recommend_list{
+        margin:0 auto;
+        height:175px;
+        width:650px;
+        overflow:hidden;
+        position:relative;
+        background-color: #ffffff;
+    }
+    #recommend_list ul,
+    #recommend_list li{
+        list-style:none;
+        margin:0;
+        padding:0;
+    }
+    #recommend_list a{
+        position:absolute;
+        text-decoration: none;
+	color:#302C29;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+    }
+    #recommend_list a:hover {
+	color:#6C8C84;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+    }
+</style>
+
+
+
 
 	<script type="text/javascript">
 	function framesetsize(w,h){
@@ -123,7 +298,7 @@
 	</td>
   </tr>
   <tr>
-    <td colspan="2"><span class="Title">Top 3 recommended </span></td>
+    <td colspan="2"><span class="Title">Top 5 recommended </span></td>
   </tr>
   <tr>
    <td height="1" bgcolor="#808080"></td>
@@ -134,7 +309,7 @@
         <td>
   <div id="recommend_list">
 	<ul> {% for course in Recommend %}
-	  <li><a href="/course/{{course.id}}">{{course.name|escape}}{{course.name|escape}}</a></li>
+	  <li><a href="/course/{{course.id}}">{{course.name|removefirstword|escape}}</a></li>
 	  {% endfor %} </ul>
 </div>
 </td>
@@ -264,7 +439,7 @@
 	 </td>
 	 <td height="25" class="search_result_tag">My rating:
 	<div><script type="text/javascript" language="javascript">
-	 moonStarStars("Overall_Rating", {{ User_Overall_Rating|lookup:course }},{{course.id}});
+	 moonStarStars("Overall_Rating", {{ User_Overall_Rating|lookup:course }}, 'star_x_gray.png', 'star_x_gold.png', ["","","","",""],{{course.id}});
 	</script>
 	 </div>
 	 </td>
@@ -303,7 +478,8 @@
 </td>
   </tr>
 </table>
-  
+
+
   </div>
  		<div id="fb-root"></div>
 		<script>
