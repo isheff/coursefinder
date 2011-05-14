@@ -118,6 +118,12 @@ class Teacher_Comment(Comment):
 	"""
 	teacher = models.ForeignKey('Facebook_User')		# the Teacher involved. 
 
+class Rating_Alg(User_Course_Interaction):
+        value = models.FloatField()
+        def __unicode__(self):
+                return str(self.user.name) + ":" +str(self.value)+ " "+str(self.course.name)
+        class Meta:
+                abstract = True
 
 class Rating(User_Course_Interaction):
 	"""
