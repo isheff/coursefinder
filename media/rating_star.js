@@ -10,12 +10,12 @@
  This is based upon the 5-star rating code, and expanded to be used for the Hours and Grade input 
  as well.
  */
-function moonStars(ratingname, defaultValue, emptyImage, fullImage, optionNames,course_id)
+function moonStars(ratingname, defaultValue, emptyImage, fullImage,Image_size, optionNames,course_id)
 {
 	
 	
 	//Generate the actual form of images
-	document.write("<form name=\""+ratingname+"form\" class=\"Rating_item\" >");
+	document.write("<form name=\""+ratingname+course_id+"form\" class=\"Rating_item\" >");
 	for(count=1; count< optionNames.length+1; count=count+1)
 	{
 		document.write("<input type=\"radio\" name=\""+ratingname+"buttons\" value=\""+(count)+"\" ");
@@ -29,7 +29,7 @@ function moonStars(ratingname, defaultValue, emptyImage, fullImage, optionNames,
 	//generate the table of image labels
 	for(count=1; count< optionNames.length+1; count=count+1)
 	{
-		document.write("<td width=\"25\" style=\" text-align: center; padding: 0; border: 0; margin: 0;\">")
+		document.write("<td width="+Image_size+" style=\" text-align: center; padding: 0; border: 0; margin: 0;\">")
 		document.write(optionNames[count-1])
 		document.write("</td>")
 	}
@@ -43,14 +43,14 @@ function moonStars(ratingname, defaultValue, emptyImage, fullImage, optionNames,
 		// Create our instance  
 		// Advanced options  
 		var advancedRating = new MooStarRating({  
-		   form: ratingname+'form', //Form name   
+		   form: ratingname+course_id+'form', //Form name   
 		   radios: ratingname+'buttons', //Radios name  
 		   half: false, //if you need half star rating just make this true  
 		   imageEmpty: emptyImage, //Default images are in definition. You will use your own  
 		   imageFull:  fullImage,  
 		   imageHover: null,   
-		   width: 25,
-		   height: 25,   
+		   width: Image_size,
+		   height: Image_size,   
 		   tip: '[VALUE] / '+optionNames.length, //Mouse rollover tip  
 		   tipTarget: $('htmlTip'), //Tip element  
 		   tipTargetType: 'html', //Tip type is HTML   
@@ -75,10 +75,14 @@ function moonStars(ratingname, defaultValue, emptyImage, fullImage, optionNames,
  */
 function moonStarStars(ratingname, defaultValue,course_id)
 {
-	moonStars(ratingname, defaultValue, 'star_x_gray.png', 'star_x_gold.png', ["","","","",""],course_id)
+	moonStars(ratingname, defaultValue, 'star_x_gray.png', 'star_x_gold.png',25, ["","","","",""],course_id)
 }
 
 
+function moonStarStars_small(ratingname, defaultValue,course_id)
+{
+	moonStars(ratingname, defaultValue, 'star_x_gray_small.png', 'star_x_gold_small.png',15, ["","","","",""],course_id)
+}
 // Hides the loading div, and shows the el div for
 // a period of four seconds.
 var showHide = function( el, effects ){

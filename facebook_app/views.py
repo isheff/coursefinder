@@ -67,6 +67,7 @@ def canvas(request):
 	for item in user_not_rate:
 		user_not_rate_course.append(item.course)
 	'''
+	'''
 	# Currently I'm using all courses that user-rated-courses' departments as source
 	user_not_rate = Overall_Rating.objects.filter(user=user)
 	user_not_rate_dept=[]
@@ -97,6 +98,8 @@ def canvas(request):
 	recommend = []
 	for i in range(5):
 		recommend.append(recommend_value_sort[i][0])
+	'''
+	recommend = []
 	pass_to_template['Recommend']= recommend
 
 	return render_to_response('facebook_app/canvas.html', pass_to_template)
