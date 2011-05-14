@@ -303,7 +303,7 @@ def display_course(request, course_id):
                         pass_to_template['User_Overall_Rating']=int(over_rat[0].value*4.0 + 1.1)
                 # Any Grading Rating previously input by the user must be passed to the template
                 grad_rat = Grading_Rating.objects.filter(user=user, course=p)
-                if len(over_rat) == 0:
+                if len(grad_rat) == 0:
                         pass_to_template['User_Grading_Rating']=0
                 else:
                         pass_to_template['User_Grading_Rating']=int(grad_rat[0].value*4.0 + 1.1)
