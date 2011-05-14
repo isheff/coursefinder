@@ -360,7 +360,7 @@ def Rating_alg(user,course,Rating_item):
 	if len(Rating_item_course)!=0:
 		for course in Rating_item_course:
 			Rating_item_value += course.value
-			Rating_item_value = int(round((Rating_item_value/len(Rating_item_course))*80 +20))
+			Rating_item_value = round(  Rating_item_value/len(Rating_item_course)*80 +20 ) 
 	return Rating_item_value
 
 def comment_list_pair(comments_friends, comments_public):
