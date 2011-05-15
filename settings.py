@@ -83,6 +83,7 @@ SECRET_KEY = 'z()aj&(db*n&rewmsn&t%xl@n-)%s@!d&t+5dd9^p09cd^0ph-'
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+	'fandjango.middleware.FacebookMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -132,6 +133,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'django.contrib.sessions',
+	'fandjango',
 	'facebook_app',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
@@ -166,6 +168,16 @@ LOGGING = {
 }
 
 LOGIN_REDIRECT_URL = '/'
+
+
+
+
+FACEBOOK_APP_ID = "174228859292999"
+FACEBOOK_APPLICATION_SECRET_KEY = "cf8e2ce228f9a2d00f13357a826d0093"
+FACEBOOK_APPLICATION_URL = "http://apps.facebook.com/coursefinder"
+FACEBOOK_APPLICATION_INITIAL_PERMISSIONS = ["user_education_history"]
+
+
 """
 
 from djangoappengine.settings_base import *

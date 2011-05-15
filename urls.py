@@ -20,5 +20,7 @@ urlpatterns = patterns('',
 	
 	(r'^facebook_app/', include('facebook_app.urls')),
 	
+	(r'^fandjango/', include('fandjango.urls'))
+	
 	
 )
