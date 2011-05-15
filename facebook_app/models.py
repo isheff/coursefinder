@@ -2,6 +2,7 @@ from django.db import models
 from djangotoolbox.fields import ListField
 from django.utils.html import escape
 from datetime import datetime
+from facebook_login import Facebook, _USER_FIELDS
 
 # Create your models here.
 
@@ -30,6 +31,21 @@ class Facebook_User(DateStamped):
 	key_name = models.CharField(max_length=100, blank=True, default="")		# users's facebook ID
 	profile_url = models.CharField(max_length=200, blank=True, default="")	# user's profile's URL
 	access_token = models.CharField(max_length=255, blank=True, default="")	# user's oauth access token (facebook defined, changes)
+	picture = models.CharField(max_length=255, blank=True, default="")		# user's facebook picture
+	email = models.CharField(max_length=255, blank=True, default="")		# user's facebook email
+	friends = ListField(models.CharField(max_length=100))					# user's friend list (ids)
+	dirty = models.BooleanField(default=False)								# used in resetting information
+	
+	def refresh_data(self):
+		"""Refresh this user's data using the Facebook Graph API"""
+		me = Facebook().api(u'/me',
+			{u'fields': _USER_FIELDS, u'access_token': self.access_token})
+		self.dirty = False
+		self.name = me[u'name']
+		self.email = me.get(u'email')
+		self.picture = me[u'picture']
+		self.friends = [user[u'id'] for user in me[u'friends'][u'data']]
+		return self.save()
 	
 	def __unicode__(self):
 		"""
