@@ -18,7 +18,7 @@ import random
 import time
 from itertools import groupby
 from course_value_convert import course_value_convert
-from settings import FACEBOOK_APP_ID
+from settings import FACEBOOK_APPLICATION_ID as FACEBOOK_APP_ID
 from settings import FACEBOOK_APPLICATION_SECRET_KEY as FACEBOOK_APP_SECRET
 from fandjango.decorators import facebook_authorization_required
 
@@ -26,7 +26,7 @@ from fandjango.decorators import facebook_authorization_required
 #@csrf_exempt
 @facebook_authorization_required()
 def canvas(request):
-	return HttpResponse("Hello, "+user.first_name+" "+user.last_name)
+	return HttpResponse("Hello, "+request.facebook.user.first_name+" "+request.facebook.user.last_name)
 	
 	user = get_current_user(request)
 	pass_to_template = {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID}
@@ -381,7 +381,7 @@ def comment_list_pair(comments_friends, comments_public):
 		answer.append(next)
 	return answer
 
-def Interest_list(request, user_id):
+def interest_list(request, user_id):
 	user = get_current_user(request) # the user presently logged in
 	user_id = user.key_name
 	pass_to_template={'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID,}

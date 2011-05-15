@@ -66,3 +66,13 @@ indexes:
   properties:
   - name: __key__
     direction: desc
+
+- kind: fandjango_oauthtoken
+  properties:
+  - name: __key__
+    direction: desc
+
+- kind: fandjango_user
+  properties:
+  - name: __key__
+    direction: desc
