@@ -24,8 +24,8 @@ from settings import FACEBOOK_APPLICATION_SECRET_KEY as FACEBOOK_APP_SECRET
 from fandjango.decorators import facebook_authorization_required
 
 
-#@csrf_exempt
-# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
+@csrf_exempt
+@facebook_authorization_required()
 def canvas(request):
 	#return HttpResponse("Hello, "+request.facebook.user.first_name+" "+request.facebook.user.last_name)
 	
@@ -109,7 +109,7 @@ def canvas(request):
 	return render_to_response('facebook_app/canvas.html', pass_to_template)
 
 
-# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
+@facebook_authorization_required()
 def display_institution(request, institution_id):
 	# TODO: edit template to display courses and stuff. 
 	institute = get_object_or_404(Institution, id=int(institution_id))
@@ -122,8 +122,8 @@ def display_institution(request, institution_id):
 
 
 
-#@csrf_exempt
-# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
+@csrf_exempt
+@facebook_authorization_required()
 def rate_course(request, course_id):
 	# this view, found at url "course/<course_id>/submit/", exists to recieve forms containing ONE of the following entries in form data:
 	#
@@ -261,8 +261,8 @@ def rate_course(request, course_id):
 
 
 
-#@csrf_exempt
-# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
+@csrf_exempt
+@facebook_authorization_required()
 def display_course(request, course_id):
 	# This view returns a webpage in which a user can rate a class, comment on it, and do all those other things
 	p = get_object_or_404(Course, id=int(course_id)) # The class to be displayed
@@ -386,7 +386,7 @@ def comment_list_pair(comments_friends, comments_public):
 		answer.append(next)
 	return answer
 
-# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
+@facebook_authorization_required()
 def interest_list(request, user_id):
 	user = get_current_user(request) # the user presently logged in
 	user_id = user.facebook_id
@@ -412,7 +412,7 @@ def get_current_user(request):
 	
 	
 	# FOR OFF-GOOGLE TESTING ONLY***************
-	return get_object_or_404(User, last_name="Sheff")
+	#return get_object_or_404(User, last_name="Sheff")
 	# FOR OFF-GOOGLE TESTING ONLY***************
 	
 	if request.facebook.user:
@@ -444,7 +444,7 @@ def is_friends(user1, user2):
 
 # radar chart for course-map
 
-# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
+@facebook_authorization_required()
 def radar_chart(request,user_facebook_id):
     user=get_current_user(request) # the user presently logged in
     user_facebook_id = user.facebook_id
