@@ -2,6 +2,7 @@ from django.db import models
 from djangotoolbox.fields import ListField
 from django.utils.html import escape
 from datetime import datetime
+from fandjango.models import User
 
 # Create your models here.
 
@@ -18,24 +19,25 @@ class DateStamped(models.Model):
 		abstract = True
 
 
-class Facebook_User(DateStamped):
-	"""
-	This is the class for a facebook user, as defined by Facebook's Python-SDK google appengine example
-	
-	I added a title, for use with teachers, and made the facebook-provided fields optionally blank, so 
-	Teachers can be created as Facebook_Users without actually knowing their facebook info. 
-	"""
-	title = models.CharField(max_length=100, blank=True, default="")		# user's title (optional, default "")
-	name = models.CharField(max_length=100)									# user's name 
-	key_name = models.CharField(max_length=100, blank=True, default="")		# users's facebook ID
-	profile_url = models.CharField(max_length=200, blank=True, default="")	# user's profile's URL
-	access_token = models.CharField(max_length=255, blank=True, default="")	# user's oauth access token (facebook defined, changes)
-	
-	def __unicode__(self):
-		"""
-		This method defines how this class is converted to a string (for example, in the admin interface)
-		"""
-		return str(self.title)+" "+str(self.name)
+# The Facebook_User class is now depreciated. It has been replaced by the fandjango User class
+#class Facebook_User(DateStamped):
+#	"""
+#	This is the class for a facebook user, as defined by Facebook's Python-SDK google appengine example
+#	
+#	I added a title, for use with teachers, and made the facebook-provided fields optionally blank, so 
+#	Teachers can be created as Facebook_Users without actually knowing their facebook info. 
+#	"""
+#	title = models.CharField(max_length=100, blank=True, default="")		# user's title (optional, default "")
+#	name = models.CharField(max_length=100)									# user's name 
+#	key_name = models.CharField(max_length=100, blank=True, default="")		# users's facebook ID
+#	profile_url = models.CharField(max_length=200, blank=True, default="")	# user's profile's URL
+#	access_token = models.CharField(max_length=255, blank=True, default="")	# user's oauth access token (facebook defined, changes)
+#	
+#	def __unicode__(self):
+#		"""
+#		This method defines how this class is converted to a string (for example, in the admin interface)
+#		"""
+#		return str(self.title)+" "+str(self.name)
 
 
 class Institution(DateStamped):
@@ -45,6 +47,7 @@ class Institution(DateStamped):
 	name = models.CharField(max_length=255)												# Insititution's Name
 	description = models.CharField(max_length=2023)										# Insititution's Description
 	url = models.URLField(verify_exists=True, max_length=255, blank=True, default="")	# a url for this university. (optional)
+	facebook_id = models.CharField(max_length=100, blank=True, default="")				# Institution's facebook ID
 	
 	def __unicode__(self):
 		"""
@@ -79,7 +82,7 @@ class User_Course_Interaction(DateStamped):
 	This is an abstract model, meaning you can't actually create and save these, designed to define the required fields for
 	every other model which featers a user and a course. (comments, ratings, etc . . . )
 	"""
-	user = models.ForeignKey('Facebook_User',  related_name="%(app_label)s_%(class)s_student_user")	# the user involved. 
+	user = models.ForeignKey(User,  related_name="%(app_label)s_%(class)s_student_user")			# the user involved. 
 	course = models.ForeignKey('Course')															# the course involved
 	date = models.DateField(auto_now=False, auto_now_add=False, default = datetime.now().date())	# ideally the date the class was taken. default: now
 	
@@ -99,7 +102,7 @@ class Comment(User_Course_Interaction):
 		"""
 		This method defines how this class is converted to a string (for example, in the admin interface)
 		"""
-		return str(self.user.name) + ", "+str(self.course.name)+": "+str(self.content)[:30]
+		return str(self.user.full_name) + ", "+str(self.course.name)+": "+str(self.content)[:30]
 	
 	class Meta:
 		abstract = True
@@ -116,12 +119,12 @@ class Teacher_Comment(Comment):
 	"""
 	A comment on a teacher, for a class.
 	"""
-	teacher = models.ForeignKey('Facebook_User')		# the Teacher involved. 
+	teacher = models.ForeignKey(User)		# the Teacher involved. 
 
 class Rating_Alg(User_Course_Interaction):
         value = models.FloatField()
         def __unicode__(self):
-                return str(self.user.name) + ":" +str(self.value)+ " "+str(self.course.name)
+                return str(self.user.full_name) + ":" +str(self.value)+ " "+str(self.course.name)
         class Meta:
                 abstract = True
 
@@ -135,14 +138,14 @@ class Rating(User_Course_Interaction):
 		"""
 		This method defines how this class is converted to a string (for example, in the admin interface)
 		"""
-		return str(self.user.name) + ": "+str(self.value)+" " +str(self.course.name)
+		return str(self.user.full_name) + ": "+str(self.value)+" " +str(self.course.name)
 	
 	class Meta:
 		abstract = True
 class Interest(User_Course_Interaction):
 	value = models.IntegerField() # the interest tag is 0 (none) or 1 (interested in)
 	def __unicode__(self):
-		return str(self.user.name) + ": "+str(self.value)+" " +str(self.course.name)
+		return str(self.user.full_name) + ": "+str(self.value)+" " +str(self.course.name)
 
 class Overall_Rating(Rating):
 	"""
@@ -165,7 +168,7 @@ class Teaching_Rating(Rating):
 	"""
 	This is the teaching rating for a course, and a teacher. It is a rating, but now with both a course and a teacher.
 	"""
-	teacher = models.ForeignKey('Facebook_User')		# the Teacher involved.
+	teacher = models.ForeignKey(User,  related_name="Teacher_being_rated")		# the Teacher involved.
 
 
 
@@ -182,7 +185,7 @@ class Hours(User_Course_Interaction):
 		"""
 		This method defines how this class is converted to a string (for example, in the admin interface)
 		"""
-		return str(self.user.name) + ", "+str(self.course.name)+": "+str(self.hours)
+		return str(self.user.full_name) + ", "+str(self.course.name)+": "+str(self.hours)
 
 class Grade(User_Course_Interaction):
 	"""
@@ -194,4 +197,4 @@ class Grade(User_Course_Interaction):
 		"""
 		This method defines how this class is converted to a string (for example, in the admin interface)
 		"""
-		return str(self.user.name) + ", "+str(self.course.name)+": "+str(self.grade)
+		return str(self.user.full_name) + ", "+str(self.course.name)+": "+str(self.grade)

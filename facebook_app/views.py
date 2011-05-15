@@ -10,6 +10,7 @@ from django.core.context_processors import csrf
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from facebook_app.models import *
+from fandjango.models import User
 from urllib import urlopen
 import BeautifulSoup,re
 import facebook
@@ -24,9 +25,9 @@ from fandjango.decorators import facebook_authorization_required
 
 
 #@csrf_exempt
-@facebook_authorization_required()
+# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
 def canvas(request):
-	return HttpResponse("Hello, "+request.facebook.user.first_name+" "+request.facebook.user.last_name)
+	#return HttpResponse("Hello, "+request.facebook.user.first_name+" "+request.facebook.user.last_name)
 	
 	user = get_current_user(request)
 	pass_to_template = {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID}
@@ -107,6 +108,8 @@ def canvas(request):
 
 	return render_to_response('facebook_app/canvas.html', pass_to_template)
 
+
+# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
 def display_institution(request, institution_id):
 	# TODO: edit template to display courses and stuff. 
 	institute = get_object_or_404(Institution, id=int(institution_id))
@@ -119,7 +122,8 @@ def display_institution(request, institution_id):
 
 
 
-@csrf_exempt
+#@csrf_exempt
+# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
 def rate_course(request, course_id):
 	# this view, found at url "course/<course_id>/submit/", exists to recieve forms containing ONE of the following entries in form data:
 	#
@@ -145,7 +149,7 @@ def rate_course(request, course_id):
 		
 		#now, just for bookeeping, if the course contains any teacher_ids not actually representative of teachers, delete them.
 		for teacher_id in p.teacher_ids:
-			if len(Facebook_User.objects.filter(id=teacher_id)) == 0:
+			if len(User.objects.filter(id=teacher_id)) == 0:
 				course.teacher_ids.remove(teacher_id)
 				course.save()
 		
@@ -215,7 +219,7 @@ def rate_course(request, course_id):
 			for teacher_id in p.teacher_ids:
 				if "Teacher_"+str(teacher_id)+"_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
 					if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
-						teacher = Facebook_User.objects.get(id=teacher_id)
+						teacher = User.objects.get(id=teacher_id)
 						teach_rat = Teaching_Rating.objects.filter(teacher=teacher, course=p, user=user)
 						if len(teach_rat) == 0:
 							teach_rat=Teaching_Rating(teacher=teacher, course=p, user=user)
@@ -242,7 +246,7 @@ def rate_course(request, course_id):
 		for teacher_id in p.teacher_ids:
 			comment_id = "Teacher_"+str(teacher_id)+"_Comment"
 			if comment_id+"_Text" in request.REQUEST:
-				teacher = Facebook_User.objects.get(id = teacher_id)
+				teacher = User.objects.get(id = teacher_id)
 				com = Teacher_Comment.objects.filter(teacher=teacher, user=user, course=p)
 				if len(com)==0:
 					com = Teacher_Comment(teacher=teacher, user=user, course=p)
@@ -257,7 +261,8 @@ def rate_course(request, course_id):
 
 
 
-@csrf_exempt
+#@csrf_exempt
+# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
 def display_course(request, course_id):
 	# This view returns a webpage in which a user can rate a class, comment on it, and do all those other things
 	p = get_object_or_404(Course, id=int(course_id)) # The class to be displayed
@@ -266,7 +271,7 @@ def display_course(request, course_id):
 	#First, we must assemble the necessary information to display in the form. This includes comments and ratings previously made by the User
 	
 	if attends_institution(user, p.institution): # The page should only be displayed if this User attends this Course's institution
-		teachers = map(lambda x: Facebook_User.objects.get(id=x), p.teacher_ids) # the teachers teaching this course
+		teachers = map(lambda x: User.objects.get(id=x), p.teacher_ids) # the teachers teaching this course
 		for teacher in range(len(teachers)):
 			# Any rating the user has previously given this teacher on this course must be passed to the template in the teacher object
 			tr = Teaching_Rating.objects.filter(user=user, course=p, teacher=teachers[teacher])
@@ -381,9 +386,10 @@ def comment_list_pair(comments_friends, comments_public):
 		answer.append(next)
 	return answer
 
+# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
 def interest_list(request, user_id):
 	user = get_current_user(request) # the user presently logged in
-	user_id = user.key_name
+	user_id = user.facebook_id
 	pass_to_template={'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID,}
 	interest = Interest.objects.filter(user=user)
 	if len(interest)==0:
@@ -406,27 +412,30 @@ def get_current_user(request):
 	
 	
 	# FOR OFF-GOOGLE TESTING ONLY***************
-	return get_object_or_404(Facebook_User, name="lee")
+	return get_object_or_404(User, last_name="Sheff")
 	# FOR OFF-GOOGLE TESTING ONLY***************
 	
+	if request.facebook.user:
+		return request.facebook.user
+	return None
 	
-	cookie = facebook.get_user_from_cookie(request.COOKIES, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET)
-	if cookie:
-		user = Facebook_User.objects.filter(key_name=cookie["uid"])
-		if len(user) == 0:
-			graph = facebook.GraphAPI(cookie["access_token"])
-			profile = graph.get_object("me")
-			user = Facebook_User(key_name=str(profile["id"]),
-				name=profile["name"],
-				profile_url=profile["link"],
-				access_token=cookie["access_token"])
-			user.save()
-		else:
-			user = user[0]
-			if user.access_token != cookie["access_token"]:
-				user.access_token = cookie["access_token"]
-				user.save()
-	return user
+	#cookie = facebook.get_user_from_cookie(request.COOKIES, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET)
+	#if cookie:
+	#	user = Facebook_User.objects.filter(key_name=cookie["uid"])
+	#	if len(user) == 0:
+	#		graph = facebook.GraphAPI(cookie["access_token"])
+	#		profile = graph.get_object("me")
+	#		user = Facebook_User(key_name=str(profile["id"]),
+	#			name=profile["name"],
+	#			profile_url=profile["link"],
+	#			access_token=cookie["access_token"])
+	#		user.save()
+	#	else:
+	#		user = user[0]
+	#		if user.access_token != cookie["access_token"]:
+	#			user.access_token = cookie["access_token"]
+	#			user.save()
+	#return user
 
 def is_friends(user1, user2):
 		# in the future, this will return a boolean value representing whether the input users are friends.
@@ -435,10 +444,11 @@ def is_friends(user1, user2):
 
 # radar chart for course-map
 
-def radar_chart(request,user_key_name):
+# MUST NOT BE COMMENTED ON GOOGLE: @facebook_authorization_required()
+def radar_chart(request,user_facebook_id):
     user=get_current_user(request) # the user presently logged in
-    user_key_name = user.key_name
-    user_name = user.name
+    user_facebook_id = user.facebook_id
+    user_name = user.full_name
     user_current = Overall_Rating.objects.filter(user=user)
     user_dept=[]
     for i in range(len(user_current)):
@@ -461,7 +471,7 @@ def radar_chart(request,user_key_name):
 
     #--------------------------------------------------------------------------
     chart = pyofc2.open_flash_chart() 
-    chart.title = pyofc2.title(text=user.name+"'s  course-map")
+    chart.title = pyofc2.title(text=user.full_name+"'s  course-map")
     chart.title.style =("{font-size:20px; color : #B0BFBA;}")   # title colour
     area = pyofc2.area_hollow()
     area.width = 1

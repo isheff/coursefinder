@@ -2,7 +2,6 @@ from facebook_app.models import *
 from django.contrib import admin
 
 #note that all the non-abstract models are here, except Course. Course has listfields, which the admin interface can't handle.
-admin.site.register(Facebook_User)
 admin.site.register(Institution)
 admin.site.register(Course_Comment)
 admin.site.register(Teacher_Comment)

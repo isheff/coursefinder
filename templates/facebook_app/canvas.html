@@ -12,7 +12,7 @@
    	 	swfobject.embedSWF(
     		  "/media/open-flash-chart.swf", "course_map",
     		  "350", "350", "9.0.0", "/media/expressInstall.swf",
-		  {"data-file":"/data/{{current_user.key_name|escape}}" });
+		  {"data-file":"/data/{{current_user.facebook_id|escape}}" });
 	  </script>
 	<script src="/media/jquery-1.2.6.min.js" type="text/javascript"></script>
 
@@ -235,12 +235,6 @@
     </table></td>
   </tr>
   <tr>
-	  <td height="40" colspan="2">
-		<div id="fb-root"></div> <div align="right"><fb:login-button autologoutlink="true"></fb:login-button>
-		</div>
-	</td>
-  </tr>
-  <tr>
     <td colspan="2"><span class="Title">Top 5 recommended </span></td>
   </tr>
   <tr>
@@ -426,24 +420,7 @@
 
 
 
-  </div>
- 		<div id="fb-root"></div>
-		<script>
-			window.fbAsyncInit = function() {
-				FB.init({appId: '{{ facebook_app_id }}', status: true, cookie: true,
-					xfbml: true});
-				FB.Event.subscribe('{% if current_user %}auth.logout{% else %}auth.login{% endif %}', function(response) {
-					window.location.reload();
-				});
-			};
-			(function() {
-				var e = document.createElement('script');
-				e.type = 'text/javascript';
-				e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
-				e.async = true;
-				document.getElementById('fb-root').appendChild(e);
-			}());
-		</script>  
+  </div> 
     
 	
 	
