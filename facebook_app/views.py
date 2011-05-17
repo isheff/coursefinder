@@ -46,7 +46,7 @@ def canvas(request):
 		if query_numb:
 			results = results.filter(name__icontains=str(query_numb))
 	elif query_prof:
-		results= Course.objects.filter(teacher_lastname=query_prof.capitaliza())
+		results= Course.objects.filter(teacher_lastname=query_prof.capitalize())
 	else:
 		results = []
 	if results:
