@@ -105,7 +105,7 @@ def canvas(request):
 	for i in range(5):
 		recommend.append(recommend_value_sort[i][0])
 	'''
-	
+	'''
 	#pass_to_template['test']=len(Institution.objects.filter(name="aaa"))
 	# (1) get all courses averaging rating value by from high to low
 	recommend = list(Course.objects.all().order_by("-overall_avg")[:8])
@@ -113,8 +113,8 @@ def canvas(request):
 	random.shuffle(recommend)
 	# (3) Select top five
 	del recommend[5:]
-	
-	#recommend=[]
+	'''
+	recommend=[]
 	pass_to_template['Recommend']= recommend
 
 	return render_to_response('facebook_app/canvas.html', pass_to_template)
