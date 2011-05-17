@@ -428,34 +428,13 @@ def attends_institution(user, institution):
 	return institution.facebook_id in [x['school']['id'] for x in get_facebook_profile(user.oauth_token.token)['education']]
 
 def get_current_user(request):
-	user = None
-	
-	
 	# FOR OFF-GOOGLE TESTING ONLY***************
 	#return get_object_or_404(User, last_name="Sheff")
 	# FOR OFF-GOOGLE TESTING ONLY***************
 	
-	#if request.facebook.user:
-	#	return request.facebook.user
-	#return None
-	
-	cookie = facebook.get_user_from_cookie(request.COOKIES, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET)
-	if cookie:
-		user = Facebook_User.objects.filter(key_name=cookie["uid"])
-		if len(user) == 0:
-			graph = facebook.GraphAPI(cookie["access_token"])
-			profile = graph.get_object("me")
-			user = Facebook_User(key_name=str(profile["id"]),
-				name=profile["name"],
-				profile_url=profile["link"],
-				access_token=cookie["access_token"])
-			user.save()
-		else:
-			user = user[0]
-			if user.access_token != cookie["access_token"]:
-				user.access_token = cookie["access_token"]
-				user.save()
-	return user
+	if request.facebook.user:
+		return request.facebook.user
+	return None
 
 def is_friends(user1, user2):
 		# in the future, this will return a boolean value representing whether the input users are friends.
