@@ -54,7 +54,7 @@
 	  </td>
                     <td width="80" ><span class="Course_instructor">Instructors:</span></td>
                     {% for teacher in teachers %}
-					<td width="280" ><span class="Course_instructor">{{ teacher.title }} {{ teacher.name }} </span></td>
+					<td width="280" ><span class="Course_instructor">{{ teacher.title }} {{ teacher.full_name }} </span></td>
 					{% endfor %}                  </tr>
                 </table>
 				</td>
@@ -105,7 +105,7 @@
 						{% for teacher in teachers %}
 							<tr>
 								<td class="Rating_item">
-									Instructor: {{teacher.title}} {{teacher.name}}
+									Instructor: {{teacher.title}} {{teacher.full_name}}
 								</td>
 								<td>
 									{% if teacher.rating %}
@@ -174,7 +174,7 @@
 						<script type="text/javascript">
 							mooComment("Course_Comment", "Course Comment [optional]", "{{Course_Comment}}", {{Course_Comment_Privacy}});
 							{% for teacher in teachers %}
-								mooComment("Teacher_{{ teacher.id }}_Comment", "Instructor Comment: {{teacher.title}} {{teacher.name}} [optional]", "{{teacher.course_comment}}", {{teacher.course_comment_privacy}});
+								mooComment("Teacher_{{ teacher.id }}_Comment", "Instructor Comment: {{teacher.title}} {{teacher.full_name}} [optional]", "{{teacher.course_comment}}", {{teacher.course_comment_privacy}});
 							{% endfor %}
 						</script>
 					</div>				
@@ -219,24 +219,25 @@
 			</tr>
 			<tr>
 				<td>
-					<table width="760" border="0" cellpadding="0" class="Rating_item">
+					<table width="700" border="0" cellpadding="0" class="Rating_item">
 						<tr>
-							<td width="375" height="30">
+							<td width="345" height="30">
 								FB friends comments
 							</td>
-							<td width="375" height="30">
+							<td width="345" height="30">
 								FB public comments
 							</td>
 						</tr>
 						{% for comment_pair in Course_Comments %}
 							<tr>
 								{% for comment in comment_pair %}
-									<td>
-										<table>
+									<td {% if comment %} style="border:1px #3B5998  solid" {% endif %}>
+										{% if comment %}
+										<table >
 											<tr>
-												{% if comment.privacy == 0 %}
+												{% if comment == comment_pair|first %}
 													<td width = "50">
-														<img src="http://graph.facebook.com/{{ comment.user.key_name }}/picture?type=square" />
+														<img src="http://graph.facebook.com/{{ comment.user.facebook_id }}/picture?type=square" />
 													</td>
 												{% endif %}
 												<td>
@@ -244,16 +245,17 @@
 												</td>
 											</tr>
 											<tr>
-												{% if comment.privacy == 0 %}
+												{% if  comment == comment_pair|first %}
 													<td>
-														{{comment.user.name }}
+														{{comment.user.full_name }}
 													</td>
 												{% endif %}
 												<td>
-													 - {{comment.date }}
+													- {{comment.date }}
 												</td>
 											</tr>
 										</table>
+										{% endif %}
 									</td>
 								{% endfor %}
 							</tr>
@@ -269,7 +271,7 @@
 			{% for teacher in teachers %}
 				<tr>
 					<td height="10" class="Title">
-						Instructor Comments: {{teacher.title}} {{teacher.name}}
+						Instructor Comments: {{teacher.title}} {{teacher.full_name}}
 					</td>
 				</tr>
 				<tr>
@@ -278,25 +280,26 @@
 				</tr>
 				<tr>
 					<td>
-						<table width="760" border="0" cellpadding="0" class="Rating_item">
+						<table width="700" border="0" cellpadding="0" class="Rating_item">
 							<tr>
-								<td width="375" height="30">
+								<td width="345" height="30">
 									FB friends comments
 								</td>
-								<td width="375" height="30">
+								<td width="345" height="30">
 									FB public comments
 								</td>
 							{% for comment_pair in teacher.comments %}
 								</tr>
 								<tr>
 									{% for comment in comment_pair %}
-										{% if comment %}
 											<td>
-												<table>
+
+												{% if comment %}
+												<table border="0" cellpadding="0" style="border:1px #3B5998  solid">
 													<tr>
-														{% if comment.privacy == 0 %}
+														{% if comment == comment_pair|first %}
 															<td width = "50">
-																<img src="http://graph.facebook.com/{{ comment.user.key_name }}/picture?type=square" />
+																<img src="http://graph.facebook.com/{{ comment.user.facebook_id }}/picture?type=square" />
 															</td>
 														{% endif %}
 														<td>
@@ -304,18 +307,18 @@
 														</td>
 													</tr>
 													<tr>
-														{% if comment.privacy == 0 %}
+														{% if  comment == comment_pair|first %}
 															<td>
-																{{comment.user.name }}
+																{{comment.user.full_name }}
 															</td>
 														{% endif %}
 														<td>
-															 - {{comment.date }}
+															- {{comment.date }}
 														</td>
 													</tr>
 												</table>
+												{% endif %}
 											</td>
-										{% endif %}
 									{% endfor %}
 								</tr>
 						{% endfor %}
@@ -339,24 +342,5 @@
 				</td>
 			</tr>
 		</table>
-		<fb:login-button autologoutlink="true"></fb:login-button>
-		<div id="fb-root">
-		</div>
-		<script>
-			window.fbAsyncInit = function() {
-				FB.init({appId: '{{ facebook_app_id }}', status: true, cookie: true,
-					xfbml: true});
-				FB.Event.subscribe('{% if current_user %}auth.logout{% else %}auth.login{% endif %}', function(response) {
-					window.location.reload();
-				});
-			};
-			(function() {
-				var e = document.createElement('script');
-				e.type = 'text/javascript';
-				e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
-				e.async = true;
-				document.getElementById('fb-root').appendChild(e);
-			}());
-		</script>
 	</body>
 </html>

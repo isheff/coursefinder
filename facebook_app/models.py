@@ -69,7 +69,11 @@ class Course(DateStamped):
 	teacher_lastname=ListField(models.CharField(max_length=(200)))
 	#	Not sure if this is the best way to store this
 	teacher_ids = ListField(models.IntegerField())										# a list of ids of teacher models teaching this course
-	
+	# This part is for temporary storing averaging ratings
+	overall_avg = models.FloatField(default=0.0)
+	grading_avg = models.FloatField(default=0.0)
+	teaching_avg = models.FloatField(default=0.0)
+
 	def __unicode__(self):
 		"""
 		This method defines how this class is converted to a string (for example, in the admin interface)

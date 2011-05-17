@@ -192,7 +192,7 @@ def populate_caltech_courses(request):
 		#--- print out current status---	
 		current_index +=1 #
 		current_percent = round(current_index/len(course_name_out)*100)#
-		if current_index %75 == 0:#
+		if current_index %50 == 0:#
 			print "----------"
 			print str(current_percent)+'%'#
 			print str(dept)+str(name)

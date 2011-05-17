@@ -2,3 +2,7 @@ cron:
 - description: keep alive
   url: /
   schedule: every 2 minutes
+
+- description: update all courses averaging ratings
+  url: /update_rating_alg/
+  schedule: every 1 minutes

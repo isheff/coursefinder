@@ -25,7 +25,7 @@ from fandjango.decorators import facebook_authorization_required
 
 
 @csrf_exempt
-@facebook_authorization_required()
+#@facebook_authorization_required()
 def canvas(request):
 	#return HttpResponse("Hello, "+request.facebook.user.first_name+" "+request.facebook.user.last_name)
 	
@@ -48,11 +48,13 @@ def canvas(request):
 		results= Course.objects.filter(teacher_lastname=query_prof.capitaliza())
 	else:
 		results = []
+	if results:
+		results = results.order_by("name")
 	pass_to_template['Search_results'] = results
-	# 2. result list rating value (estimated)
+	# 2. result list  (estimated) overall_rating
 	results_value={}
 	for course in results:
-		results_value[course]=Rating_alg(user,course,Overall_Rating)
+		results_value[course]=course.overall_avg#Rating_alg(user,course,Overall_Rating)
 	pass_to_template['Search_results_value'] = results_value
 	# 3. current user rating value
 	#	 Any Overall Rating previously input by the user must be passed to the template
@@ -103,13 +105,22 @@ def canvas(request):
 	for i in range(5):
 		recommend.append(recommend_value_sort[i][0])
 	'''
-	recommend = []
+	'''
+	#pass_to_template['test']=len(Institution.objects.filter(name="aaa"))
+	# (1) get all courses averaging rating value by from high to low
+	recommend = list(Course.objects.all().order_by("-overall_avg")[:8])
+	# (2) shuffle it
+	random.shuffle(recommend)
+	# (3) Select top five
+	del recommend[5:]
+	'''
+	recommend=[]
 	pass_to_template['Recommend']= recommend
 
 	return render_to_response('facebook_app/canvas.html', pass_to_template)
 
 
-@facebook_authorization_required()
+#@facebook_authorization_required()
 def display_institution(request, institution_id):
 	# TODO: edit template to display courses and stuff. 
 	institute = get_object_or_404(Institution, id=int(institution_id))
@@ -123,7 +134,7 @@ def display_institution(request, institution_id):
 
 
 @csrf_exempt
-@facebook_authorization_required()
+#@facebook_authorization_required()
 def rate_course(request, course_id):
 	# this view, found at url "course/<course_id>/submit/", exists to recieve forms containing ONE of the following entries in form data:
 	#
@@ -262,7 +273,7 @@ def rate_course(request, course_id):
 
 
 @csrf_exempt
-@facebook_authorization_required()
+#@facebook_authorization_required()
 def display_course(request, course_id):
 	# This view returns a webpage in which a user can rate a class, comment on it, and do all those other things
 	p = get_object_or_404(Course, id=int(course_id)) # The class to be displayed
@@ -341,9 +352,18 @@ def display_course(request, course_id):
 		pass_to_template['Grading_Rating'] = 0
 		Overall_Rating_value = 0
 		# Use the temp algorithm here-----------------------------
-		Overall_Rating_value = Rating_alg(user,p,Overall_Rating)	
-		pass_to_template['Overall_Rating']=Overall_Rating_value
-		pass_to_template['Overall_Rating_value']=float(Overall_Rating_value/20)
+		# 1. Overall estimated
+		Overall_Rating_avg = int(p.overall_avg *80 + 20)
+		pass_to_template['Overall_Rating']=Overall_Rating_avg
+		pass_to_template['Overall_Rating_value']=float(Overall_Rating_avg/20)
+		# 2. Teaching estimated
+		Teaching_Rating_avg = int(p.teaching_avg *80 + 20)
+		pass_to_template['Teaching_Rating']=Teaching_Rating_avg
+		pass_to_template['Teaching_Rating_value']=float(Teaching_Rating_avg/20)
+		# 3. Grading estimated
+		Grading_Rating_avg = int(p.grading_avg *80 + 20)
+		pass_to_template['Grading_Rating']=Grading_Rating_avg
+		pass_to_template['Grading_Rating_value']=float(Grading_Rating_avg/20)
 		#---------------------------------------------------------
 
 		# OK, so now we need the set of comments written by friends, and public comments.
@@ -386,7 +406,7 @@ def comment_list_pair(comments_friends, comments_public):
 		answer.append(next)
 	return answer
 
-@facebook_authorization_required()
+#@facebook_authorization_required()
 def interest_list(request, user_id):
 	user = get_current_user(request) # the user presently logged in
 	user_id = user.facebook_id
@@ -415,27 +435,27 @@ def get_current_user(request):
 	#return get_object_or_404(User, last_name="Sheff")
 	# FOR OFF-GOOGLE TESTING ONLY***************
 	
-	if request.facebook.user:
-		return request.facebook.user
-	return None
+	#if request.facebook.user:
+	#	return request.facebook.user
+	#return None
 	
-	#cookie = facebook.get_user_from_cookie(request.COOKIES, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET)
-	#if cookie:
-	#	user = Facebook_User.objects.filter(key_name=cookie["uid"])
-	#	if len(user) == 0:
-	#		graph = facebook.GraphAPI(cookie["access_token"])
-	#		profile = graph.get_object("me")
-	#		user = Facebook_User(key_name=str(profile["id"]),
-	#			name=profile["name"],
-	#			profile_url=profile["link"],
-	#			access_token=cookie["access_token"])
-	#		user.save()
-	#	else:
-	#		user = user[0]
-	#		if user.access_token != cookie["access_token"]:
-	#			user.access_token = cookie["access_token"]
-	#			user.save()
-	#return user
+	cookie = facebook.get_user_from_cookie(request.COOKIES, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET)
+	if cookie:
+		user = Facebook_User.objects.filter(key_name=cookie["uid"])
+		if len(user) == 0:
+			graph = facebook.GraphAPI(cookie["access_token"])
+			profile = graph.get_object("me")
+			user = Facebook_User(key_name=str(profile["id"]),
+				name=profile["name"],
+				profile_url=profile["link"],
+				access_token=cookie["access_token"])
+			user.save()
+		else:
+			user = user[0]
+			if user.access_token != cookie["access_token"]:
+				user.access_token = cookie["access_token"]
+				user.save()
+	return user
 
 def is_friends(user1, user2):
 		# in the future, this will return a boolean value representing whether the input users are friends.
@@ -444,7 +464,7 @@ def is_friends(user1, user2):
 
 # radar chart for course-map
 
-@facebook_authorization_required()
+#@facebook_authorization_required()
 def radar_chart(request,user_facebook_id):
     user=get_current_user(request) # the user presently logged in
     user_facebook_id = user.facebook_id
@@ -502,3 +522,10 @@ def radar_chart(request,user_facebook_id):
     chart.tooltip = tip
     chart.bg_colour = '#3B3B40' # background color
     return HttpResponse(chart.render())
+
+def update_rating_alg(request):
+	'''# for test only
+	aa= Institution(name="aaa")
+	aa.save()
+	'''
+	return HttpResponse('updated')

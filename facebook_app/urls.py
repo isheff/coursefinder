@@ -10,6 +10,7 @@ urlpatterns = patterns('facebook_app.views',
     (r'^course/(?P<course_id>\d+)/submit/$', 'rate_course'),
     (r'^list/(?P<user_facebook_id>\d+)$','interest_list'),
     (r'^data/(?P<user_facebook_id>\d+)/$','radar_chart'),
+    (r'^update_rating_alg/$','update_rating_alg'),
 )
 
 # the chart data views
