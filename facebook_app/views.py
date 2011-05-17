@@ -50,7 +50,8 @@ def canvas(request):
 	else:
 		results = []
 	if results:
-		results = results.order_by("name")
+		if not (query_numb or query_name):
+			results = results.order_by("name")
 	pass_to_template['Search_results'] = results
 	# 2. result list  (estimated) overall_rating
 	results_value={}
