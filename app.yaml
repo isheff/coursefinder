@@ -25,3 +25,7 @@ handlers:
 
 - url: /.*
   script: djangoappengine/main/main.py
+
+- url: /update_rating_alg/
+  script: djangoappengine/main/main.py
+  login: admin

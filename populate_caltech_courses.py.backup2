@@ -110,7 +110,7 @@ def populate_caltech_courses(request):
 	# let's turn this into Course objects and Facebook_User objects for the instructors.
 	coursedict = {}
 	current_index=1#
-	for course in range(len(course_name_out)):
+	for course in range(100):
 		name = str(course_numb_out[course].split()[-1])+" "+str(course_name_out[course].strip())
 		if not (name in coursedict):
 			coursedict[name] = Course()
@@ -129,9 +129,7 @@ def populate_caltech_courses(request):
 			soup_des1 = BeautifulSoup.BeautifulStoneSoup(str(soup_des0.findAll("p", {"class":"course"})))
 			soup_des2 = BeautifulSoup.BeautifulStoneSoup(str(soup_des0.findAll("span", {"class":"text84"})))
 			#target_course = soup_des1.find(text=re.compile(str( course_name_out[course].strip() ) ))
-			short_course_numb = course_numb_out[course].split()[-1][:3]
-			short_course_numb = str(int(short_course_numb))
-			target_course_name =soup_des2.find(text=re.compile( short_course_numb.strip() ) )
+			target_course_name =soup_des2.find(text=re.compile( course_numb_out[course].split()[-1][:3].strip() ) )
 			if target_course_name:
 				target_course = soup_des1.find(text=re.compile(str( target_course_name.strip() ) ))
 			else:
@@ -192,13 +190,15 @@ def populate_caltech_courses(request):
 		#--- print out current status---	
 		current_index +=1 #
 		current_percent = round(current_index/len(course_name_out)*100)#
-		if current_index %75 == 0:#
-			print "----------"
-			print str(current_percent)+'%'#
-			print str(dept)+str(name)
-			print str(course_description1)
-			print str(teacher)
-			print "----------"
+		print "----------"
+		print "original course_numb: "+str(course_numb_out[course])
+		print "shortened course_numb: "+str(course_numb_out[course].split()[-1][:3])
+		print "found course_numb_name: "+str(target_course_name)
+		print str(current_percent)+'%'#
+		print str(dept)+str(name)
+		print str(course_description1)
+		print str(teacher)
+		print "----------"
 		#--------------------------------
 	for name in coursedict:
 		coursedict[name].save()

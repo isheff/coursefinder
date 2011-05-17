@@ -27,6 +27,11 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: facebook_app_course
+  properties:
+  - name: department
+  - name: name
+
 - kind: facebook_app_course_comment
   properties:
   - name: __key__
