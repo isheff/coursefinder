@@ -22,10 +22,11 @@ from course_value_convert import course_value_convert
 from settings import FACEBOOK_APPLICATION_ID as FACEBOOK_APP_ID
 from settings import FACEBOOK_APPLICATION_SECRET_KEY as FACEBOOK_APP_SECRET
 from fandjango.decorators import facebook_authorization_required
+from fandjango.utils import get_facebook_profile
 
 
 @csrf_exempt
-#@facebook_authorization_required()
+@facebook_authorization_required()
 def canvas(request):
 	#return HttpResponse("Hello, "+request.facebook.user.first_name+" "+request.facebook.user.last_name)
 	
@@ -120,7 +121,7 @@ def canvas(request):
 	return render_to_response('facebook_app/canvas.html', pass_to_template)
 
 
-#@facebook_authorization_required()
+@facebook_authorization_required()
 def display_institution(request, institution_id):
 	# TODO: edit template to display courses and stuff. 
 	institute = get_object_or_404(Institution, id=int(institution_id))
@@ -134,7 +135,7 @@ def display_institution(request, institution_id):
 
 
 @csrf_exempt
-#@facebook_authorization_required()
+@facebook_authorization_required()
 def rate_course(request, course_id):
 	# this view, found at url "course/<course_id>/submit/", exists to recieve forms containing ONE of the following entries in form data:
 	#
@@ -273,7 +274,7 @@ def rate_course(request, course_id):
 
 
 @csrf_exempt
-#@facebook_authorization_required()
+@facebook_authorization_required()
 def display_course(request, course_id):
 	# This view returns a webpage in which a user can rate a class, comment on it, and do all those other things
 	p = get_object_or_404(Course, id=int(course_id)) # The class to be displayed
@@ -406,7 +407,7 @@ def comment_list_pair(comments_friends, comments_public):
 		answer.append(next)
 	return answer
 
-#@facebook_authorization_required()
+@facebook_authorization_required()
 def interest_list(request, user_id):
 	user = get_current_user(request) # the user presently logged in
 	user_id = user.facebook_id
@@ -424,8 +425,7 @@ def interest_list(request, user_id):
 
 
 def attends_institution(user, institution):
-	#TODO: make this method return whether the given user attends the given institution.
-	return True
+	return institution.facebook_id in [x['school']['id'] for x in get_facebook_profile(user.oauth_token.token)['education']]
 
 def get_current_user(request):
 	user = None
@@ -464,7 +464,7 @@ def is_friends(user1, user2):
 
 # radar chart for course-map
 
-#@facebook_authorization_required()
+@facebook_authorization_required()
 def radar_chart(request,user_facebook_id):
     user=get_current_user(request) # the user presently logged in
     user_facebook_id = user.facebook_id
