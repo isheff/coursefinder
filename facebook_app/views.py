@@ -135,7 +135,7 @@ def display_institution(request, institution_id):
 		courses = Course.objects.filter(institution=institute)
 		return render_to_response('facebook_app/display_institution.html', {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'institution':institute, 'courses':courses})
 	else:
-		return HttpResponse("You do not attend this institution.")
+		return render_to_response('facebook_app/not_attend.html')
 
 
 
@@ -403,7 +403,7 @@ def display_course(request, course_id):
 	
 		return render_to_response('facebook_app/display_course.html', pass_to_template)
 	else:
-		return HttpResponse("You do not attend this institution.")
+		return render_to_response('facebook_app/not_attend.html')
 
 # temporary algorithm (Average)
 def Rating_alg(user,course,Rating_item):
