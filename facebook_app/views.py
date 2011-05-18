@@ -500,8 +500,8 @@ def radar_chart(request,user_facebook_id):
 
     #--------------------------------------------------------------------------
     chart = pyofc2.open_flash_chart() 
-    chart.title = pyofc2.title(text=user.full_name+"'s  course-map")
-    chart.title.style =("{font-size:20px; color : #B0BFBA;}")   # title colour
+    #chart.title = pyofc2.title(text=user.full_name+"'s  course-map")
+    #chart.title.style =("{font-size:20px; color : #B0BFBA;}")   # title colour
     area = pyofc2.area_hollow()
     area.width = 1
     area.dot_size = 1
