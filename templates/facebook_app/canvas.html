@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml" >
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml" style="overflow:hidden" >
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	
@@ -232,22 +232,7 @@
   </head>
   <body style="overflow:hidden" >
 	  {% load my_filters %}
-	  <div id="fb-root"></div>
-<script>
-	window.fbAsyncInit = function() {
-		FB.init({appId: "174228859292999",
-                           status: true,
-                           cookie: true,
-                           xfbml: true});
-		FB.Canvas.setSize();
-	};
-	(function() {
-		var e = document.createElement('script'); e.async = true;
-		e.src = document.location.protocol +
-			'//connect.facebook.net/en_US/all.js';
-		document.getElementById('fb-root').appendChild(e);
-	}());
-</script>
+
 <div >
   <table width="700" border="0"  cellpadding="0">
   <tr>
@@ -454,7 +439,30 @@
 
   </div> 
     
-	
-	
+<div id="fb-root"></div>
+<script>
+	window.fbAsyncInit = function() {
+		FB.init({appId: "174228859292999",
+                           status: true,
+                           cookie: true,
+                           xfbml: true});
+		FB.Canvas.setSize();
+	};
+	(function() {
+		var e = document.createElement('script'); e.async = true;
+		e.src = document.location.protocol +
+			'//connect.facebook.net/en_US/all.js';
+		document.getElementById('fb-root').appendChild(e);
+	}());
+</script>
+<script type="text/javascript">
+window.fbAsyncInit = function() {
+FB.Canvas.setSize();
+}
+// Do things that will sometimes call sizeChangeCallback()
+function sizeChangeCallback() {
+FB.Canvas.setSize();
+}
+</script>	
   </body>
 </html>

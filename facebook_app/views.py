@@ -125,7 +125,7 @@ def canvas(request):
 
 	# 5. User's raged course history
 	rated_course = Overall_Rating.objects.filter(user=user)
-	rated_course = rated_course.order_by("department")
+	rated_course = rated_course.order_by("name")
 	rated_course_history = []
 	for each_course in rated_course:
                 rated_course_history.append(each_course.course)
