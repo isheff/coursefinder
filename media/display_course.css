@@ -66,6 +66,11 @@
 	font-weight: bold;
 	color: #515151;
 }
+.Title_small {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 18px;
+	color: #515151;
+}
 .Search_name {
 	font-size: 14px; 
 	font-weight: normal; 

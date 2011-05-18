@@ -123,6 +123,13 @@ def canvas(request):
 	#recommend=[]
 	pass_to_template['Recommend']= recommend
 
+	# 5. User's raged course history
+	rated_course = Overall_Rating.objects.filter(user=user)
+	rated_course_history = []
+	for each_course in rated_course:
+                rated_course_history.append(each_course.course)
+        pass_to_template['rated_course_history'] = rated_course_history
+
 	return render_to_response('facebook_app/canvas.html', pass_to_template)
 
 

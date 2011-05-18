@@ -193,6 +193,7 @@
 	color:#6C8C84;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
     }
+.style1 {font-family: Verdana, Arial, Helvetica, sans-serif}
 </style>
 
 
@@ -419,10 +420,22 @@
   <tr>
     <td colspan="0"><table width="300" border="0" cellpadding="0">
       <tr>
-        <td width="200" height="200" >
+        <td width="350" height="200" >
 		<div class="chart" id="course_map"></div>
 		</td>
-        <td></td>
+        <td width="110" align="right" valign="top">{% if rated_course_history %} <span class="Title_small">Courses History</span>
+		{% for course in rated_course_history %}
+		 <table width="100" border="0" cellpadding="0">
+  <tr>
+    <td><a class="search_result_item" style="vertical-align:text-top"  href="/course/{{course.id}}">
+				 {% for dept in course.department|join:"/"  %}{{dept|escape}}{% endfor %} {{course.name|truncatewords:1|escape}}</a>
+				 
+			 </td>
+  </tr>
+</table>
+{% endfor %}
+		
+		{% endif %}</td>
       </tr>
     </table></td>
   </tr>
