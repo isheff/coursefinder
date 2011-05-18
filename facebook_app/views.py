@@ -107,16 +107,17 @@ def canvas(request):
 	for i in range(5):
 		recommend.append(recommend_value_sort[i][0])
 	'''
-	'''
+	
 	#pass_to_template['test']=len(Institution.objects.filter(name="aaa"))
 	# (1) get all courses averaging rating value by from high to low
-	recommend = list(Course.objects.all().order_by("-overall_avg")[:8])
-	# (2) shuffle it
+        recommend_source = Course.objects.all()
+	# (2) get the top 8 courses & shuffle it
+	recommend = list(recommend_source.order_by("-overall_avg")[:8])
 	random.shuffle(recommend)
 	# (3) Select top five
 	del recommend[5:]
-	'''
-	recommend=[]
+	
+	#recommend=[]
 	pass_to_template['Recommend']= recommend
 
 	return render_to_response('facebook_app/canvas.html', pass_to_template)
@@ -172,25 +173,37 @@ def rate_course(request, course_id):
 			# If an Overall_Rating was submitted, check to see if one exists, and overwrite it or create a new one.
 			if "Overall_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
 				if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
-					over_rat = Overall_Rating.objects.filter(user=user, course=p)
+					over_rat = Overall_Rating.objects.filter(user=user, course=p) 
+					rated_amount = Overall_Rating.objects.filter(course=p).count()  # for update averaging
+					input_value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0  # for update averaging
+					existing_value = Overall_Rating.objects.filter(course=p)        # for update averaging
 					if len(over_rat)==0:
 						over_rat = Overall_Rating( user=user, course=p)
+						p.overall_avg = (existing_value*rated_amount+input_value)/(rated_amount+1)						
 					else:
 						over_rat = over_rat[0]
-					over_rat.value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
+						p.overall_avg = (existing_value*rated_amount-over_rat.value+input_value)/rated_amount
+					over_rat.value = input_value
 					over_rat.save()
+					p.save()
 					return HttpResponse("Overall Rating of "+str(over_rat.value)+" saved.")
 			
 			# If an Grading_Rating was submitted, check to see if one exists, and overwrite it or create a new one.
 			if "Grading_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
 				if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
 					grad_rat = Grading_Rating.objects.filter(user=user, course=p)
+					rated_amount = Grading_Rating.objects.filter(course=p).count()
+					input_value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
+					existing_value = Overall_Rating.objects.filter(course=p) 
 					if len(grad_rat) == 0:
 						grad_rat = Grading_Rating(user=user, course=p)
+						p.grading_avg = (existing_value*rated_amount+input_value)/(rated_amount+1)
 					else:
 						grad_rat = grad_rat[0]
-					grad_rat.value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
+						p.grading_avg = (existing_value*rated_amount-grad_rat.value+input_value)/rated_amount
+					grad_rat.value = input_value
 					grad_rat.save()
+					p.save()
 					return HttpResponse("Grading Rating of "+str(grad_rat.value)+" saved.")
 			# If an Interest was submitted, check to see if one exists, and overwrite it or create a new one.
 			if "Interest" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
