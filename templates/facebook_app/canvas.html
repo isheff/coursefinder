@@ -244,11 +244,11 @@
     <td height="10"  colspan="2"><table width="500" border="0" cellpadding="2">
       <tr>
         <td>
-  <div id="recommend_list">
+	<div id="recommend_list">
 	<ul> {% for course in Recommend %}
 	  <li><a href="/course/{{course.id}}">{{course.name|removefirstword|escape}}</a></li>
 	  {% endfor %} </ul>
-</div>
+	</div>
 </td>
       </tr>
       <tr>
@@ -335,11 +335,9 @@
       </tr>
       <tr>
         <td width="102" height="30" class="Search_name">&nbsp;</td>
-        <td height="30" colspan="2"><div>
-          <button name="Submit" type="submit"  id="Submit" class="search"   />
-		  </form>
-          
-			</div>        </td>
+	<td height="30" colspan="2">
+	<div><button name="Submit" type="submit"  id="Submit" class="search"   /></div>
+</td> </form>
       </tr>
       <tr><td colspan="2">&nbsp;</td></tr>
     </table>    </td>
@@ -371,15 +369,16 @@
 	 </tr>
 	  <tr>
 	 <td width="10" height="25">&nbsp;</td>
-	 <td width="90" height="25"><div class="rating_bar_small"> 
+	 <td width="90" height="25">
+	<div class="rating_bar_small"> 
 		 <div style="width:{{Search_results_value|lookup:course}}%"></div>
-		</div>
+	</div>
 	 </td>
 	 <td height="25" class="search_result_tag"><div style="float:left">My rating:&nbsp;</div>
 	<div float><script type="text/javascript" language="javascript">
 	 moonStarStars_small("Overall_Rating", {{ User_Overall_Rating|lookup:course }},{{course.id}});
 	</script>
-	 </div>
+	</div>
  </td>
  <td height="25">&nbsp;</td>
 	 </tr>

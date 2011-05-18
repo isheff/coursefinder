@@ -56,7 +56,10 @@ def canvas(request):
 	# 2. result list  (estimated) overall_rating
 	results_value={}
 	for course in results:
-		results_value[course]=course.overall_avg#Rating_alg(user,course,Overall_Rating)
+		if course.overall_avg == 0.0:
+			results_value[course]=0
+		else:
+			results_value[course]=int(course.overall_avg*80+20)
 	pass_to_template['Search_results_value'] = results_value
 	# 3. current user rating value
 	#	 Any Overall Rating previously input by the user must be passed to the template
@@ -176,7 +179,7 @@ def rate_course(request, course_id):
 					over_rat = Overall_Rating.objects.filter(user=user, course=p) 
 					rated_amount = Overall_Rating.objects.filter(course=p).count()  # for update averaging
 					input_value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0  # for update averaging
-					existing_value = Overall_Rating.objects.filter(course=p)        # for update averaging
+					existing_value = p.overall_avg					  # for update averaging
 					if len(over_rat)==0:
 						over_rat = Overall_Rating( user=user, course=p)
 						p.overall_avg = (existing_value*rated_amount+input_value)/(rated_amount+1)						
@@ -192,9 +195,9 @@ def rate_course(request, course_id):
 			if "Grading_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
 				if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
 					grad_rat = Grading_Rating.objects.filter(user=user, course=p)
-					rated_amount = Grading_Rating.objects.filter(course=p).count()
-					input_value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
-					existing_value = Overall_Rating.objects.filter(course=p) 
+					rated_amount = Grading_Rating.objects.filter(course=p).count()	# for update averaging
+					input_value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0	# for update averaging
+					existing_value = p.grading_avg				 	# for update averaging
 					if len(grad_rat) == 0:
 						grad_rat = Grading_Rating(user=user, course=p)
 						p.grading_avg = (existing_value*rated_amount+input_value)/(rated_amount+1)
@@ -368,7 +371,10 @@ def display_course(request, course_id):
 		Overall_Rating_value = 0
 		# Use the temp algorithm here-----------------------------
 		# 1. Overall estimated
-		Overall_Rating_avg = int(p.overall_avg *80 + 20)
+		if p.overall_avg ==0.0:
+			Overall_Rating_avg = 0
+		else:
+			Overall_Rating_avg = int(p.overall_avg *80 + 20)
 		pass_to_template['Overall_Rating']=Overall_Rating_avg
 		pass_to_template['Overall_Rating_value']=float(Overall_Rating_avg/20)
 		# 2. Teaching estimated
@@ -376,7 +382,10 @@ def display_course(request, course_id):
 		pass_to_template['Teaching_Rating']=Teaching_Rating_avg
 		pass_to_template['Teaching_Rating_value']=float(Teaching_Rating_avg/20)
 		# 3. Grading estimated
-		Grading_Rating_avg = int(p.grading_avg *80 + 20)
+		if p.grading_avg ==0.0:
+			Grading_Rating_avg = 0
+		else:
+			Grading_Rating_avg = int(p.grading_avg *80 + 20)
 		pass_to_template['Grading_Rating']=Grading_Rating_avg
 		pass_to_template['Grading_Rating_value']=float(Grading_Rating_avg/20)
 		#---------------------------------------------------------
