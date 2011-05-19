@@ -158,7 +158,7 @@ def rate_course(request, course_id):
 	# first, let's get the course, user, and make sure the user attends the course's institution:
 	p = get_object_or_404(Course, id=int(course_id))
 	user=get_current_user(request)
-	if attends_institution(user, p.institution):
+	i f attends_institution(user, p.institution):
 		
 		#now, just for bookeeping, if the course contains any teacher_ids not actually representative of teachers, delete them.
 		for teacher_id in p.teacher_ids:
