@@ -31,3 +31,10 @@ def removefirstword(s):
 	if len(words) >1:
 		words = words[1:]
 	return u' '.join(words)
+@register.filter(name="onlyfirstword")
+def onlyfirstword(s):
+        s = force_unicode(s)
+        words = s.split()
+        if len(words)>1:
+                words = words[:1]
+        return u' '.join(words)

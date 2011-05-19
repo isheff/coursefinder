@@ -6,7 +6,7 @@
 			Course finder - {% for department in course.department %} {{department}} {% endfor %} {{ course.name }}
 		</title>
 		<link rel="stylesheet" type="text/css" href="/media/display_course.css" />
-		<script src="/media/mootools-core-1.3.2.js"></script>
+		<script src="/media/mootools-core-1.3.2-full-compat.js"></script>
 		<script src="/media/moostarrating.js"></script>  
 		<script src="/media/rating_star.js"></script>
 	</head>
@@ -40,12 +40,11 @@
                       </tr>
                     </table></td>
                     <td width="10" rowspan="3">&nbsp;</td>
-		    <td colspan="2" >
-			    <a href={{course.url|escape}} target="_blank" class="Course_title"> <span class="Course_title"> {% for department in course.department %}{{department}} {% endfor %} </span><span class="Course_title">{{ course.name }}</span>
-		    </a> </td>
+		    <td colspan="2" valign="top" >
+			    <a href={{course.url|escape}} target="_blank" class="Course_title"> <span class="Course_title"> {% for department in course.department %}{{department}} {% endfor %} </span><span class="Course_title">{{ course.name }}</span>		    </a> </td>
                   </tr>
                   <tr>
-                    <td colspan="2"><span class="Course_detail">{{course.description}}</span></td>
+                    <td colspan="2" valign="top"><span class="Course_detail">{{course.description}}</span></td>
                   </tr>
                   <tr>
 			  <td width="95" align="center"> {% if Overall_Rating %} 
@@ -61,8 +60,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td height="10">
-					&nbsp;
+				<td height="10">&nbsp;
+					
 				</td>
 			</tr>
 			<tr>
@@ -92,8 +91,8 @@
 									Not Yet Avaliable
 								{% endif %}	
 							</td>
-							<td width="10">
-								&nbsp;
+							<td width="10">&nbsp;
+								
 							</td>
 							<td width="150" height="25" valign="middle">
 								<div>
@@ -141,8 +140,8 @@
 									Not Yet Avaliable
 								{% endif %}						  
 							</td>
-							<td>
-								&nbsp;							
+							<td>&nbsp;
+															
 							</td>
 							<td height="25">
 								<script type="text/javascript" language="javascript">
@@ -183,8 +182,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td height="20">
-					&nbsp;
+				<td height="20">&nbsp;
+					
 				</td>
 			</tr>
 <!-- At some point, we should make this happen, but I'm not up to it as of the time I'm writing this comment. 
@@ -224,10 +223,10 @@
 					<table width="700" border="0" cellpadding="0" class="Rating_item">
 						<tr>
 							<td width="345" height="30">
-								FB friends comments
+								friends comments
 							</td>
 							<td width="345" height="30">
-								FB public comments
+								public comments
 							</td>
 						</tr>
 						{% for comment_pair in Course_Comments %}
@@ -266,8 +265,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td height="10">
-					&nbsp;
+				<td height="10">&nbsp;
+					
 				</td>
 			</tr>
 			{% for teacher in teachers %}
@@ -285,10 +284,10 @@
 						<table width="700" border="0" cellpadding="0" class="Rating_item">
 							<tr>
 								<td width="345" height="30">
-									FB friends comments
+									friends comments
 								</td>
 								<td width="345" height="30">
-									FB public comments
+									public comments
 								</td>
 							{% for comment_pair in teacher.comments %}
 								</tr>
@@ -328,8 +327,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td height="10">
-					&nbsp;
+				<td height="10">&nbsp;
+					
 				</td>
 			</tr>
 			{% endfor %}
@@ -339,8 +338,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td height="10">
-					&nbsp;
+				<td height="10">&nbsp;
+					
 				</td>
 			</tr>
 		</table>

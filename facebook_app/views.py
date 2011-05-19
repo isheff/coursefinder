@@ -56,7 +56,10 @@ def canvas(request):
 	# 2. result list  (estimated) overall_rating
 	results_value={}
 	for course in results:
-		results_value[course]=course.overall_avg#Rating_alg(user,course,Overall_Rating)
+		if course.overall_avg == 0.0:
+			results_value[course]=0
+		else:
+			results_value[course]=int(course.overall_avg*80+20)
 	pass_to_template['Search_results_value'] = results_value
 	# 3. current user rating value
 	#	 Any Overall Rating previously input by the user must be passed to the template
@@ -107,17 +110,26 @@ def canvas(request):
 	for i in range(5):
 		recommend.append(recommend_value_sort[i][0])
 	'''
-	'''
+	
 	#pass_to_template['test']=len(Institution.objects.filter(name="aaa"))
 	# (1) get all courses averaging rating value by from high to low
-	recommend = list(Course.objects.all().order_by("-overall_avg")[:8])
-	# (2) shuffle it
+        recommend_source = Course.objects.all()
+	# (2) get the top 8 courses & shuffle it
+	recommend = list(recommend_source.order_by("-overall_avg")[:8])
 	random.shuffle(recommend)
 	# (3) Select top five
 	del recommend[5:]
-	'''
-	recommend=[]
+	
+	#recommend=[]
 	pass_to_template['Recommend']= recommend
+
+	# 5. User's raged course history
+	rated_course = Overall_Rating.objects.filter(user=user)
+	#rated_course = rated_course.course.order_by("name")
+	rated_course_history = []
+	for each_course in rated_course:
+                rated_course_history.append(each_course.course)
+        pass_to_template['rated_course_history'] = rated_course_history
 
 	return render_to_response('facebook_app/canvas.html', pass_to_template)
 
@@ -131,7 +143,7 @@ def display_institution(request, institution_id):
 		courses = Course.objects.filter(institution=institute)
 		return render_to_response('facebook_app/display_institution.html', {'current_user':user, 'facebook_app_id':FACEBOOK_APP_ID, 'institution':institute, 'courses':courses})
 	else:
-		return HttpResponse("You do not attend this institution.")
+		return render_to_response('facebook_app/not_attend.html')
 
 
 
@@ -172,25 +184,37 @@ def rate_course(request, course_id):
 			# If an Overall_Rating was submitted, check to see if one exists, and overwrite it or create a new one.
 			if "Overall_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
 				if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
-					over_rat = Overall_Rating.objects.filter(user=user, course=p)
+					over_rat = Overall_Rating.objects.filter(user=user, course=p) 
+					rated_amount = Overall_Rating.objects.filter(course=p).count()  # for update averaging
+					input_value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0  # for update averaging
+					existing_value = p.overall_avg					  # for update averaging
 					if len(over_rat)==0:
 						over_rat = Overall_Rating( user=user, course=p)
+						p.overall_avg = (existing_value*rated_amount+input_value)/(rated_amount+1)						
 					else:
 						over_rat = over_rat[0]
-					over_rat.value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
+						p.overall_avg = (existing_value*rated_amount-over_rat.value+input_value)/rated_amount
+					over_rat.value = input_value
 					over_rat.save()
+					p.save()
 					return HttpResponse("Overall Rating of "+str(over_rat.value)+" saved.")
 			
 			# If an Grading_Rating was submitted, check to see if one exists, and overwrite it or create a new one.
 			if "Grading_Rating" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
 				if request.REQUEST["Rating_Value"] in ["1", "2", "3", "4", "5"]:
 					grad_rat = Grading_Rating.objects.filter(user=user, course=p)
+					rated_amount = Grading_Rating.objects.filter(course=p).count()	# for update averaging
+					input_value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0	# for update averaging
+					existing_value = p.grading_avg				 	# for update averaging
 					if len(grad_rat) == 0:
 						grad_rat = Grading_Rating(user=user, course=p)
+						p.grading_avg = (existing_value*rated_amount+input_value)/(rated_amount+1)
 					else:
 						grad_rat = grad_rat[0]
-					grad_rat.value = (float(request.REQUEST["Rating_Value"])-1.0)/4.0
+						p.grading_avg = (existing_value*rated_amount-grad_rat.value+input_value)/rated_amount
+					grad_rat.value = input_value
 					grad_rat.save()
+					p.save()
 					return HttpResponse("Grading Rating of "+str(grad_rat.value)+" saved.")
 			# If an Interest was submitted, check to see if one exists, and overwrite it or create a new one.
 			if "Interest" == request.REQUEST["Rating_Name"] and "Rating_Value" in request.REQUEST:
@@ -355,7 +379,10 @@ def display_course(request, course_id):
 		Overall_Rating_value = 0
 		# Use the temp algorithm here-----------------------------
 		# 1. Overall estimated
-		Overall_Rating_avg = int(p.overall_avg *80 + 20)
+		if p.overall_avg ==0.0:
+			Overall_Rating_avg = 0
+		else:
+			Overall_Rating_avg = int(p.overall_avg *80 + 20)
 		pass_to_template['Overall_Rating']=Overall_Rating_avg
 		pass_to_template['Overall_Rating_value']=float(Overall_Rating_avg/20)
 		# 2. Teaching estimated
@@ -363,7 +390,10 @@ def display_course(request, course_id):
 		pass_to_template['Teaching_Rating']=Teaching_Rating_avg
 		pass_to_template['Teaching_Rating_value']=float(Teaching_Rating_avg/20)
 		# 3. Grading estimated
-		Grading_Rating_avg = int(p.grading_avg *80 + 20)
+		if p.grading_avg ==0.0:
+			Grading_Rating_avg = 0
+		else:
+			Grading_Rating_avg = int(p.grading_avg *80 + 20)
 		pass_to_template['Grading_Rating']=Grading_Rating_avg
 		pass_to_template['Grading_Rating_value']=float(Grading_Rating_avg/20)
 		#---------------------------------------------------------
@@ -381,7 +411,7 @@ def display_course(request, course_id):
 	
 		return render_to_response('facebook_app/display_course.html', pass_to_template)
 	else:
-		return HttpResponse("You do not attend this institution.")
+		return render_to_response('facebook_app/not_attend.html')
 
 # temporary algorithm (Average)
 def Rating_alg(user,course,Rating_item):
@@ -471,8 +501,8 @@ def radar_chart(request,user_facebook_id):
 
     #--------------------------------------------------------------------------
     chart = pyofc2.open_flash_chart() 
-    chart.title = pyofc2.title(text=user.full_name+"'s  course-map")
-    chart.title.style =("{font-size:20px; color : #B0BFBA;}")   # title colour
+    #chart.title = pyofc2.title(text=user.full_name+"'s  course-map")
+    #chart.title.style =("{font-size:20px; color : #B0BFBA;}")   # title colour
     area = pyofc2.area_hollow()
     area.width = 1
     area.dot_size = 1

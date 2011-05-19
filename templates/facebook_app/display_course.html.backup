@@ -40,7 +40,9 @@
                       </tr>
                     </table></td>
                     <td width="10" rowspan="3">&nbsp;</td>
-                    <td colspan="2" ><span class="Course_title"> {% for department in course.department %}{{department}} {% endfor %} </span><span class="Course_title">{{ course.name }}</span></td>
+		    <td colspan="2" >
+			    <a href={{course.url|escape}} target="_blank" class="Course_title"> <span class="Course_title"> {% for department in course.department %}{{department}} {% endfor %} </span><span class="Course_title">{{ course.name }}</span>
+		    </a> </td>
                   </tr>
                   <tr>
                     <td colspan="2"><span class="Course_detail">{{course.description}}</span></td>
@@ -53,9 +55,8 @@
 				  </div> {% endif %}
 	  </td>
                     <td width="80" ><span class="Course_instructor">Instructors:</span></td>
-                    {% for teacher in teachers %}
-					<td width="280" ><span class="Course_instructor">{{ teacher.title }} {{ teacher.full_name }} </span></td>
-					{% endfor %}                  </tr>
+		    <td width="280" ><span class="Course_instructor">{% for teacher in teachers %}{{ teacher.title }} {{ teacher.full_name|escape }}&nbsp;{% endfor %}  </span></td>
+				                  </tr>
                 </table>
 				</td>
 			</tr>
@@ -132,9 +133,10 @@
 							<td >		
 								{% if Grading_Rating %}
 									<div class="rating_bar">
-										<div style="width:{{Grading_Rating}}%">										
-										</div>
-									</div>		
+										<div style="width:{{Grading_Rating}}%"></div></div>
+										<div> ({{Grading_Rating_value|floatformat:1}})</div>										
+									
+											
 								{% else %}
 									Not Yet Avaliable
 								{% endif %}						  
@@ -222,10 +224,10 @@
 					<table width="700" border="0" cellpadding="0" class="Rating_item">
 						<tr>
 							<td width="345" height="30">
-								FB friends comments
+								friends comments
 							</td>
 							<td width="345" height="30">
-								FB public comments
+								public comments
 							</td>
 						</tr>
 						{% for comment_pair in Course_Comments %}
