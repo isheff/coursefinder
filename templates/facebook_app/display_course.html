@@ -25,9 +25,22 @@
 			</tr>
 			<tr>
 			  <td height="40">
-			  <button class="searchback" onclick="location.href='/'"/>
 			  
-			  </td>
+			  
+			  
+			  
+			  
+			  <table width="255" height="30" border="0" cellpadding="0">
+                <tr>
+                  <td width="85" align="left" valign="bottom"><button class="searchback" onclick="location.href='/'"/></td>
+                  <td width="85" align="left" valign="bottom">{% if Previous_course %}
+			  <button class="previous_button" onclick="location.href='/course/{{Previous_course.id}}'"/>
+			  {% endif %}</td>
+                  <td width="85" align="left" valign="bottom">{% if Next_course %}
+			  <button class="next_button" onclick="location.href='/course/{{Next_course.id}}'"/>
+			  {% endif %}</td>
+                </tr>
+              </table></td>
 		  </tr>
 			<tr>
 				<td height="40">

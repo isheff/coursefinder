@@ -38,3 +38,10 @@ def onlyfirstword(s):
         if len(words)>1:
                 words = words[:1]
         return u' '.join(words)
+@register.filter(name="unit2percent")
+def unit2percent(num):
+        if num == 0.0:
+                result = int(0)
+        else:
+                result = int(num*80+20)
+        return result

@@ -130,7 +130,7 @@
 			
 			// Trig to figure out the size and where the
 			// text should go
-			x = 120 + Math.sin(angle) * 30;
+			x = 90 + Math.sin(angle) * 30;
 			y = 45 + Math.cos(angle) * 40;
 			size = Math.round(30 - Math.sin(angle) * 30);
 			size_font = Math.round(size /5)
@@ -366,7 +366,7 @@
 			 <a class="search_result_item" style="vertical-align:text-top"  href="/course/{{course.id}}">
 				 {% for dept in course.department|join:"/"  %}{{dept|escape}}{% endfor %}</a>
 				 
-			 </td>
+		    </td>
 			 <td colspan="2">
 				 <a class="search_result_item" href="/course/{{course.id}}">
 				 {{course.name|escape}}
@@ -408,14 +408,18 @@
         <td width="350" height="200" >
 		<div class="chart" id="course_map"></div>
 		</td>
-        <td width="140" align="right" valign="top">
+        <td width="140" align="left" valign="top">
 		{% if rated_course_history %} 
-		<span class="Title_small">Courses History</span>
+		<span class="Title_small">Course History</span>
 		{% for course in rated_course_history %}
-		 <table width="140" border="0" cellpadding="0">
+		 <table width="250" border="0" cellpadding="0">
   <tr>
-    <td><a class="search_result_item" style="vertical-align:text-top"  href="/course/{{course.id}}">
-				 {% for dept in course.department|join:"/"  %}{{dept|escape}}{% endfor %} {{course.name|onlyfirstword|escape}}</a>
+    <td width="140" align="left"><a class="search_result_item" style="vertical-align:text-top"  href="/course/{{course.id}}">
+				 {% for dept in course.department|join:"/"  %}{{dept|escape}}{% endfor %} {{course.name|onlyfirstword|escape}}</a>				 </td>
+				 <td width="90">
+				 <div class="rating_bar_small"> 
+		 		<div style="width:{{course.overall_avg|unit2percent}}%"></div>
+				</div>
 				 </td>
   </tr>
 </table>
@@ -429,7 +433,7 @@
     <td colspan="2">		 </td>
   </tr>
   <tr>
-    <td colspan="2">
+    <td height="40" colspan="2">
 	    <iframe src="http://www.facebook.com/plugins/like.php?app_id=184092124973821&amp;href=http%3A%2F%2Fapps.facebook.com%2Fcoursefinder&amp;send=true&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font=verdana&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>
 </td>
   </tr>

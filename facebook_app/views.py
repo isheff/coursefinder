@@ -129,6 +129,7 @@ def canvas(request):
 	rated_course_history = []
 	for each_course in rated_course:
                 rated_course_history.append(each_course.course)
+        rated_course_history = sorted(rated_course_history, key=lambda course: course.name)
         pass_to_template['rated_course_history'] = rated_course_history
 
 	return render_to_response('facebook_app/canvas.html', pass_to_template)
@@ -397,7 +398,19 @@ def display_course(request, course_id):
 		pass_to_template['Grading_Rating']=Grading_Rating_avg
 		pass_to_template['Grading_Rating_value']=float(Grading_Rating_avg/20)
 		#---------------------------------------------------------
-
+                # Next & Previous course
+                department_courses = Course.objects.filter(department = p.department)
+                department_courses = list(department_courses.order_by("name"))
+                current_course_index = department_courses.index(p)
+                next_course = []
+                previous_course = []
+                if current_course_index != len(department_courses)-1:
+                        next_course = department_courses[current_course_index+1]
+                if current_course_index != 0:
+                        previous_course = department_courses[current_course_index-1]
+                pass_to_template['Next_course'] = next_course
+                pass_to_template['Previous_course'] = previous_course
+                        
 		# OK, so now we need the set of comments written by friends, and public comments.
 		# Note that comments not by friends are anonymous. That is, their username will not be displayed.
 		comments_friends = []
@@ -507,8 +520,8 @@ def radar_chart(request,user_facebook_id):
     area.width = 1
     area.dot_size = 1
     area.halo_size = 1
-    area.colour = '#B0BFBA'	 # area edge color
-    area.fill_colour = '#FFFFFF'    # area color
+    area.colour = '#36647F'	 # area edge color B0BFBA
+    area.fill_colour = '#36647F'    # area color FFFFFF
     area.fill_alpha = 0.5
     area.loop = True
     
@@ -516,21 +529,21 @@ def radar_chart(request,user_facebook_id):
     chart.add_element(area) 
 
     r = pyofc2.radar_axis(max=course_value_max,steps=2)
-    r.colour ='#36647F'     # main axis color
-    r.grid_colour = '#36647F'   # grid color
+    r.colour ='#DAD5E0'     # main axis color 36647F
+    r.grid_colour = '#DAD5E0'   # grid color 36647F
     ra = pyofc2.radar_axis_labels(labels=course_value_label,size=12)
-    ra.colour = '#B0BFBA'   # label(on axis) color
+    ra.colour = '#3B3B40'   # label(on axis) color B0BFBA
     r.labels = ra
     
     sa = pyofc2.radar_spoke_labels(labels=course_taken_fullname ,size=40)
     
-    sa.colour = '#B0BFBA'   # label color
+    sa.colour = '#3B3B40'   # label color B0BFBA
     chart.radar_axis = r 
     r.spoke_labels = sa
     tip = pyofc2.tooltip()
     tip.proximity = 1
     chart.tooltip = tip
-    chart.bg_colour = '#3B3B40' # background color
+    chart.bg_colour = '#FFFFFF' # background color 3B3B40
     return HttpResponse(chart.render())
 
 def update_rating_alg(request):

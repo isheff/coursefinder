@@ -148,6 +148,44 @@
 	width:78px;
 	border: none;
 }
+.next_button {
+	background-image: url(/media/Next.png);
+	text-decoration: none;
+	background-position:center;
+	background-repeat: no-repeat;
+	height:25px;
+	width:78px;
+	border: none;
+}
+
+.next_button:hover {
+	background-image: url(/media/Next_link.png);
+	text-decoration: none;
+	background-position:center;
+	background-repeat: no-repeat;
+	height:25px;
+	width:78px;
+	border: none;
+}
+.previous_button {
+	background-image: url(/media/Previous.png);
+	text-decoration: none;
+	background-position:center;
+	background-repeat: no-repeat;
+	height:25px;
+	width:78px;
+	border: none;
+}
+
+.previous_button:hover {
+	background-image: url(/media/Previous_link.png);
+	text-decoration: none;
+	background-position:center;
+	background-repeat: no-repeat;
+	height:25px;
+	width:78px;
+	border: none;
+}
 .submit {
 	width:60px;
 	height:25px;
