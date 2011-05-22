@@ -433,7 +433,7 @@
     <td colspan="2">		 </td>
   </tr>
   <tr>
-    <td height="40" colspan="2">
+    <td colspan="2">
 	    <iframe src="http://www.facebook.com/plugins/like.php?app_id=184092124973821&amp;href=http%3A%2F%2Fapps.facebook.com%2Fcoursefinder&amp;send=true&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font=verdana&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>
 </td>
   </tr>
@@ -450,7 +450,7 @@
                            status: true,
                            cookie: true,
                            xfbml: true});
-		FB.Canvas.setSize();
+		FB.Canvas.setAutoResize();
 	};
 	(function() {
 		var e = document.createElement('script'); e.async = true;
@@ -461,11 +461,11 @@
 </script>
 <script type="text/javascript">
 window.fbAsyncInit = function() {
-FB.Canvas.setSize();
+FB.Canvas.setAutoResize();
 }
 // Do things that will sometimes call sizeChangeCallback()
 function sizeChangeCallback() {
-FB.Canvas.setSize();
+FB.Canvas.setAutoResize();
 }
 </script>	
   </body>
