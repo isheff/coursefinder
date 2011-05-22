@@ -399,6 +399,27 @@ def display_course(request, course_id):
 		pass_to_template['Grading_Rating_value']=float(Grading_Rating_avg/20)
 		#---------------------------------------------------------
                 # Next & Previous course
+                all_course = Course.objects.all()
+                next_list = all_course.filter(name__gt = p.name).order_by("name")
+                previous_list = all_course.filter(name__lt = p.name).order_by("-name")
+                next_list_dept = []
+                previous_list_dept = []
+                next_course = []
+                previous_course = []
+                for dept in p.department:
+                        next_list_dept += next_list.filter(department=dept)[:1]
+                        previous_list_dept += previous_list.filter(department=dept)[:1]
+                next_course = sorted(next_list_dept, key=lambda item:item.name)[:1]
+                previous_course = sorted(previous_list_dept, key=lambda item:item.name)[-1:]
+                if len(next_course)!=0:
+                        next_course=next_course[0]
+                else:
+                        next_course=[]
+                if len(previous_course)!=0:
+                        previous_course=previous_course[0]
+                else:
+                        previous_course=[]
+                '''
                 department_courses = Course.objects.filter(department = p.department)
                 department_courses = list(department_courses.order_by("name"))
                 current_course_index = department_courses.index(p)
@@ -408,6 +429,7 @@ def display_course(request, course_id):
                         next_course = department_courses[current_course_index+1]
                 if current_course_index != 0:
                         previous_course = department_courses[current_course_index-1]
+                '''
                 pass_to_template['Next_course'] = next_course
                 pass_to_template['Previous_course'] = previous_course
                         
