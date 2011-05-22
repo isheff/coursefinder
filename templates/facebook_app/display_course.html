@@ -356,5 +356,31 @@
 				</td>
 			</tr>
 		</table>
+		<iframe src="http://www.facebook.com/plugins/like.php?app_id=184092124973821&amp;href=http%3A%2F%2Fapps.facebook.com%2Fcoursefinder&amp;send=true&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font=verdana&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>
+		<div id="fb-root"></div>
+<script>
+	window.fbAsyncInit = function() {
+		FB.init({appId: "174228859292999",
+                           status: true,
+                           cookie: true,
+                           xfbml: true});
+		FB.Canvas.setSize();
+	};
+	(function() {
+		var e = document.createElement('script'); e.async = true;
+		e.src = document.location.protocol +
+			'//connect.facebook.net/en_US/all.js';
+		document.getElementById('fb-root').appendChild(e);
+	}());
+</script>
+<script type="text/javascript">
+window.fbAsyncInit = function() {
+FB.Canvas.setSize();
+}
+// Do things that will sometimes call sizeChangeCallback()
+function sizeChangeCallback() {
+FB.Canvas.setSize();
+}
+</script>	
 	</body>
 </html>
