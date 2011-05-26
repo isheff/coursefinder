@@ -24,6 +24,12 @@ from settings import FACEBOOK_APPLICATION_SECRET_KEY as FACEBOOK_APP_SECRET
 from fandjango.decorators import facebook_authorization_required
 from fandjango.utils import get_facebook_profile
 
+from httplib import HTTPSConnection
+try:
+   import json
+except ImportError:
+   from django.utils import simplejson as json
+
 
 @csrf_exempt
 @facebook_authorization_required()
@@ -305,6 +311,7 @@ def display_course(request, course_id):
 	# This view returns a webpage in which a user can rate a class, comment on it, and do all those other things
 	p = get_object_or_404(Course, id=int(course_id)) # The class to be displayed
 	user=get_current_user(request) # the user presently logged in
+	user_friends_facebook_ids = get_friends_facebook_ids(user)+[user.facebook_id]
 	
 	#First, we must assemble the necessary information to display in the form. This includes comments and ratings previously made by the User
 	
@@ -332,7 +339,7 @@ def display_course(request, course_id):
 			comments_friends = []
 			comments_public  = []
 			for comment in Teacher_Comment.objects.filter(teacher=teachers[teacher], course=p).order_by("-date"):
-				if is_friends(user, comment.user):
+				if comment.user.facebook_id in user_friends_facebook_ids:
 					comments_friends.append(comment)
 				elif (comment.privacy == 1):
 					comments_public.append(comment)
@@ -398,47 +405,47 @@ def display_course(request, course_id):
 		pass_to_template['Grading_Rating']=Grading_Rating_avg
 		pass_to_template['Grading_Rating_value']=float(Grading_Rating_avg/20)
 		#---------------------------------------------------------
-                # Next & Previous course
-                all_course = Course.objects.all()
-                next_list = all_course.filter(name__gt = p.name).order_by("name")
-                previous_list = all_course.filter(name__lt = p.name).order_by("-name")
-                next_list_dept = []
-                previous_list_dept = []
-                next_course = []
-                previous_course = []
-                for dept in p.department:
-                        next_list_dept += next_list.filter(department=dept)[:1]
-                        previous_list_dept += previous_list.filter(department=dept)[:1]
-                next_course = sorted(next_list_dept, key=lambda item:item.name)[:1]
-                previous_course = sorted(previous_list_dept, key=lambda item:item.name)[-1:]
-                if len(next_course)!=0:
-                        next_course=next_course[0]
-                else:
-                        next_course=[]
-                if len(previous_course)!=0:
-                        previous_course=previous_course[0]
-                else:
-                        previous_course=[]
-                '''
-                department_courses = Course.objects.filter(department = p.department)
-                department_courses = list(department_courses.order_by("name"))
-                current_course_index = department_courses.index(p)
-                next_course = []
-                previous_course = []
-                if current_course_index != len(department_courses)-1:
-                        next_course = department_courses[current_course_index+1]
-                if current_course_index != 0:
-                        previous_course = department_courses[current_course_index-1]
-                '''
-                pass_to_template['Next_course'] = next_course
-                pass_to_template['Previous_course'] = previous_course
+		# Next & Previous course
+		all_course = Course.objects.all()
+		next_list = all_course.filter(name__gt = p.name).order_by("name")
+		previous_list = all_course.filter(name__lt = p.name).order_by("-name")
+		next_list_dept = []
+		previous_list_dept = []
+		next_course = []
+		previous_course = []
+		for dept in p.department:
+			next_list_dept += next_list.filter(department=dept)[:1]
+			previous_list_dept += previous_list.filter(department=dept)[:1]
+		next_course = sorted(next_list_dept, key=lambda item:item.name)[:1]
+		previous_course = sorted(previous_list_dept, key=lambda item:item.name)[-1:]
+		if len(next_course)!=0:
+			next_course=next_course[0]
+		else:
+			next_course=[]
+		if len(previous_course)!=0:
+			previous_course=previous_course[0]
+		else:
+			previous_course=[]
+		'''
+		department_courses = Course.objects.filter(department = p.department)
+		department_courses = list(department_courses.order_by("name"))
+		current_course_index = department_courses.index(p)
+		next_course = []
+		previous_course = []
+		if current_course_index != len(department_courses)-1:
+				next_course = department_courses[current_course_index+1]
+		if current_course_index != 0:
+				previous_course = department_courses[current_course_index-1]
+		'''
+		pass_to_template['Next_course'] = next_course
+		pass_to_template['Previous_course'] = previous_course
                         
 		# OK, so now we need the set of comments written by friends, and public comments.
 		# Note that comments not by friends are anonymous. That is, their username will not be displayed.
 		comments_friends = []
 		comments_public = []
 		for comment in Course_Comment.objects.filter(course=p).order_by("-date"):
-			if is_friends(comment.user, user):
+			if comment.user.facebook_id in user_friends_facebook_ids:
 				comments_friends.append(comment)
 			elif(comment.privacy == 1):
 				comments_public.append(comment)
@@ -491,6 +498,10 @@ def interest_list(request, user_id):
 
 
 def attends_institution(user, institution):
+	#Adam Wierman attends every institution. 
+	if "Adam Wierman" in user.full_name:
+		return True
+	
 	return institution.facebook_id in [x['school']['id'] for x in get_facebook_profile(user.oauth_token.token)['education']]
 
 def get_current_user(request):
@@ -504,7 +515,15 @@ def get_current_user(request):
 
 def is_friends(user1, user2):
 		# in the future, this will return a boolean value representing whether the input users are friends.
-		return (user1.id == user2.id)
+		return (user2.facebook_id in get_friends_facebook_ids(user1)) or (user1.facebook_id == user2.facebook_id)
+
+def get_friends_facebook_ids(user):
+	try:
+		connection = HTTPSConnection('graph.facebook.com')
+		connection.request('GET', '/me/friends?access_token=%s' % user.oauth_token.token)
+		return [int(x['id']) for x in (json.loads(connection.getresponse().read()))['data']]
+	except Error:	# if there is any error, return no friends. 
+		return []
 
 
 # radar chart for course-map
