@@ -510,6 +510,7 @@ def get_current_user(request):
 	# FOR OFF-GOOGLE TESTING ONLY***************
 	
 	if request.facebook.user:
+		useless = get_friends_facebook_ids(request.facebook.user) #we're just updating the user's friends here.
 		return request.facebook.user
 	return None
 
@@ -521,8 +522,17 @@ def get_friends_facebook_ids(user):
 	try:
 		connection = HTTPSConnection('graph.facebook.com')
 		connection.request('GET', '/me/friends?access_token=%s' % user.oauth_token.token)
-		return [int(x['id']) for x in (json.loads(connection.getresponse().read()))['data']]
-	except Error:	# if there is any error, return no friends. 
+		friends = [int(x['id']) for x in (json.loads(connection.getresponse().read()))['data']]
+		friendship = Friendship.objects.filter(user=user)
+		if friendship.count() > 0:
+			fr = friendship[0]
+		else:
+			fr = Friendship(user=user)
+		fr.friends_facebook_ids = friends
+		fr.save()
+		return friends
+			
+	except Exception:	# if there is any error, return no friends. 
 		return []
 
 

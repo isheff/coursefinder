@@ -19,6 +19,16 @@ class DateStamped(models.Model):
 		abstract = True
 
 
+class Friendship(DateStamped):
+	user=models.ForeignKey(User,  related_name="user involved")			# the user involved.
+	friends_facebook_ids = ListField(models.BigIntegerField())
+	
+	def __unicode__(self):
+		"""
+		This method defines how this class is converted to a string (for example, in the admin interface)
+		"""
+		return str(self.user.full_name)+" friends"
+
 # The Facebook_User class is now depreciated. It has been replaced by the fandjango User class
 #class Facebook_User(DateStamped):
 #	"""
